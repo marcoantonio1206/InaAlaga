@@ -22,6 +22,8 @@ With the same workers and follow-up capacity, when do faster handoffs and deadli
 
 Compare A: assumed delayed handoff and arrival-order scheduling; B: faster handoff and arrival-order scheduling; C: faster handoff and earliest-deadline scheduling. Use the same fictional cases, locations, capacity, and random inputs across policies. Repeat runs and vary demand, travel, service time, and delays. Report ties or worse results honestly.
 
+We are still using a mathematical model: a discrete-event simulation. We deferred the machine-learning model that predicts individual outcomes. Our simulation will represent discharge times, handoff delays, worker queues, travel, and contact duration. We will compare scheduling policies using on-time contact rates, delays, and workload, then repeat experiments under different assumptions. This approach is specified but has not been implemented yet.
+
 Staffing, demand, handoff delays, and 24/48/72-hour post-discharge deadlines are assumptions, not measured Tuguegarao practice or WHO clinical deadlines. WHO contact timing is counted from birth. Saving a record or sending a message does not prove care occurred. We have no clinician/BHW reviewer and cannot claim real health improvements.
 
 ## What is finished
