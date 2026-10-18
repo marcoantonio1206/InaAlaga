@@ -4,6 +4,10 @@ Project state: October 18, 2026. Start with [team context](docs/TEAM_HANDOFF.md)
 
 No application or policy simulation has been built yet. This is a curated handoff, not the complete local master folder or chat export.
 
+## Published statistics verification
+
+Read the [PSA NDHS verification report](data/context/psa_ndhs_verification/README.md) before citing maternal-care figures. It records exact table cells, population definitions, source links and remaining provenance limits. The [checked indicators](data/context/psa_ndhs_verification/checked_indicators.csv) are published aggregates, not respondent records.
+
 ## Included
 
 Team-authored planning documents, a small OSM geographic extract and extraction script, and narrative location findings/source links. The location report describes additional local working tables that are intentionally not included here.
