@@ -1,0 +1,86 @@
+{
+  "source_file": "philippines.gpkg",
+  "source_bytes": 3340197888,
+  "source_folder": "philippines-261017-free",
+  "extraction_date": "2026-10-18",
+  "coordinate_reference": "OGC CRS84 longitude latitude",
+  "city_boundary_bbox": [
+    121.6817808,
+    17.5241591,
+    121.8232606,
+    17.6880456
+  ],
+  "extract_bbox": [
+    121.6617808,
+    17.5041591,
+    121.8432606,
+    17.7080456
+  ],
+  "selection": "Bounding box of OSM Tuguegarao boundary plus 0.02 degrees on each side. Not clipped to official city limits; adjacent municipalities may be included.",
+  "layers": {
+    "city_boundary": {
+      "features": 1,
+      "bytes": 24775
+    },
+    "roads": {
+      "features": 3860,
+      "bytes": 1790317,
+      "classes": {
+        "trunk": 106,
+        "secondary": 69,
+        "residential": 2277,
+        "track": 166,
+        "path": 103,
+        "tertiary": 95,
+        "primary": 36,
+        "service": 761,
+        "unclassified": 183,
+        "footway": 48,
+        "trunk_link": 9,
+        "steps": 2,
+        "pedestrian": 3,
+        "tertiary_link": 1,
+        "busway": 1
+      }
+    },
+    "places": {
+      "features": 52,
+      "bytes": 10463,
+      "classes": {
+        "city": 1,
+        "town": 3,
+        "village": 48
+      }
+    },
+    "health_points": {
+      "features": 25,
+      "bytes": 4878,
+      "classes": {
+        "pharmacy": 12,
+        "clinic": 9,
+        "dentist": 1,
+        "doctors": 2,
+        "hospital": 1
+      }
+    },
+    "health_areas": {
+      "features": 17,
+      "bytes": 7439,
+      "classes": {
+        "hospital": 10,
+        "doctors": 1,
+        "clinic": 3,
+        "pharmacy": 2,
+        "dentist": 1
+      }
+    }
+  },
+  "road_quality": {
+    "maxspeed_zero_or_blank": 3628,
+    "oneway_values": {
+      "B": 3643,
+      "F": 217
+    },
+    "note": "Line geometry does not guarantee a connected routable graph. Preserve bridge/layer/oneway tags; do not connect every crossing."
+  }
+}

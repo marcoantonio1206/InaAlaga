@@ -1,0 +1,87 @@
+[
+  {
+    "path": ".gitignore",
+    "bytes": 95,
+    "sha256": "6e5650aa622d2d3552c5757ab0a3ea4a77de62f621a9b032dc012044a0b3fda4"
+  },
+  {
+    "path": "README.md",
+    "bytes": 2295,
+    "sha256": "ebdccbe89d2e21a5c8eec8fe31d48ddda1ad53fdb92f8ef89cc46a56a90e2af9"
+  },
+  {
+    "path": "data/geography/extract_tuguegarao.py",
+    "bytes": 7828,
+    "sha256": "81401436a58dae3777100053e2045639d8eb9920e64333d533dd8239b3d56444"
+  },
+  {
+    "path": "data/geography/tuguegarao_osm/README.md",
+    "bytes": 1501,
+    "sha256": "f96a7a7eab5c644d5b2c13c6f17e0f578725b9b8d7cb6ac611b76b291ace4e1e"
+  },
+  {
+    "path": "data/geography/tuguegarao_osm/city_boundary.geojson",
+    "bytes": 24775,
+    "sha256": "7922fe7dfe6e30c144b81c798d851932321881f604c50349c8ba891d9992b3de"
+  },
+  {
+    "path": "data/geography/tuguegarao_osm/extraction_summary.json",
+    "bytes": 1949,
+    "sha256": "d32be1efafef44673ec31cf4eeaff9e8fe155c0bb973a3cd62406b797663ef57"
+  },
+  {
+    "path": "data/geography/tuguegarao_osm/health_areas.geojson",
+    "bytes": 7439,
+    "sha256": "9019bfe6b30d6a2a316e257de6ea2adbcc2dd6b737e6fe6d395042674b7e3dce"
+  },
+  {
+    "path": "data/geography/tuguegarao_osm/health_candidates.csv",
+    "bytes": 7112,
+    "sha256": "288d9c27dec509b977041869a44082e44ea8bcf1a6dcbd8c4fb08f2433d76605"
+  },
+  {
+    "path": "data/geography/tuguegarao_osm/health_points.geojson",
+    "bytes": 4878,
+    "sha256": "f09a4c6f7511daa73393c535f98acbc6bacc682c952254aae2968284b7005ad3"
+  },
+  {
+    "path": "data/geography/tuguegarao_osm/places.geojson",
+    "bytes": 10463,
+    "sha256": "c08ad3cc4f49599d8c5280c1731d70a804883e57d6ec23849ee83fc42f071a97"
+  },
+  {
+    "path": "data/geography/tuguegarao_osm/roads.geojson",
+    "bytes": 1790317,
+    "sha256": "da448cad0616312195d344f4b94ac358a15255677d5445a54924074285c9ad46"
+  },
+  {
+    "path": "data/geography/tuguegarao_osm/sources.txt",
+    "bytes": 669,
+    "sha256": "4d9dad3861e806105610844a737afcd63138bb216b07ca1706b48cd332c042b3"
+  },
+  {
+    "path": "data/locations/tuguegarao_review/README.md",
+    "bytes": 12101,
+    "sha256": "90ac754a579f14c79fb6297ca13d75d6d78ce0e160def73608fec9ff1317a603"
+  },
+  {
+    "path": "data/locations/tuguegarao_review/sources.csv",
+    "bytes": 2331,
+    "sha256": "8339645cecd4b282764e6ce5dccdbe559131ecfc3c23d46b68ebbc8e2a62c980"
+  },
+  {
+    "path": "docs/InaAlaga_PRD.docx",
+    "bytes": 61109,
+    "sha256": "02d2ba7d3a668296d9e821cc37dafd8b0b66741aca93dd410e092ebadcb936d1"
+  },
+  {
+    "path": "docs/InaAlaga_PRD.md",
+    "bytes": 43141,
+    "sha256": "6a7241acd8c42c34b76bd4598d9986003443e307bcb1e6b3e1403a02a9d44816"
+  },
+  {
+    "path": "docs/TEAM_HANDOFF.md",
+    "bytes": 5644,
+    "sha256": "380168eb1914306d483672f32e860a94c5f793914ab0667f8ab95adc528c759a"
+  }
+]

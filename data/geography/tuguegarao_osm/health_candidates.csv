@@ -1,0 +1,43 @@
+source_layer,osm_id,name,fclass,reference_lon,reference_lat,reference_method,verification_status
+gis_osm_pois_free,2527872781,Botica San Jacinto,pharmacy,121.7289873,17.6132511,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,2550694229,Mercury Drug,pharmacy,121.7276786,17.617801,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,2550719637,Valley Care Specialty Clinic,clinic,121.7256134,17.6091956,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,2552025402,Lasam Medical Clinic,clinic,121.6800943,17.6480023,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,2552257232,Our Lady of Piat Health Clinic,clinic,121.729482,17.6158329,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,3564684275,City Health Office,clinic,121.7211753,17.6227411,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,3641821237,Tanza Barangay Health Station,clinic,121.7365289,17.6274872,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,4305669974,St. Joseph Drugstore,pharmacy,121.7279168,17.6180191,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,4412908190,Linao West Health Center,clinic,121.7169282,17.6502689,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,4755616027,Dra Manaligod,clinic,121.7296099,17.6159298,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,4868683722,Caritas,clinic,121.7283063,17.6170268,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,4958633021,Barasi-Ascano Dental Clinic,dentist,121.7158115,17.6246543,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,7565536046,Mercury Drug,pharmacy,121.7048693,17.6133994,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,7698365044,Mang Jemongs Drugstore,pharmacy,121.7456363,17.6571793,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,8073875989,CSU Clinic,doctors,121.7252079,17.6204055,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,8344883527,,doctors,121.7474118,17.6567481,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,8793730149,Zinca Pharmacy,pharmacy,121.7115051,17.6339454,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,8897562419,Old Devine mercy hospital,hospital,121.729312,17.6157908,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,8981748217,Best clinic,clinic,121.7456315,17.6575629,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,8981748317,Rodamel grocery,pharmacy,121.7458546,17.6575542,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,9555674116,Medic-1 Pharmacy,pharmacy,121.7276694,17.6154331,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,10186914317,Fervil Pharmacy,pharmacy,121.707557,17.6133904,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,11345713369,Mercury Drug,pharmacy,121.7341521,17.6256752,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,11345848069,K2 Pharmacy,pharmacy,121.7252191,17.6173244,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_free,11763530046,Rodamel Drug Store,pharmacy,121.6911913,17.6498292,mapped point,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,152287567,Tuguegarao People's Emergency Hospital,hospital,121.72945335,17.6129113,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,152460872,Dr. Ronald P. Guzman Medical Clinic,hospital,121.7559016,17.649502050000002,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,247676247,Rural Health Unit,doctors,121.70106175000001,17.5615399,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,262495832,Saint Paul Hospital,hospital,121.70743535,17.61409235,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,300619037,Dr. Domingo S. de Leon General Hospital,hospital,121.72816085,17.61023055,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,310338773,Dr. Teresita Reyes Clinic,clinic,121.7255421,17.611292249999998,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,336434175,St. Joseph Pharmacy,pharmacy,121.72862,17.6143271,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,629289015,Paragua Drugstore,pharmacy,121.74511874999999,17.6561196,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,630209262,The Dental Office by Dr. Nico Paras,dentist,121.74273165,17.650502449999998,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,639012536,Immaculate Heart Clinic,clinic,121.73028615000001,17.6136591,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,775561027,Cagayan Valley Medical Center,hospital,121.74712305,17.6565835,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,957908241,Cagayan United Doctors Medical Center,hospital,121.72144080000001,17.6242891,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,1289265454,Solana Municipal Health Office,clinic,121.69069,17.649205600000002,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,1313482035,Raphael General Hospital,hospital,121.71267755,17.6334583,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,1313482036,Holy Infant Hospital,hospital,121.72587165,17.6156606,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,1313482037,Divine Mercy Wellness Center,hospital,121.7273864,17.611422,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city
+gis_osm_pois_a_free,1313482039,Allied Care Experts Medical Center,hospital,121.7070271,17.62030175,geometry bounding-box midpoint,OSM candidate only; not verified by DOH; may be outside city

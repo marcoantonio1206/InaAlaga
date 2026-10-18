@@ -1,0 +1,10 @@
+Publisher: OpenStreetMap contributors; extract distributed by Geofabrik GmbH
+Source URL: https://download.geofabrik.de/asia/philippines.html
+Source folder supplied: philippines-261017-free
+Publication date: Snapshot date appears in folder name; exact OSM cutoff not independently verified
+Date downloaded: Not supplied by user
+Date extracted: October 18, 2026
+License: Open Database License 1.0 (ODbL)
+License URL: https://www.openstreetmap.org/copyright
+Attribution: OpenStreetMap contributors, distributed by Geofabrik GmbH
+Changes: Geographic and thematic filtering to the documented bbox; GeoJSON export; candidate-location summary. No PSA population substitution.
