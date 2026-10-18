@@ -8,6 +8,10 @@ No application or policy simulation has been built yet. This is a curated handof
 
 Read the [PSA NDHS verification report](data/context/psa_ndhs_verification/README.md) before citing maternal-care figures. It records exact table cells, population definitions, source links and remaining provenance limits. The [checked indicators](data/context/psa_ndhs_verification/checked_indicators.csv) are published aggregates, not respondent records.
 
+## Current pilot inputs
+
+The [pilot v2 specification](data/geography/pilot_v2/README.md) is the current five-barangay selection, station lookup and approximate travel matrix. It supersedes the earlier grouping in the historical location review. Reproduce it with `python3 data/geography/build_pilot_v2.py`. These are geographic/model inputs, not policy results or verified catchments.
+
 ## Included
 
 Team-authored planning documents, a small OSM geographic extract and extraction script, and narrative location findings/source links. The location report describes additional local working tables that are intentionally not included here.

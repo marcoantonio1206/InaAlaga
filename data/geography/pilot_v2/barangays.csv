@@ -1,0 +1,6 @@
+name,psgc,longitude,latitude,osm_id,osm_source_layer,inside_osm_city,nearest_station_id,nearest_distance_km,within_5km,selected,selection_role,coordinate_kind,psa_population_2024,psa_table_as_of
+Linao West,0201529047,121.7171388,17.6501752,2550799591,gis_osm_places_free,True,demo_linao_west,0.02462778618944305,True,True,near,"Approximate settlement reference; not home, centroid or exact facility",1899,2025-07-31
+Atulayan Norte,0201529002,121.7180134,17.6395902,2898940510,gis_osm_places_free,True,demo_linao_west,1.1929739189430006,True,True,middle,"Approximate settlement reference; not home, centroid or exact facility",4226,2025-07-31
+Pallua Sur,0201529049,121.7023656,17.6220082,2898940519,gis_osm_places_free,True,demo_linao_west,3.500915476599033,True,True,far,"Approximate settlement reference; not home, centroid or exact facility",3126,2025-07-31
+Caritan Norte,0201529019,121.7212798,17.6302713,2898940516,gis_osm_places_free,True,demo_tanza,1.645381159890494,True,True,near,"Approximate settlement reference; not home, centroid or exact facility",3691,2025-07-31
+Libag Sur,0201529045,121.7562282,17.6018528,11282384169,gis_osm_places_free,True,demo_tanza,3.5332190541413917,True,True,far,"Approximate settlement reference; not home, centroid or exact facility",3097,2025-07-31

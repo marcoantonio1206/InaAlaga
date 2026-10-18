@@ -1,0 +1,3 @@
+station_id,name,longitude,latitude,osm_id,osm_source_layer,location_status,coordinate_kind,service_eligibility
+demo_linao_west,Linao West demonstration station,121.7169282,17.6502689,4412908190,gis_osm_pois_free,Approximate,Mapped OSM POI; entrance unverified,"Assumed demo station only; staff, referral acceptance and official catchments unverified"
+demo_tanza,Tanza demonstration station,121.7365289,17.6274872,3641821237,gis_osm_pois_free,Supported match,Mapped OSM POI; entrance unverified,"Assumed demo station only; staff, referral acceptance and official catchments unverified"

@@ -1,7 +1,7 @@
 {
-  "version": "1.0",
+  "version": "2.0",
   "decision_date": "2026-10-18",
-  "status": "Main demand-allocation assumption approved in chat; pilot station assignment unresolved; simulation not implemented",
+  "status": "Equal demand allocation and pilot_v2 nearest-distance demonstration station rule specified; simulation not implemented",
   "main_allocation": {
     "method": "uniform_categorical",
     "probability_per_barangay": 0.2,
@@ -12,20 +12,20 @@
         "name": "Linao West"
       },
       {
-        "psgc": "0201529027",
-        "name": "Linao East"
+        "psgc": "0201529002",
+        "name": "Atulayan Norte"
       },
       {
-        "psgc": "0201529046",
-        "name": "Linao Norte"
+        "psgc": "0201529049",
+        "name": "Pallua Sur"
       },
       {
-        "psgc": "0201529038",
-        "name": "Annafunan West"
+        "psgc": "0201529019",
+        "name": "Caritan Norte"
       },
       {
-        "psgc": "0201529039",
-        "name": "Atulayan Sur"
+        "psgc": "0201529045",
+        "name": "Libag Sur"
       }
     ]
   },
@@ -39,9 +39,9 @@
     "limit": "Total population is a proxy assumption, not postpartum demand. Keep total arrivals/resources fixed across allocation scenarios and pair policies within each scenario."
   },
   "station_assignment": {
-    "status": "unresolved",
-    "rule": null,
-    "reason": "All current five reference points are closer to Linao West in screened geometry; no official catchments established. Old proposed demo grouping is not approved by this demand allocation decision."
+    "status": "Specified demo assumption; not official catchments",
+    "rule": "Minimum unrounded haversine distance; tie by station_id. Select BEFORE time floor; keep assignment fixed across policies and travel multipliers. This is not an official catchment.",
+    "source": "data/geography/pilot_v2/barangays.csv"
   },
-  "implementation_gate": "Before policy simulation, document station allocation and travel assumptions. Recalculate equal weights as 1 / pilot count if pilot membership changes."
+  "implementation_gate": "Geography/allocation/travel inputs specified in pilot_v2. Implement and verify the simulation separately; actual service availability and local validity remain unverified."
 }

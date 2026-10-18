@@ -1,0 +1,35 @@
+{
+  "version": "2.0",
+  "decision_date": "2026-10-18",
+  "stage": "Geography inputs only; no patients or policy outcomes",
+  "selection_rule": "Exact PSA/OSM name match, inside OSM city boundary, nearest station within 5 km; Linao near/lower-middle/far and Tanza near/far in ordered eligible lists. Ties by PSGC. 5 km footprint and 3/2 quota are demonstration design assumptions.",
+  "assignment_rule": "Minimum unrounded haversine distance; tie by station_id. Select BEFORE time floor; keep assignment fixed across policies and travel multipliers. This is not an official catchment.",
+  "travel_formula": "base_minutes = max(5, haversine_km / 15 * 60)",
+  "travel_multipliers": [
+    0.5,
+    1,
+    2
+  ],
+  "floor_order": "Apply baseline floor first; multiply resulting time. Slow/fast scenarios may have minimum 10/2.5 minutes.",
+  "round_trip": "2 * one_way_minutes; same outbound/return assumed; add service duration separately later",
+  "station_case_shares_assumed": {
+    "demo_linao_west": 0.6,
+    "demo_tanza": 0.4
+  },
+  "limitations": [
+    "Settlement reference points do not represent all homes or within-barangay travel",
+    "Linao location approximate; entrances/access unverified",
+    "Straight-line travel estimate is not routed or measured time; rivers/road detours may be omitted",
+    "No clinical timing or outcome claims; no catchment/staff confirmation",
+    "PSA geography table July 2025, population 2024; exact OSM cutoff unverified",
+    "5 km footprint and selected near/far coverage are not representative city sampling"
+  ],
+  "input_sha256": {
+    "data/geography/tuguegarao_osm/places.geojson": "c08ad3cc4f49599d8c5280c1731d70a804883e57d6ec23849ee83fc42f071a97",
+    "data/geography/tuguegarao_osm/health_points.geojson": "f09a4c6f7511daa73393c535f98acbc6bacc682c952254aae2968284b7005ad3",
+    "data/geography/tuguegarao_osm/roads.geojson": "da448cad0616312195d344f4b94ac358a15255677d5445a54924074285c9ad46",
+    "data/geography/tuguegarao_osm/city_boundary.geojson": "7922fe7dfe6e30c144b81c798d851932321881f604c50349c8ba891d9992b3de",
+    "data/geography/psa_tuguegarao/barangays_population_2024.csv": "6d8b91fe9188a4fb156ecbb4037fbd3ed177d791ee1e7f356734e42f644aadbd",
+    "data/geography/build_pilot_v2.py": "90e429cb9b9a683564074dd613c2e16c9494e69213d097a4218ab21ba20c6e32"
+  }
+}

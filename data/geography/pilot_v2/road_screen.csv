@@ -1,0 +1,8 @@
+reference_id,nearest_vertex_gap_m,road_osm_id,road_class,road_name,oneway,layer,bridge,tunnel,status
+demo_linao_west,34.821,631242408,residential,,B,0,F,F,Geometric vertex proximity only; connector and legal access unverified
+demo_tanza,19.627,150286576,primary,Maharlika Highway,B,0,F,F,Geometric vertex proximity only; connector and legal access unverified
+0201529047,10.696,631242408,residential,,B,0,F,F,Geometric vertex proximity only; connector and legal access unverified
+0201529002,9.143,286246148,secondary,Tramo Road,B,0,F,F,Geometric vertex proximity only; connector and legal access unverified
+0201529049,17.327,639783324,service,,B,0,F,F,Geometric vertex proximity only; connector and legal access unverified
+0201529019,9.326,150329329,residential,,B,0,F,F,Geometric vertex proximity only; connector and legal access unverified
+0201529045,6.628,340276380,trunk,Maharlika Highway,B,0,F,F,Geometric vertex proximity only; connector and legal access unverified

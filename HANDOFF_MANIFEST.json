@@ -6,8 +6,8 @@
   },
   {
     "path": "README.md",
-    "bytes": 2691,
-    "sha256": "ff97240bd6bff7eb0682e42fc915f4e3bbbce28015869d1ede00edfc92672f06"
+    "bytes": 3077,
+    "sha256": "0fc438ffc305390caf0a2f79ab40dc5c2997983f852c21b8d1b71064f1ddee76"
   },
   {
     "path": "data/context/psa_ndhs_verification/README.md",
@@ -20,9 +20,59 @@
     "sha256": "7e9ed1be33dbd800028764014642f6481cb527bd674ab5c08d6f1713319f6d70"
   },
   {
+    "path": "data/geography/build_pilot_v2.py",
+    "bytes": 9766,
+    "sha256": "90e429cb9b9a683564074dd613c2e16c9494e69213d097a4218ab21ba20c6e32"
+  },
+  {
     "path": "data/geography/extract_tuguegarao.py",
     "bytes": 7828,
     "sha256": "81401436a58dae3777100053e2045639d8eb9920e64333d533dd8239b3d56444"
+  },
+  {
+    "path": "data/geography/pilot_v2/README.md",
+    "bytes": 7654,
+    "sha256": "0adadffd27b3a5c8f783622980b50acb7ee882ac451b44b1c709429c7e588ada"
+  },
+  {
+    "path": "data/geography/pilot_v2/assumptions.json",
+    "bytes": 2321,
+    "sha256": "9acf66ef352920f1358dd82254d21925168befbb9eefa6268555b8ec08c5a853"
+  },
+  {
+    "path": "data/geography/pilot_v2/barangays.csv",
+    "bytes": 1291,
+    "sha256": "76736932e5d45fc55d14dc2ebc6a446d97a7875286d1081fa679a4fd48de3cb9"
+  },
+  {
+    "path": "data/geography/pilot_v2/candidate_selection.csv",
+    "bytes": 4723,
+    "sha256": "a92cfd71fc7a0b090ff6268b089335a26ad08e13c45e0e7b9a5dc4b624ca1c4c"
+  },
+  {
+    "path": "data/geography/pilot_v2/road_connectivity_screen.csv",
+    "bytes": 1748,
+    "sha256": "a64c24e11d26d0046ec5f00eccc5a64644711ff8cec876830938b98ce73c5e90"
+  },
+  {
+    "path": "data/geography/pilot_v2/road_screen.csv",
+    "bytes": 971,
+    "sha256": "8eda5a83245d90608583386ba8a3dfc1f4cd5502fb9afea7826ab09ba73c14c4"
+  },
+  {
+    "path": "data/geography/pilot_v2/stations.csv",
+    "bytes": 585,
+    "sha256": "9dcb3c7c2367e644d8e3dc80d54ef8230890d6af408181f305309371559deb4a"
+  },
+  {
+    "path": "data/geography/pilot_v2/travel_matrix.csv",
+    "bytes": 2161,
+    "sha256": "1be5e302d8d0557f7ab8c0d440d5285266085a8f6967b50b244ae61e04d09e69"
+  },
+  {
+    "path": "data/geography/pilot_v2/travel_sensitivity.csv",
+    "bytes": 3505,
+    "sha256": "bba72c47b55c5b4fa96b42cddd72e11ec2239853be738c1f84fb8b70bf551706"
   },
   {
     "path": "data/geography/psa_tuguegarao/README.md",
@@ -96,8 +146,8 @@
   },
   {
     "path": "data/simulation/demand_allocation.json",
-    "bytes": 2187,
-    "sha256": "9fe9ea0e2c4c1c2565839d5bb17c81cc425b7542c73857d3dfa0601db1a19964"
+    "bytes": 2268,
+    "sha256": "6dac61d900793551e81f371611455f645030ad197c8fa290bafa653a3779311a"
   },
   {
     "path": "docs/InaAlaga_PRD.docx",
@@ -111,7 +161,7 @@
   },
   {
     "path": "docs/TEAM_HANDOFF.md",
-    "bytes": 6854,
-    "sha256": "a7ffe96f3993f96366f462c8f74575f94c08d9ee9c635458aa0e7f7e51e5861f"
+    "bytes": 7400,
+    "sha256": "b65f64449685cbdc3cb67965734d44da2e18eef931df7250bc634a61fed21089"
   }
 ]

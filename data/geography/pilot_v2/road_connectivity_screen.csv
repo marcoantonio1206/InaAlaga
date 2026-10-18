@@ -1,0 +1,11 @@
+station_id,barangay_psgc,outbound_graph_connected,diagnostic
+demo_linao_west,0201529047,True,Exact shared vertices + same layer/bridge/tunnel; no arbitrary crossing nodes; access restrictions missing; nearest vertices not entrances
+demo_linao_west,0201529002,True,Exact shared vertices + same layer/bridge/tunnel; no arbitrary crossing nodes; access restrictions missing; nearest vertices not entrances
+demo_linao_west,0201529049,True,Exact shared vertices + same layer/bridge/tunnel; no arbitrary crossing nodes; access restrictions missing; nearest vertices not entrances
+demo_linao_west,0201529019,True,Exact shared vertices + same layer/bridge/tunnel; no arbitrary crossing nodes; access restrictions missing; nearest vertices not entrances
+demo_linao_west,0201529045,False,Exact shared vertices + same layer/bridge/tunnel; no arbitrary crossing nodes; access restrictions missing; nearest vertices not entrances
+demo_tanza,0201529047,True,Exact shared vertices + same layer/bridge/tunnel; no arbitrary crossing nodes; access restrictions missing; nearest vertices not entrances
+demo_tanza,0201529002,True,Exact shared vertices + same layer/bridge/tunnel; no arbitrary crossing nodes; access restrictions missing; nearest vertices not entrances
+demo_tanza,0201529049,True,Exact shared vertices + same layer/bridge/tunnel; no arbitrary crossing nodes; access restrictions missing; nearest vertices not entrances
+demo_tanza,0201529019,True,Exact shared vertices + same layer/bridge/tunnel; no arbitrary crossing nodes; access restrictions missing; nearest vertices not entrances
+demo_tanza,0201529045,False,Exact shared vertices + same layer/bridge/tunnel; no arbitrary crossing nodes; access restrictions missing; nearest vertices not entrances
