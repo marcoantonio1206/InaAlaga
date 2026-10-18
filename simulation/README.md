@@ -62,3 +62,26 @@ The dashboard should read a whole scenario object by ID. Display missing values 
 ## Verification and limits
 
 The tests include hand-calculated FIFO/EDF and overload queues, zero/abundant capacity, exact shift fit, nonfitting tasks, delayed receipts, same-time arrivals, shared-case reproducibility, sensitivity pairing, duplicate prevention and no-overlap checks. The runner independently checks all completed timelines and metric denominators. This verifies implementation against stated rules; no local operational/clinical validation has occurred. Null results and reversals must remain in results and reports.
+
+## Full-factorial uncertainty extension
+
+The original 30-configuration release above is preserved. A separate extension examines all 162 combinations of demand (4/8/12), workers per station (1/2), service minutes (15/30/60), travel multiplier (0.5/1/2), and reference handoff hours (6–24/12–48/24–72). With 100 seeds and A/B/C/D this is 64,800 policy runs. No engine changes were made; `simulation/model.py` and the original runner remain unchanged so original v1 reproduction is preserved.
+
+```sh
+python3 -m unittest discover -s tests -v
+python3 -m simulation.factorial --replications 100
+python3 -m simulation.factorial_report
+```
+
+The first command now runs 21 tests, including full-grid coverage and common cohorts across staffing/delay changes. The factorial command freezes `simulation/results/factorial_v1/experiment_design.json` before outcomes. The report command builds findings, grid counts, separate staffing comparisons and capacity/scheduling interactions under `simulation/reports/factorial_v1/`. Full raw outputs and per-cell summary CSV remain in the factorial results folder. The original results and original FINDINGS.md remain historical initial-grid artifacts.
+
+For optional standalone PNG heatmaps, install the plotting dependency into your own environment and run:
+
+```sh
+python3 -m pip install -r simulation/requirements-plots.txt
+python3 -m simulation.factorial_report --plots
+```
+
+The simulation still needs no third-party packages. Heatmaps are means, not uncertainty intervals; read the summary CSV for ranges. The same seeds are reused across settings and policies; no additional independent evidence is created by repeating B/C over the reference-delay axis, which only affects A/D. There are 54 distinct B/C settings. Staffing comparisons use matched cohorts but different resources and must not be labeled scheduling-only gains. Full-grid counts are not weighted by the frequency of conditions in the real city.
+
+See [factorial findings and heatmaps](reports/factorial_v1/FINDINGS.md) for all scheduling cells, complete raw-data links, and unchanged model/local-validity limits. No local workflow validation has occurred. This extension addresses interactions among the five stated axes; it does not vary every possible assumption or prove robustness beyond this grid.

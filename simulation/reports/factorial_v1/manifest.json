@@ -1,0 +1,14 @@
+{
+  "source_results_sha256": "e1199be241320562290bd232e5ab88263a7af0840de88714d4ce1b5c6a282b95",
+  "source_replications_sha256": "da548101a7d4996190d76b4c73f47736624aed6292bc6770d2c363efb20840a6",
+  "report_builder_sha256": "6c2dc1c41914df1d80087a7ed89314cda78126d11f97065155f5552f54c15bb8",
+  "outputs": {
+    "FINDINGS.md": "a800ad75c29b20e50f39670b37d5f41cc89a55a1bddad7d57b9f2c44b26b7814",
+    "capacity_scheduling_interactions.csv": "85588a2364c89e33bd25e55a8adea9b64b020dd60d1128f81eb307642505a6c3",
+    "grid_counts.json": "c1229a543a80965e9c13606d30e2badb7db7b7a46bb9d55e1b930fdd0ad319a3",
+    "handoff_workers_1.png": "70cd1469e8285b9526e33fd49f7701902e53f1373b4e495c2d3a099ad7d1638b",
+    "handoff_workers_2.png": "d3d5e495b933386e25aad0204a68ff97f9740bd23eee3347a922e006bc5a96ab",
+    "scheduling_by_capacity.png": "ea0a9f1fab8b47028a3e10f8c4811a7b0244ff6a6d34fec70cac6909a6be9587",
+    "staffing_comparisons.csv": "095da89bf6f8c32ec9aa3dd469fa9e92843d1050113196a7c2ed733cd4154727"
+  }
+}

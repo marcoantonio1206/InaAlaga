@@ -8,6 +8,10 @@ The synthetic generator and scheduling simulation are implemented and tested; th
 
 Read the [PSA NDHS verification report](data/context/psa_ndhs_verification/README.md) before citing maternal-care figures. It records exact table cells, population definitions, source links and remaining provenance limits. The [checked indicators](data/context/psa_ndhs_verification/checked_indicators.csv) are published aggregates, not respondent records.
 
+## Full-factorial uncertainty study
+
+The [expanded report and heatmaps](simulation/reports/factorial_v1/FINDINGS.md) cover 162 combinations and 64,800 matched policy runs. [Full scenario table](simulation/results/factorial_v1/scenario_summary.csv). This explores assumptions and interactions; local operating conditions are still unverified. Original results remain intact. Reproduce with `python3 -m simulation.factorial --replications 100`.
+
 ## Simulation implementation and results
 
 Start with [simulation instructions](simulation/README.md), [all scenario findings](simulation/FINDINGS.md), and [versioned dashboard results](simulation/results/v1/results.json). The first full grid contains 30 configurations × 100 matched replications × four policies (12,000 policy runs), with ties and reversals retained. These are hypothetical scenario outputs, not validated local outcomes. From the repository root run:

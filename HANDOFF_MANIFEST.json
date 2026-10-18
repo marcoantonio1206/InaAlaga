@@ -6,8 +6,8 @@
   },
   {
     "path": "README.md",
-    "bytes": 3962,
-    "sha256": "6827e12867a762def8ea143f787a17f41b882ed1c7350aa9ee847e596327c778"
+    "bytes": 4406,
+    "sha256": "c232374f8614cb96ca85d4868b830b13555995954a9d05384af3c45004f3550b"
   },
   {
     "path": "data/context/psa_ndhs_verification/README.md",
@@ -161,8 +161,8 @@
   },
   {
     "path": "docs/TEAM_HANDOFF.md",
-    "bytes": 8057,
-    "sha256": "93fc7f9ed083919980d9c99b3b5e4085012e5c73fd62c1e9862a9a7570be9d8f"
+    "bytes": 8468,
+    "sha256": "3241216071c3928f516e1456dfdd1fdb6a4bd1e18bf093b3dc0f732d5288763d"
   },
   {
     "path": "simulation/FINDINGS.md",
@@ -171,8 +171,8 @@
   },
   {
     "path": "simulation/README.md",
-    "bytes": 9182,
-    "sha256": "ee8b051c7715f09e18e9d6da7a7c3cde00d1e98d351a828bb04303dbca7446b1"
+    "bytes": 11490,
+    "sha256": "8242f306a55b8355aaafb50e85df11838ec09aa5655340875847f6ac8f0e67d6"
   },
   {
     "path": "simulation/__init__.py",
@@ -180,9 +180,99 @@
     "sha256": "6dce62d371e486df4579b54f262663574f2f99326509f3bdfc1999b7a5b3e276"
   },
   {
+    "path": "simulation/factorial.py",
+    "bytes": 9915,
+    "sha256": "4caf35721f1b9cad2769e9104b50d376c2639b9481a8d61d59b86febc062ea7e"
+  },
+  {
+    "path": "simulation/factorial_report.py",
+    "bytes": 14160,
+    "sha256": "6c2dc1c41914df1d80087a7ed89314cda78126d11f97065155f5552f54c15bb8"
+  },
+  {
+    "path": "simulation/factorial_validation.json",
+    "bytes": 992,
+    "sha256": "55569fefb3187cf77bc46077a7e52916c0b8469a0f17400dce5304d1fc7fa294"
+  },
+  {
     "path": "simulation/model.py",
     "bytes": 15749,
     "sha256": "081144aa2b4050166e71a92ca2e56e39116e117263529e9dd1a0a0dea6c0cfbf"
+  },
+  {
+    "path": "simulation/reports/factorial_v1/FINDINGS.md",
+    "bytes": 7466,
+    "sha256": "a800ad75c29b20e50f39670b37d5f41cc89a55a1bddad7d57b9f2c44b26b7814"
+  },
+  {
+    "path": "simulation/reports/factorial_v1/capacity_scheduling_interactions.csv",
+    "bytes": 3095,
+    "sha256": "85588a2364c89e33bd25e55a8adea9b64b020dd60d1128f81eb307642505a6c3"
+  },
+  {
+    "path": "simulation/reports/factorial_v1/grid_counts.json",
+    "bytes": 375,
+    "sha256": "c1229a543a80965e9c13606d30e2badb7db7b7a46bb9d55e1b930fdd0ad319a3"
+  },
+  {
+    "path": "simulation/reports/factorial_v1/handoff_workers_1.png",
+    "bytes": 317164,
+    "sha256": "70cd1469e8285b9526e33fd49f7701902e53f1373b4e495c2d3a099ad7d1638b"
+  },
+  {
+    "path": "simulation/reports/factorial_v1/handoff_workers_2.png",
+    "bytes": 324489,
+    "sha256": "d3d5e495b933386e25aad0204a68ff97f9740bd23eee3347a922e006bc5a96ab"
+  },
+  {
+    "path": "simulation/reports/factorial_v1/manifest.json",
+    "bytes": 999,
+    "sha256": "d1ce136d979fe9b48e7187367835c736353fd663b4ba136decf6997cd150633d"
+  },
+  {
+    "path": "simulation/reports/factorial_v1/scheduling_by_capacity.png",
+    "bytes": 201216,
+    "sha256": "ea0a9f1fab8b47028a3e10f8c4811a7b0244ff6a6d34fec70cac6909a6be9587"
+  },
+  {
+    "path": "simulation/reports/factorial_v1/staffing_comparisons.csv",
+    "bytes": 44519,
+    "sha256": "095da89bf6f8c32ec9aa3dd469fa9e92843d1050113196a7c2ed733cd4154727"
+  },
+  {
+    "path": "simulation/requirements-plots.txt",
+    "bytes": 94,
+    "sha256": "509671d3177ac45b6dd9c6be57f84988f8197f1b2057608a7017a2df2b9945c5"
+  },
+  {
+    "path": "simulation/results/factorial_v1/experiment_design.json",
+    "bytes": 108863,
+    "sha256": "08f13f065adadab1e4346dfb3da2bd9499f679168dcbd7f68af72d27eb7dba19"
+  },
+  {
+    "path": "simulation/results/factorial_v1/manifest.json",
+    "bytes": 1578,
+    "sha256": "29b20b3914f0effab1b2001f459464b66dc97ae53b01dca22ce46725e63d5239"
+  },
+  {
+    "path": "simulation/results/factorial_v1/paired_differences.csv",
+    "bytes": 9995124,
+    "sha256": "5c67a75edbb86279939be67131e0a29fc0f23c0f2d3950080dbd2ae973838109"
+  },
+  {
+    "path": "simulation/results/factorial_v1/replications.csv",
+    "bytes": 18738722,
+    "sha256": "da548101a7d4996190d76b4c73f47736624aed6292bc6770d2c363efb20840a6"
+  },
+  {
+    "path": "simulation/results/factorial_v1/results.json",
+    "bytes": 2738969,
+    "sha256": "e1199be241320562290bd232e5ab88263a7af0840de88714d4ce1b5c6a282b95"
+  },
+  {
+    "path": "simulation/results/factorial_v1/scenario_summary.csv",
+    "bytes": 87427,
+    "sha256": "72d8d5e4814ace7ee981662d22192dccfead541010b6fbf6e9b3331e060860af"
   },
   {
     "path": "simulation/results/v1/experiment_design.json",
@@ -248,6 +338,11 @@
     "path": "simulation/validation_report.json",
     "bytes": 762,
     "sha256": "87243a67b2d3d2e1cf98ec4eb10daa64285d825d27fb0b61f0ce75879aba82fa"
+  },
+  {
+    "path": "tests/test_factorial.py",
+    "bytes": 1213,
+    "sha256": "43849f3f65eec1ec6ca5f8339225da50b77085dc39995510a2f3eb1f41421e46"
   },
   {
     "path": "tests/test_simulation.py",

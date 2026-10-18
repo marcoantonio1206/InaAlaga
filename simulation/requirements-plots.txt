@@ -1,0 +1,2 @@
+# Optional plotting only; the simulation itself uses the standard library.
+matplotlib==3.11.2

@@ -1,0 +1,16 @@
+{
+  "B_minus_A_full_grid": {
+    "positive_mean": 162,
+    "zero_mean": 0,
+    "negative_mean": 0,
+    "minimum_mean_pp": 2.543223821770676,
+    "maximum_mean_pp": 63.151491996757656
+  },
+  "C_minus_B_unique_grid": {
+    "positive_mean": 44,
+    "zero_mean": 3,
+    "negative_mean": 7,
+    "minimum_mean_pp": -1.55022938032293,
+    "maximum_mean_pp": 7.702279338374991
+  }
+}

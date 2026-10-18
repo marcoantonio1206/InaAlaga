@@ -1,0 +1,23 @@
+{
+  "experiment_version": "factorial-v1",
+  "unit_tests_passed": 21,
+  "scenarios": 162,
+  "replications": 100,
+  "policy_runs": 64800,
+  "matched_case_groups": 16200,
+  "paired_difference_rows": 81000,
+  "unique_B_C_settings": 54,
+  "staffing_summaries": 324,
+  "capacity_scheduling_interaction_summaries": 27,
+  "checks": [
+    "All 162 cross-product combinations present with no duplicates",
+    "Every policy timeline/denominator verified by unchanged engine invariants",
+    "All 64800 replication rows and 81000 differences independently reconciled",
+    "Per-scenario means independently reconciled to raw rows",
+    "Same cohorts across policies, staffing and reference-delay variants",
+    "Full second run byte-identical, including frozen design, JSON, raw CSV and manifest",
+    "Original 30-scenario output and source/input checksums preserved",
+    "All report/plot output checksums verified; all three heatmaps visually inspected"
+  ],
+  "local_operational_validation": false
+}
