@@ -1,0 +1,861 @@
+{
+  "schema_version": "1.0",
+  "model_version": "1.0.0",
+  "suite": "full",
+  "replications_per_scenario": 100,
+  "first_seed": 20261018,
+  "policies": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "scenario_count": 30,
+  "scenarios": [
+    {
+      "scenario_id": "demand_4_base",
+      "config": {
+        "demand_per_day": 4,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "a7d661c1531c6b494f37f45f42767b8d5531cbbc466f966193f3772dcb260b62"
+    },
+    {
+      "scenario_id": "demand_4_service_15",
+      "config": {
+        "demand_per_day": 4,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 15,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "f7ae291f412f5485e2eff7c51c6ed826dda68677e1afddb7a7a60d38dbf44286"
+    },
+    {
+      "scenario_id": "demand_4_service_60",
+      "config": {
+        "demand_per_day": 4,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 60,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "3107c3e8fe0c51bf811a04cbe907f8552ed55304899e9b3fc91500054f9b532a"
+    },
+    {
+      "scenario_id": "demand_4_travel_half",
+      "config": {
+        "demand_per_day": 4,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 0.5,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "f6fec3fe8956b91395f47306d0b8583cf4bc7a835333a00625821a7523161fbc"
+    },
+    {
+      "scenario_id": "demand_4_travel_double",
+      "config": {
+        "demand_per_day": 4,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 2,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "b508c27605b5d8eebb03c8d26aba368f93c09693319eed8655d60cb03930f226"
+    },
+    {
+      "scenario_id": "demand_4_reference_delay_6_24",
+      "config": {
+        "demand_per_day": 4,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          6,
+          24
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "a5c3356f68b9f48a1b18136ba4c299f47ea5e9de713249f8c0699742822fc3ed"
+    },
+    {
+      "scenario_id": "demand_4_reference_delay_24_72",
+      "config": {
+        "demand_per_day": 4,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          24,
+          72
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "5c0e8c6ca0f412cc1c9aa7c35928f69a23952a3b64e739d9b83b5f9344c25e7c"
+    },
+    {
+      "scenario_id": "demand_4_backlog_one_day",
+      "config": {
+        "demand_per_day": 4,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 1
+      },
+      "config_sha256": "c4661b6d70d9f00adea4254d3edd7e7746fed6b68d038c81fe4b8ec8b35c75bc"
+    },
+    {
+      "scenario_id": "demand_4_uniform_due_48h",
+      "config": {
+        "demand_per_day": 4,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          48
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "5f455b2afd5cfd1524db29e202fa76832348862dff860b054edaab70da521150"
+    },
+    {
+      "scenario_id": "demand_8_base",
+      "config": {
+        "demand_per_day": 8,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "281ec15570ef01c8da6346b22f20f2ba4ad3f82e548b89daa50999217737ec86"
+    },
+    {
+      "scenario_id": "demand_8_service_15",
+      "config": {
+        "demand_per_day": 8,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 15,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "c052eeade59a9013c7504ed4cf290388097a77d7512773cbbef6903097af0f42"
+    },
+    {
+      "scenario_id": "demand_8_service_60",
+      "config": {
+        "demand_per_day": 8,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 60,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "33ade4aa608cc7c727d1f918c82bec5211128ca8fd15ea7466d0536a1ac39f60"
+    },
+    {
+      "scenario_id": "demand_8_travel_half",
+      "config": {
+        "demand_per_day": 8,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 0.5,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "b7bdfc656c64fc2f6d9401023e72b40ad4ad76b6c9c3527ed7c2012b13569199"
+    },
+    {
+      "scenario_id": "demand_8_travel_double",
+      "config": {
+        "demand_per_day": 8,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 2,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "9d6ef73ccf77f5dc165f32a19940c42dbea7005bd2d73e9b6bdfa83c2c80dab1"
+    },
+    {
+      "scenario_id": "demand_8_reference_delay_6_24",
+      "config": {
+        "demand_per_day": 8,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          6,
+          24
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "d6062644e306a90df6c07d44db0e151886f79174cd20f8cd4908ce9ab1fbabf1"
+    },
+    {
+      "scenario_id": "demand_8_reference_delay_24_72",
+      "config": {
+        "demand_per_day": 8,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          24,
+          72
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "155b70f6862cead183b3e763f6c8fc66a0d0b5575cbccce5ab52fd4eff288eeb"
+    },
+    {
+      "scenario_id": "demand_8_backlog_one_day",
+      "config": {
+        "demand_per_day": 8,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 1
+      },
+      "config_sha256": "f8568dcea05e56bb556ffcc67c3d6ad4498d381d107005a4d79111503389e196"
+    },
+    {
+      "scenario_id": "demand_8_uniform_due_48h",
+      "config": {
+        "demand_per_day": 8,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          48
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "382bb3c2b25087bdc08375927b7dc4350401a8f641fc6cbbf22fe028bc231520"
+    },
+    {
+      "scenario_id": "demand_12_base",
+      "config": {
+        "demand_per_day": 12,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "7a11f97d2bd7f899e128d5d45ec0e6fdd90161daa14f42f2eca9a4831e837606"
+    },
+    {
+      "scenario_id": "demand_12_service_15",
+      "config": {
+        "demand_per_day": 12,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 15,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "ded420e3081c01aaeea58f8d7cd899e9c38a203ebb57578651b7066f25d21f2e"
+    },
+    {
+      "scenario_id": "demand_12_service_60",
+      "config": {
+        "demand_per_day": 12,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 60,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "643599d7011e2dd63ae86fee81299c2ae901c9426901654db15f112ff805483f"
+    },
+    {
+      "scenario_id": "demand_12_travel_half",
+      "config": {
+        "demand_per_day": 12,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 0.5,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "df65532ac9d0230468f7bacfbf5528c3270ef866551c53309b1ed48b37d60415"
+    },
+    {
+      "scenario_id": "demand_12_travel_double",
+      "config": {
+        "demand_per_day": 12,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 2,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "3591532b2cf3a2a678f63d54762ab8a9a41bc91d16c52338e326e3eff9d5175e"
+    },
+    {
+      "scenario_id": "demand_12_reference_delay_6_24",
+      "config": {
+        "demand_per_day": 12,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          6,
+          24
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "d872428f9d7a8696c32de0f601454c3cdf2bfc6136cb3462eb92d025af2771ce"
+    },
+    {
+      "scenario_id": "demand_12_reference_delay_24_72",
+      "config": {
+        "demand_per_day": 12,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          24,
+          72
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "d3ef7a2251ac1cdca93a4b29693ad21df118a56239471034786f73e5572bab7d"
+    },
+    {
+      "scenario_id": "demand_12_backlog_one_day",
+      "config": {
+        "demand_per_day": 12,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 1
+      },
+      "config_sha256": "0bb600ea88ff2da74faf50db8d709b0decea224b6f2f01e79aab65647ada9f49"
+    },
+    {
+      "scenario_id": "demand_12_uniform_due_48h",
+      "config": {
+        "demand_per_day": 12,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          48
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "579c3bfb080cf6ace5fdee4a638fbb1d17f141b7e9f2de46504acd1dcaceef28"
+    },
+    {
+      "scenario_id": "demand_12_combined_stress",
+      "config": {
+        "demand_per_day": 12,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 1,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 60,
+        "travel_multiplier": 2,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "e9ea1f4f5cb0d128a1cdca555a38f0a7764a5013a18214096cdcb6d31f7cf3fa"
+    },
+    {
+      "scenario_id": "control_zero_workers",
+      "config": {
+        "demand_per_day": 12,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 0,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "830fe70725da5e4d41868bf0109ab57a659cf8dcd453158f6604a43d4a41ea98"
+    },
+    {
+      "scenario_id": "control_abundant_workers",
+      "config": {
+        "demand_per_day": 12,
+        "arrival_days": 14,
+        "drain_days": 7,
+        "workers_per_station": 10,
+        "shift_start": 540,
+        "shift_end": 780,
+        "service_minutes": 30,
+        "travel_multiplier": 1,
+        "reference_delay_hours": [
+          12,
+          48
+        ],
+        "fast_delay_hours": [
+          0,
+          6
+        ],
+        "due_windows_hours": [
+          24,
+          48,
+          72
+        ],
+        "backlog_days": 0
+      },
+      "config_sha256": "961e7784639b1313402a79f9b891d15459327a716fa41362593f997275a19fde"
+    }
+  ],
+  "pilot_input_sha256": {
+    "data/geography/pilot_v2/barangays.csv": "76736932e5d45fc55d14dc2ebc6a446d97a7875286d1081fa679a4fd48de3cb9",
+    "data/geography/pilot_v2/stations.csv": "9dcb3c7c2367e644d8e3dc80d54ef8230890d6af408181f305309371559deb4a",
+    "data/geography/pilot_v2/travel_matrix.csv": "1be5e302d8d0557f7ab8c0d440d5285266085a8f6967b50b244ae61e04d09e69",
+    "data/geography/pilot_v2/assumptions.json": "9acf66ef352920f1358dd82254d21925168befbb9eefa6268555b8ec08c5a853",
+    "data/simulation/demand_allocation.json": "14dd4860cc81000898ae532caf02b792f1adb6235017a01714ea7f1420c698f1"
+  },
+  "source_sha256": {
+    "simulation/run.py": "0a5e91f32fcad6afae17b8094b646c11154f4b229aa9d7161d71d58ca2d980cc",
+    "simulation/model.py": "081144aa2b4050166e71a92ca2e56e39116e117263529e9dd1a0a0dea6c0cfbf"
+  }
+}

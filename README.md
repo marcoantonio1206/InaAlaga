@@ -2,11 +2,22 @@
 
 Project state: October 18, 2026. Start with [team context](docs/TEAM_HANDOFF.md), then [PRD](docs/InaAlaga_PRD.md), then [location findings](data/locations/tuguegarao_review/README.md).
 
-No application or policy simulation has been built yet. This is a curated handoff, not the complete local master folder or chat export.
+The synthetic generator and scheduling simulation are implemented and tested; the application remains unbuilt. This is a curated handoff, not the complete local master folder or chat export.
 
 ## Published statistics verification
 
 Read the [PSA NDHS verification report](data/context/psa_ndhs_verification/README.md) before citing maternal-care figures. It records exact table cells, population definitions, source links and remaining provenance limits. The [checked indicators](data/context/psa_ndhs_verification/checked_indicators.csv) are published aggregates, not respondent records.
+
+## Simulation implementation and results
+
+Start with [simulation instructions](simulation/README.md), [all scenario findings](simulation/FINDINGS.md), and [versioned dashboard results](simulation/results/v1/results.json). The first full grid contains 30 configurations × 100 matched replications × four policies (12,000 policy runs), with ties and reversals retained. These are hypothetical scenario outputs, not validated local outcomes. From the repository root run:
+
+```sh
+python3 -m unittest discover -s tests -v
+python3 -m simulation.run --suite full --replications 100
+```
+
+Python standard library only. The seed/config/source hashes and output checksums are bundled. The historical location reports describe the state at their review time; use the handoff and simulation documentation for current implementation status.
 
 ## Current pilot inputs
 

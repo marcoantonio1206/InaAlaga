@@ -1,7 +1,7 @@
 {
   "version": "2.0",
   "decision_date": "2026-10-18",
-  "status": "Equal demand allocation and pilot_v2 nearest-distance demonstration station rule specified; simulation not implemented",
+  "status": "Generator and simulation implemented in simulation/; uniform allocation and pilot_v2 station rule are hypothetical inputs, not validated local practice",
   "main_allocation": {
     "method": "uniform_categorical",
     "probability_per_barangay": 0.2,
@@ -43,5 +43,5 @@
     "rule": "Minimum unrounded haversine distance; tie by station_id. Select BEFORE time floor; keep assignment fixed across policies and travel multipliers. This is not an official catchment.",
     "source": "data/geography/pilot_v2/barangays.csv"
   },
-  "implementation_gate": "Geography/allocation/travel inputs specified in pilot_v2. Implement and verify the simulation separately; actual service availability and local validity remain unverified."
+  "implementation_gate": "Implemented and tested model v1.0.0; see simulation/README.md and versioned results. Clinical/service eligibility and real-city validity remain unverified."
 }

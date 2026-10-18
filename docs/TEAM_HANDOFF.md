@@ -22,7 +22,7 @@ With the same workers and follow-up capacity, when do faster handoffs and deadli
 
 Compare A: assumed delayed handoff and arrival-order scheduling; B: faster handoff and arrival-order scheduling; C: faster handoff and earliest-deadline scheduling. Use the same fictional cases, locations, capacity, and random inputs across policies. Repeat runs and vary demand, travel, service time, and delays. Report ties or worse results honestly.
 
-We are still using a mathematical model: a discrete-event simulation. We deferred the machine-learning model that predicts individual outcomes. Our simulation will represent discharge times, handoff delays, worker queues, travel, and contact duration. We will compare scheduling policies using on-time contact rates, delays, and workload, then repeat experiments under different assumptions. This approach is specified but has not been implemented yet.
+We are still using a mathematical model: a discrete-event simulation. We deferred the machine-learning model that predicts individual outcomes. Our simulation will represent discharge times, handoff delays, worker queues, travel, and contact duration. We will compare scheduling policies using on-time contact rates, delays, and workload, then repeat experiments under different assumptions. The generator and discrete-event simulation are now implemented in simulation/. A full 30-configuration experiment with 100 paired replications and four policies has run. Read simulation/README.md and simulation/FINDINGS.md; the web app remains unbuilt.
 
 Synthetic cases will be allocated equally in probability across the five selected barangays (20% per barangay). This is an experimental assumption, not an estimate of actual local births. Each case receives one seeded random barangay assignment, reused across all policies; counts can vary by barangay within a run. Population-based allocation is an optional sensitivity check, not the main scenario. See data/simulation/demand_allocation.json. Station assignments and approximate travel are now specified in data/geography/pilot_v2/ as demonstration assumptions; they are not official catchments.
 
@@ -30,7 +30,7 @@ Staffing, demand, handoff delays, and 24/48/72-hour post-discharge deadlines are
 
 ## What is finished
 
-The PRD is written. Data inspection/extraction scripts and source notes exist. Published maternal-care statistics and WHO guidance were reviewed for context. Regional percentages do not measure local handoff failure, and indicators with different denominators cannot simply be subtracted to calculate it.
+The PRD is written. Data inspection/extraction scripts, source notes, the synthetic case generator and the discrete-event simulation exist. Versioned simulation JSON, seed-level metrics and example synthetic timelines are saved under simulation/results/v1/. Published maternal-care statistics and WHO guidance were reviewed for context. Regional percentages do not measure local handoff failure, and indicators with different denominators cannot simply be subtracted to calculate it.
 
 A small OSM extract contains roads, settlement reference points, health candidates, and a city boundary. Registry exports identify 37 BHSs, 10 hospitals, and one RHU in Tuguegarao; this does not prove complete coverage. Across those 48 facilities, the location review found 2 supported matches, 10 approximate locations, and 36 unresolved locations. Unresolved coordinates stay blank.
 
@@ -42,8 +42,8 @@ Road screening connects eight of ten pairs in the revised pilot; Libag Sur topol
 
 ## What is not finished and what comes next
 
-No application or policy simulation has been implemented or run. Existing results are data/location checks, not evidence that InaAlaga works.
+The application has not been built. The synthetic generator and scheduling simulation are implemented; 19 unit checks pass and 12,000 policy runs cover 30 configurations. These verify the stated model, not actual city effectiveness. Deadline scheduling ties or performs worse in some configurations; do not promise an improvement. See simulation/FINDINGS.md for the full results.
 
-Next: use the versioned pilot allocation and travel assumptions; assign the five team roles; build one complete saved handoff; implement/test the fair simulation; connect the dashboard; prepare deck/video and a clean submission. Aim for feature freeze October 22, testing/recording October 23, and October 24 for fixes/submission.
+Next: use the versioned pilot allocation and travel assumptions; assign the five team roles; build one complete saved handoff; review the simulation assumptions and failure conditions; connect the dashboard to the versioned results; prepare deck/video and a clean submission. Aim for feature freeze October 22, testing/recording October 23, and October 24 for fixes/submission.
 
 Treat the PRD as the implementation baseline, with proposed defaults clearly marked. The newer location review updates geography knowledge without silently changing the PRD. Keep approved decisions, inspected facts, assumptions, and unanswered questions separate. Keep source citations and licenses. Build the public repository from a reviewed allowlist, not the entire master folder.

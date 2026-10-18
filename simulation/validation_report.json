@@ -1,0 +1,18 @@
+{
+  "model_version": "1.0.0",
+  "unit_tests_passed": 19,
+  "configurations": 30,
+  "replications_per_configuration": 100,
+  "policies": 4,
+  "policy_runs": 12000,
+  "paired_cohort_groups": 3000,
+  "checks": [
+    "All source/input and output hashes verified",
+    "Entire repeated full experiment byte-identical including results JSON, raw CSV, design, examples and manifest",
+    "Every group receives identical cases across A/B/C/D",
+    "All reported mean on-time rates independently reconciled to seed-level CSV",
+    "All introduced = completed + unserved denominators reconciled",
+    "Curated repository reruns all 19 tests and reproduces every bundled output byte-for-byte without the private master-folder files"
+  ],
+  "real_world_validation": false
+}

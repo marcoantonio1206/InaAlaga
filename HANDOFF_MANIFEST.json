@@ -6,8 +6,8 @@
   },
   {
     "path": "README.md",
-    "bytes": 3077,
-    "sha256": "0fc438ffc305390caf0a2f79ab40dc5c2997983f852c21b8d1b71064f1ddee76"
+    "bytes": 3962,
+    "sha256": "6827e12867a762def8ea143f787a17f41b882ed1c7350aa9ee847e596327c778"
   },
   {
     "path": "data/context/psa_ndhs_verification/README.md",
@@ -31,8 +31,8 @@
   },
   {
     "path": "data/geography/pilot_v2/README.md",
-    "bytes": 7654,
-    "sha256": "0adadffd27b3a5c8f783622980b50acb7ee882ac451b44b1c709429c7e588ada"
+    "bytes": 7785,
+    "sha256": "ea7907a60e602364a425338304c8f5e2b143f3ce758478a1a3bd669cef41fddb"
   },
   {
     "path": "data/geography/pilot_v2/assumptions.json",
@@ -146,8 +146,8 @@
   },
   {
     "path": "data/simulation/demand_allocation.json",
-    "bytes": 2268,
-    "sha256": "6dac61d900793551e81f371611455f645030ad197c8fa290bafa653a3779311a"
+    "bytes": 2285,
+    "sha256": "14dd4860cc81000898ae532caf02b792f1adb6235017a01714ea7f1420c698f1"
   },
   {
     "path": "docs/InaAlaga_PRD.docx",
@@ -161,7 +161,97 @@
   },
   {
     "path": "docs/TEAM_HANDOFF.md",
-    "bytes": 7400,
-    "sha256": "b65f64449685cbdc3cb67965734d44da2e18eef931df7250bc634a61fed21089"
+    "bytes": 8057,
+    "sha256": "93fc7f9ed083919980d9c99b3b5e4085012e5c73fd62c1e9862a9a7570be9d8f"
+  },
+  {
+    "path": "simulation/FINDINGS.md",
+    "bytes": 6533,
+    "sha256": "67b222d09dbbd35de3418757603eb3b990b0378eb5b26883db4376f68fc86157"
+  },
+  {
+    "path": "simulation/README.md",
+    "bytes": 9182,
+    "sha256": "ee8b051c7715f09e18e9d6da7a7c3cde00d1e98d351a828bb04303dbca7446b1"
+  },
+  {
+    "path": "simulation/__init__.py",
+    "bytes": 80,
+    "sha256": "6dce62d371e486df4579b54f262663574f2f99326509f3bdfc1999b7a5b3e276"
+  },
+  {
+    "path": "simulation/model.py",
+    "bytes": 15749,
+    "sha256": "081144aa2b4050166e71a92ca2e56e39116e117263529e9dd1a0a0dea6c0cfbf"
+  },
+  {
+    "path": "simulation/results/v1/experiment_design.json",
+    "bytes": 20745,
+    "sha256": "89ad869754da626683970465bf1c7c46a589d2456010e88dd4b9e362f08565d7"
+  },
+  {
+    "path": "simulation/results/v1/manifest.json",
+    "bytes": 1838,
+    "sha256": "c2f5bb2e6c43b51e3fb2e41de412c951d6e241de3a435766d61a939ae1fe90b8"
+  },
+  {
+    "path": "simulation/results/v1/paired_differences.csv",
+    "bytes": 1897782,
+    "sha256": "5f36318ce877f3e686b3886e356aa0dfab8ed1598e5e6b33495d81aa82f61664"
+  },
+  {
+    "path": "simulation/results/v1/replications.csv",
+    "bytes": 4377879,
+    "sha256": "440055c26f694d331923e8bcecafe1701d76b0783eab035b079d1df51e2798f1"
+  },
+  {
+    "path": "simulation/results/v1/results.json",
+    "bytes": 1580851,
+    "sha256": "c0c900acc1d29f1ad77d4038fbff5901f5c90c1a680964fd49c6a272e7368599"
+  },
+  {
+    "path": "simulation/results/v1/synthetic_cases_example.csv",
+    "bytes": 13909,
+    "sha256": "befeea535ec64c00b0011b6053200125c9d65590842a75248150dbe02068f02b"
+  },
+  {
+    "path": "simulation/results/v1/timeline_example_A.csv",
+    "bytes": 12371,
+    "sha256": "32029b4f6fa55779193c64dd5ff73244d030fa3b1b2fcac0b5b739b7366e75a7"
+  },
+  {
+    "path": "simulation/results/v1/timeline_example_B.csv",
+    "bytes": 12388,
+    "sha256": "1139cce9d4e6829bcfaf48ac24e96ee91724665fc63d53ea22867a145e3a7117"
+  },
+  {
+    "path": "simulation/results/v1/timeline_example_C.csv",
+    "bytes": 12404,
+    "sha256": "0f9e268a5ff7a223566747128c32fd504ab1037dc86c5f32a760d2801e3b5a77"
+  },
+  {
+    "path": "simulation/results/v1/timeline_example_D.csv",
+    "bytes": 12371,
+    "sha256": "1dd96b57f1cbe5a433619060e475ea27a7c7bcacbe1b2c577cc069f809b7165b"
+  },
+  {
+    "path": "simulation/run.py",
+    "bytes": 11543,
+    "sha256": "0a5e91f32fcad6afae17b8094b646c11154f4b229aa9d7161d71d58ca2d980cc"
+  },
+  {
+    "path": "simulation/scenario_summary.csv",
+    "bytes": 6055,
+    "sha256": "e5f1a66ed49e39bcb2d763317747d3941355b2c07275dad8d196684bdacefea8"
+  },
+  {
+    "path": "simulation/validation_report.json",
+    "bytes": 762,
+    "sha256": "87243a67b2d3d2e1cf98ec4eb10daa64285d825d27fb0b61f0ce75879aba82fa"
+  },
+  {
+    "path": "tests/test_simulation.py",
+    "bytes": 7741,
+    "sha256": "c905ee214bb403e9b6a46ea7386f96fac95e9f0150633c8b040eb8a675c72a4b"
   }
 ]

@@ -1,0 +1,25 @@
+{
+  "model_version": "1.0.0",
+  "python_version": "3.14.7",
+  "experiment_design_sha256": "520105ec5303d4428931612b4eed0e53996bcbd312ceadabbb2d87d0f4d167d1",
+  "source_and_inputs": {
+    "data/geography/pilot_v2/barangays.csv": "76736932e5d45fc55d14dc2ebc6a446d97a7875286d1081fa679a4fd48de3cb9",
+    "data/geography/pilot_v2/stations.csv": "9dcb3c7c2367e644d8e3dc80d54ef8230890d6af408181f305309371559deb4a",
+    "data/geography/pilot_v2/travel_matrix.csv": "1be5e302d8d0557f7ab8c0d440d5285266085a8f6967b50b244ae61e04d09e69",
+    "data/geography/pilot_v2/assumptions.json": "9acf66ef352920f1358dd82254d21925168befbb9eefa6268555b8ec08c5a853",
+    "data/simulation/demand_allocation.json": "14dd4860cc81000898ae532caf02b792f1adb6235017a01714ea7f1420c698f1",
+    "simulation/run.py": "0a5e91f32fcad6afae17b8094b646c11154f4b229aa9d7161d71d58ca2d980cc",
+    "simulation/model.py": "081144aa2b4050166e71a92ca2e56e39116e117263529e9dd1a0a0dea6c0cfbf"
+  },
+  "outputs": {
+    "experiment_design.json": "89ad869754da626683970465bf1c7c46a589d2456010e88dd4b9e362f08565d7",
+    "paired_differences.csv": "5f36318ce877f3e686b3886e356aa0dfab8ed1598e5e6b33495d81aa82f61664",
+    "replications.csv": "440055c26f694d331923e8bcecafe1701d76b0783eab035b079d1df51e2798f1",
+    "results.json": "c0c900acc1d29f1ad77d4038fbff5901f5c90c1a680964fd49c6a272e7368599",
+    "synthetic_cases_example.csv": "befeea535ec64c00b0011b6053200125c9d65590842a75248150dbe02068f02b",
+    "timeline_example_A.csv": "32029b4f6fa55779193c64dd5ff73244d030fa3b1b2fcac0b5b739b7366e75a7",
+    "timeline_example_B.csv": "1139cce9d4e6829bcfaf48ac24e96ee91724665fc63d53ea22867a145e3a7117",
+    "timeline_example_C.csv": "0f9e268a5ff7a223566747128c32fd504ab1037dc86c5f32a760d2801e3b5a77",
+    "timeline_example_D.csv": "1dd96b57f1cbe5a433619060e475ea27a7c7bcacbe1b2c577cc069f809b7165b"
+  }
+}

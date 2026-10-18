@@ -1,6 +1,6 @@
 # Pilot v2: five barangays, two demo stations, approximate travel
 
-Decision date: October 18, 2026. User authorized the revised pilot and PRD distance-based travel fallback. These files supersede the original five-barangay proposal and its manual station grouping for future demo/simulation inputs. Historical data/locations/tuguegarao_review outputs remain a record of the earlier review. No synthetic cases or policy outcomes have been generated. PRD v1.0 remains intact; this is its geographic input addendum.
+Decision date: October 18, 2026. User authorized the revised pilot and PRD distance-based travel fallback. These files supersede the original five-barangay proposal and its manual station grouping for future demo/simulation inputs. Historical data/locations/tuguegarao_review outputs remain a record of the earlier review. At this geography-input freeze, no synthetic cases or policy outcomes had been generated. The later generator and experiments are now documented separately in ../../../simulation/README.md. PRD v1.0 remains intact; this is its geographic input addendum.
 
 ## Selection before policy outcomes
 
