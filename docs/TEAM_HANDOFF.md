@@ -40,6 +40,12 @@ The revised five-barangay pilot is Linao West, Atulayan Norte, Pallua Sur, Carit
 
 Road screening connects eight of ten pairs in the revised pilot; Libag Sur topology is unresolved. Entrances, private access, turn restrictions, and actual travel times remain unverified. Straight-line travel is the explicit modeling fallback. OSM attribution/license obligations apply. Registry redistribution terms remain unresolved. The earlier PSA text file is missing, but all 49 barangay rows have now been recovered from the official PSA page and saved in data/geography/psa_tuguegarao/. Their 2024 population totals 167,297. The page labels its geography table July 31, 2025; this is not a verified 2026 classification update. Population is background and an optional allocation sensitivity input, not measured postpartum demand.
 
+## Confirmed app-build decisions (October 18, 2026)
+
+The team approved proceeding with the fictional prototype while seeking local feedback. The hospital form must require an explicitly entered administrative demo follow-up deadline, with no automatic 48-hour default; seeded fictional examples may already contain deadlines. Keep the simulation’s 24/48/72-hour assumptions unchanged.
+
+Show the saved lookup’s initial demonstration-station assignment and allow a coordinator to correct it before acknowledgment, with an audit event. Keep acknowledged-case reassignment outside the first build; do not silently change ownership. Unmapped/ambiguous cases remain unassigned. Build the saved discharge → station inbox → acknowledgment path first, then the remaining workflow and dashboard. These are design decisions, not proof of local practice. See docs/FINAL_ASSUMPTIONS_REVIEW.md; implementation acceptance boxes remain unchecked.
+
 ## What is not finished and what comes next
 
 The application has not been built. The synthetic generator and scheduling simulation are implemented; 21 unit checks pass; the initial 12,000-run release is preserved and the factorial extension adds 64,800 runs across 162 configurations. These verify the stated model, not actual city effectiveness. Deadline scheduling ties or performs worse in some configurations; do not promise an improvement. See simulation/reports/factorial_v1/FINDINGS.md for the current interaction analysis and simulation/FINDINGS.md for the original grid. These tests explore assumed conditions and do not establish which conditions occur locally.

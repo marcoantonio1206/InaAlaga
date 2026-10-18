@@ -150,6 +150,11 @@
     "sha256": "14dd4860cc81000898ae532caf02b792f1adb6235017a01714ea7f1420c698f1"
   },
   {
+    "path": "docs/FINAL_ASSUMPTIONS_REVIEW.md",
+    "bytes": 15345,
+    "sha256": "ace12d5e3248b9ce4f96c532961d3560e8ff6fb49edefd3c285141680d5e8d07"
+  },
+  {
     "path": "docs/InaAlaga_PRD.docx",
     "bytes": 61109,
     "sha256": "02d2ba7d3a668296d9e821cc37dafd8b0b66741aca93dd410e092ebadcb936d1"
@@ -161,8 +166,8 @@
   },
   {
     "path": "docs/TEAM_HANDOFF.md",
-    "bytes": 8468,
-    "sha256": "3241216071c3928f516e1456dfdd1fdb6a4bd1e18bf093b3dc0f732d5288763d"
+    "bytes": 9408,
+    "sha256": "cded07eebe736713fd53eb6157d09d7a45b7441fe00fb5d9f861e177c226f4e3"
   },
   {
     "path": "simulation/FINDINGS.md",
