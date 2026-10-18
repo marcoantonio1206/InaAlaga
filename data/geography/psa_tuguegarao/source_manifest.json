@@ -1,0 +1,18 @@
+{
+  "publisher": "Philippine Statistics Authority",
+  "source_url": "https://psa.gov.ph/classification/psgc/barangays/0201529000",
+  "retrieved_date": "2026-10-18",
+  "population_reference": "2024 POPCEN",
+  "geography_table_as_of": "2025-07-31",
+  "method": "Transcribed all 49 rows from official page retrieved through web tool; original missing text not used",
+  "count": 49,
+  "population_total": 167297,
+  "license": "CC BY 4.0 unless otherwise stated",
+  "terms_url": "https://psa.gov.ph/terms-of-use",
+  "sha256": "6d8b91fe9188a4fb156ecbb4037fbd3ed177d791ee1e7f356734e42f644aadbd",
+  "limits": [
+    "Page links newer 2026 publications but its barangay table explicitly says 31 July 2025; no 2026 classification join",
+    "Urban/rural label vintage not independently established",
+    "Population is not postpartum demand; no facility coordinates or catchments supplied"
+  ]
+}

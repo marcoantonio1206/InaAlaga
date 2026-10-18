@@ -24,6 +24,8 @@ Compare A: assumed delayed handoff and arrival-order scheduling; B: faster hando
 
 We are still using a mathematical model: a discrete-event simulation. We deferred the machine-learning model that predicts individual outcomes. Our simulation will represent discharge times, handoff delays, worker queues, travel, and contact duration. We will compare scheduling policies using on-time contact rates, delays, and workload, then repeat experiments under different assumptions. This approach is specified but has not been implemented yet.
 
+Synthetic cases will be allocated equally in probability across the five selected barangays (20% per barangay). This is an experimental assumption, not an estimate of actual local births. Each case receives one seeded random barangay assignment, reused across all policies; counts can vary by barangay within a run. Population-based allocation is an optional sensitivity check, not the main scenario. See data/simulation/demand_allocation.json. Station assignments remain unresolved.
+
 Staffing, demand, handoff delays, and 24/48/72-hour post-discharge deadlines are assumptions, not measured Tuguegarao practice or WHO clinical deadlines. WHO contact timing is counted from birth. Saving a record or sending a message does not prove care occurred. We have no clinician/BHW reviewer and cannot claim real health improvements.
 
 ## What is finished
@@ -36,7 +38,7 @@ Proposed pilot: CVMC as discharge reference, Tanza BHS and Linao West BHS as dem
 
 The five proposed barangays are Linao West, Linao East, Linao Norte, Annafunan West, and Atulayan Sur. Names/codes were checked against PSA; mapped points represent settlements, not homes or exact facilities. All five points are closer to Linao West in the screened road network. Assigning some to Tanza would be a stated demo choice. Settle this allocation, or revise the subset, before running policies.
 
-Road geometry connects the selected points, but entrances, private access, turn restrictions, and actual travel times remain unverified. OSM attribution/license obligations apply. Registry redistribution terms remain unresolved. The earlier PSA text file is missing; five pilot identities were reacquired from the official page, not a full population dataset.
+Road geometry connects the selected points, but entrances, private access, turn restrictions, and actual travel times remain unverified. OSM attribution/license obligations apply. Registry redistribution terms remain unresolved. The earlier PSA text file is missing, but all 49 barangay rows have now been recovered from the official PSA page and saved in data/geography/psa_tuguegarao/. Their 2024 population totals 167,297. The page labels its geography table July 31, 2025; this is not a verified 2026 classification update. Population is background and an optional allocation sensitivity input, not measured postpartum demand.
 
 ## What is not finished and what comes next
 

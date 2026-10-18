@@ -15,6 +15,21 @@
     "sha256": "81401436a58dae3777100053e2045639d8eb9920e64333d533dd8239b3d56444"
   },
   {
+    "path": "data/geography/psa_tuguegarao/README.md",
+    "bytes": 1622,
+    "sha256": "a689cb893af95b0220b3231edde84dde282659b63c0dd6114f4f463110ca804b"
+  },
+  {
+    "path": "data/geography/psa_tuguegarao/barangays_population_2024.csv",
+    "bytes": 6764,
+    "sha256": "6d8b91fe9188a4fb156ecbb4037fbd3ed177d791ee1e7f356734e42f644aadbd"
+  },
+  {
+    "path": "data/geography/psa_tuguegarao/source_manifest.json",
+    "bytes": 885,
+    "sha256": "3e278fab9e17fe7d7096bd133161618fdac37301649866c743d744298c3d714f"
+  },
+  {
     "path": "data/geography/tuguegarao_osm/README.md",
     "bytes": 1501,
     "sha256": "f96a7a7eab5c644d5b2c13c6f17e0f578725b9b8d7cb6ac611b76b291ace4e1e"
@@ -70,6 +85,11 @@
     "sha256": "8339645cecd4b282764e6ce5dccdbe559131ecfc3c23d46b68ebbc8e2a62c980"
   },
   {
+    "path": "data/simulation/demand_allocation.json",
+    "bytes": 2187,
+    "sha256": "9fe9ea0e2c4c1c2565839d5bb17c81cc425b7542c73857d3dfa0601db1a19964"
+  },
+  {
     "path": "docs/InaAlaga_PRD.docx",
     "bytes": 61109,
     "sha256": "02d2ba7d3a668296d9e821cc37dafd8b0b66741aca93dd410e092ebadcb936d1"
@@ -81,7 +101,7 @@
   },
   {
     "path": "docs/TEAM_HANDOFF.md",
-    "bytes": 5644,
-    "sha256": "380168eb1914306d483672f32e860a94c5f793914ab0667f8ab95adc528c759a"
+    "bytes": 6854,
+    "sha256": "a7ffe96f3993f96366f462c8f74575f94c08d9ee9c635458aa0e7f7e51e5861f"
   }
 ]
