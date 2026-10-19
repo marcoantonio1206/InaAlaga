@@ -1,6 +1,10 @@
 # InaAlaga team handoff
 
-Status: October 19, 2026 (mother UI update; analytical status unchanged). Read this first, then docs/InaAlaga_PRD.md and data/locations/tuguegarao_review/README.md. This summary covers the supplied project handoff and files inspected in this chat, not a complete export of every earlier conversation.
+Status: October 19, 2026 (UI and app seed update; analytical status unchanged). Read this first, then docs/InaAlaga_PRD.md and data/locations/tuguegarao_review/README.md. This summary covers the supplied project handoff and files inspected in this chat, not a complete export of every earlier conversation.
+
+## New design and app seed artifacts
+
+Read [UI and app seed handoff](UI_AND_APP_SEED_HANDOFF.md) for the editable hospital facilitator Figma link, design corrections, verified competition context and seed/import instructions. `data/app_demo/seed_v1.json` is the six-mother/two-worker clean profile; `seed_populated_v1.json` is the alternative 20-mother/four-worker snapshot with fictional event history. Both have validators, and the larger snapshot has a deterministic builder. They are not connected to a database yet and do not change simulation inputs/results. Load profiles separately into scoped sessions; do not merge shared case IDs. The frozen demo clock remains explicit.
 
 ## Current mother UI direction
 

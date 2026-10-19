@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "inaalaga-app-demo-v1",
+  "fictional_data_only": true,
+  "display_timezone": "Asia/Manila",
+  "demo_clock_at": "2026-10-19T04:00:00Z",
+  "assignment_lookup_version": "pilot_v2",
+  "description": "Independent fictional app fixtures. Not simulation cases, real patients, official catchments, or a clinical schedule.",
+  "facilities": [
+    {
+      "facility_id": "demo_cvmc",
+      "display_name": "Cagayan Valley Medical Center",
+      "role": "discharge_reference",
+      "demo_reference_only": true
+    }
+  ],
+  "stations": [
+    {
+      "station_id": "demo_tanza",
+      "display_name": "Tanza BHS",
+      "demo_station": true
+    },
+    {
+      "station_id": "demo_linao_west",
+      "display_name": "Linao West BHS",
+      "demo_station": true
+    }
+  ],
+  "workers": [
+    {
+      "worker_id": "demo_worker_ana",
+      "display_name": "Ana",
+      "station_id": "demo_tanza",
+      "fictional": true
+    },
+    {
+      "worker_id": "demo_worker_bea",
+      "display_name": "Bea",
+      "station_id": "demo_linao_west",
+      "fictional": true
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "IA-0042",
+      "mother_alias": "Maria Santos",
+      "barangay_name": "Caritan Norte",
+      "barangay_psgc": "0201529019",
+      "facility_id": "demo_cvmc",
+      "birth_at": "2026-10-18T01:40:00Z",
+      "discharge_at": "2026-10-19T03:15:00Z",
+      "due_at": "2026-10-20T02:00:00Z",
+      "station_id": "demo_tanza",
+      "assignment_reason": "pilot_v2_demo_lookup",
+      "routed_at": "2026-10-19T03:16:00Z",
+      "handoff_status": "pending",
+      "owner_worker_id": null,
+      "acknowledged_at": null
+    },
+    {
+      "case_id": "IA-0043",
+      "mother_alias": "Rosa Dela Cruz",
+      "barangay_name": "Libag Sur",
+      "barangay_psgc": "0201529045",
+      "facility_id": "demo_cvmc",
+      "birth_at": "2026-10-17T05:00:00Z",
+      "discharge_at": "2026-10-18T05:00:00Z",
+      "due_at": "2026-10-20T05:00:00Z",
+      "station_id": "demo_tanza",
+      "assignment_reason": "pilot_v2_demo_lookup",
+      "routed_at": "2026-10-18T05:01:00Z",
+      "handoff_status": "pending",
+      "owner_worker_id": null,
+      "acknowledged_at": null
+    },
+    {
+      "case_id": "IA-0044",
+      "mother_alias": "Grace Villanueva",
+      "barangay_name": "Linao West",
+      "barangay_psgc": "0201529047",
+      "facility_id": "demo_cvmc",
+      "birth_at": "2026-10-17T22:00:00Z",
+      "discharge_at": "2026-10-18T22:00:00Z",
+      "due_at": "2026-10-21T22:00:00Z",
+      "station_id": "demo_linao_west",
+      "assignment_reason": "pilot_v2_demo_lookup",
+      "routed_at": "2026-10-18T22:01:00Z",
+      "handoff_status": "pending",
+      "owner_worker_id": null,
+      "acknowledged_at": null
+    },
+    {
+      "case_id": "IA-0045",
+      "mother_alias": "Liza Mercado",
+      "barangay_name": "Atulayan Norte",
+      "barangay_psgc": "0201529002",
+      "facility_id": "demo_cvmc",
+      "birth_at": "2026-10-17T01:00:00Z",
+      "discharge_at": "2026-10-18T01:00:00Z",
+      "due_at": "2026-10-19T01:00:00Z",
+      "station_id": "demo_linao_west",
+      "assignment_reason": "pilot_v2_demo_lookup",
+      "routed_at": "2026-10-18T01:01:00Z",
+      "handoff_status": "pending",
+      "owner_worker_id": null,
+      "acknowledged_at": null
+    },
+    {
+      "case_id": "IA-0046",
+      "mother_alias": "Angelica Bautista",
+      "barangay_name": "Pallua Sur",
+      "barangay_psgc": "0201529049",
+      "facility_id": "demo_cvmc",
+      "birth_at": "2026-10-17T23:30:00Z",
+      "discharge_at": "2026-10-18T23:30:00Z",
+      "due_at": "2026-10-20T23:30:00Z",
+      "station_id": "demo_linao_west",
+      "assignment_reason": "pilot_v2_demo_lookup",
+      "routed_at": "2026-10-18T23:31:00Z",
+      "handoff_status": "pending",
+      "owner_worker_id": null,
+      "acknowledged_at": null
+    },
+    {
+      "case_id": "IA-0047",
+      "mother_alias": "Demo Mother 08",
+      "barangay_name": "Demo barangay outside lookup",
+      "barangay_psgc": null,
+      "facility_id": "demo_cvmc",
+      "birth_at": "2026-10-17T02:00:00Z",
+      "discharge_at": "2026-10-18T02:00:00Z",
+      "due_at": "2026-10-21T01:00:00Z",
+      "station_id": null,
+      "assignment_reason": "no_demo_lookup_match",
+      "routed_at": null,
+      "handoff_status": "unassigned",
+      "owner_worker_id": null,
+      "acknowledged_at": null
+    }
+  ],
+  "followups": [],
+  "contact_requests": [],
+  "contact_outcomes": []
+}
