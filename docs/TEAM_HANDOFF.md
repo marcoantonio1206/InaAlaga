@@ -1,6 +1,14 @@
 # InaAlaga team handoff
 
-Status: October 18, 2026. Read this first, then docs/InaAlaga_PRD.md and data/locations/tuguegarao_review/README.md. This summary covers the supplied project handoff and files inspected in this chat, not a complete export of every earlier conversation.
+Status: October 19, 2026 (mother UI update; analytical status unchanged). Read this first, then docs/InaAlaga_PRD.md and data/locations/tuguegarao_review/README.md. This summary covers the supplied project handoff and files inspected in this chat, not a complete export of every earlier conversation.
+
+## Current mother UI direction
+
+PRD v1.1 Section 3 captures the October 19 design discussion. Home combines responsibility, assigned demo station and scheduled visit in one compact card, with an expandable “How your follow-up works” explanation and “Please contact me” below. Saved requests show “Request recorded · Awaiting acknowledgment”; worker acknowledgment is separate from contact/completion. The station is not automatically the visit destination. Use “Scheduled visit” rather than implying a separate confirmation step.
+
+A Visits page is now proposed for next/later/previous saved visits, expandable details, contact updates, empty/loading/error states and proposed reschedule/cancellation states. A preferred-date/time-period request is recommended as an extension requiring a worker review workflow; submission does not change the current schedule. These proposals do not silently expand the P0 single-home-follow-up requirement or the simulation.
+
+Final tab count, permanent Station/Map destination versus contextual link, multi-visit scope and schedule-change priority remain unresolved. Route distance/time may remain in Figma as clearly illustrative values; a routing service, fictional origin, destination and travel mode are not yet selected. Leaflet alone is a display library. No live GPS, real SMS, clinical triage or family features are added. Progress is text wireframes/specification, not updated native Figma frames or implemented app behavior. The Markdown PRD is current; its DOCX remains the older snapshot.
 
 ## What we are building
 

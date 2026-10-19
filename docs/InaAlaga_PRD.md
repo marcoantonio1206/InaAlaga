@@ -2,9 +2,11 @@
 
 ## Hackathon prototype and simulation plan
 
-Version 1.0 | Prepared October 18, 2026 | Team BAIthropic, UPLB
+Version 1.1 | Prepared October 18, 2026 | UI revision October 19, 2026 | Team BAIthropic, UPLB
 
-**Delivery target:** hosted demonstration and submission by October 24, 2026, 11:59 PM Asia/Manila, subject to the official primer. This document specifies work to build and verify; it does not claim that the application or simulation already exists.
+**Revision status:** Section 3 records the current mother UI/UX direction and proposed extensions discussed on October 19. This is a design specification, not implemented functionality or an updated Figma file. The simulation is implemented; the app remains unbuilt. For later evidence and approved operational assumptions, read `FINAL_ASSUMPTIONS_REVIEW.md` alongside the historical research sections below. The Markdown PRD is current; the existing DOCX is the earlier version and has not been regenerated.
+
+**Delivery target:** hosted demonstration and submission by October 24, 2026, 11:59 PM Asia/Manila, subject to the official primer. Application requirements specify work still to build and verify; the simulation is implemented as documented in the later assumptions review.
 
 InaAlaga will demonstrate how hospital discharge records can reach a barangay health team, acquire a responsible worker, and lead to a recorded follow-up. A separate simulation will help a proposed city maternal-health coordinator compare handoff and scheduling policies under limited worker capacity. Every patient and worker record in the public demonstration will be fictional.
 
@@ -59,7 +61,7 @@ Family permissions and supportive actions; learning library; full maternal/newbo
 
 ### Changes from earlier designs
 
-The four-tab mother application becomes one mobile status/visit screen with an optional report panel. The dashboard becomes the analytical centerpiece. The BHW queue explains administrative order, not medical risk. Reusable Figma components are retained, but unbuilt screens do not block the connected story. This scope protects implementation time and evidence quality.
+The mother application prioritizes a compact Home page and a distinct Visits design for schedules/history. A station/map view and secondary settings remain under design review; the original four tabs are not automatically removed or retained. Section 3 distinguishes the required single-follow-up flow from proposed multi-visit and schedule-change extensions. The dashboard remains the analytical centerpiece. The BHW queue explains administrative order, not medical risk. Reusable Figma components are retained; the connected story takes priority over optional screens.
 
 <!-- pagebreak -->
 
@@ -114,9 +116,117 @@ P0 means required for the submission. P1 is added only after the core flow and s
 
 ### Screens and interaction
 
-Limit design to six reusable views: demo launcher/SMS inbox; hospital form plus confirmation; BHW queue; BHW detail; mother page with request panel; coordinator dashboard with operations and planning sections. Desktop views target 1280 px; mother/BHW views must work at 360 px. Use shared status badges, cards, forms and tables. Frontend work starts from the agreed fields, not final Figma completion.
+Core views remain the demo launcher/SMS inbox, hospital form/confirmation, BHW queue/detail, mother experience, and coordinator operations/planning. The mother experience now has a Home/Visits design direction rather than a fixed one-screen restriction. Desktop views target 1280 px; mother/BHW views must work at 360 px. Frontend work starts from agreed fields, not final Figma completion.
 
-P1 items are simple FIL/EN strings, station-versus-home visit selection, map pin highlighting and CSV scenario export. The release remains usable in reviewed plain English if translation time is insufficient. Retain readable 16 px mobile body text, large tap targets, keyboard labels and non-color status cues. Red denotes an attention/request state, not computed clinical severity.
+P1 items include reviewed FIL/EN strings, station-versus-home visit selection, map pin highlighting and CSV scenario export. Plain English remains a release fallback. Additional UI proposals below do not silently expand P0 or change the first-home-follow-up simulation.
+
+### Figma and mother UI progress — October 19
+
+The old exports and PJDSC minutes are historical design references. The October 18 alignment review remains useful evidence of those exports; this section supersedes its blanket recommendation to consolidate everything into one page. Current progress consists of reviewed content hierarchy, text wireframes, and interaction/state proposals. No app, updated native Figma frames, live map routing, or multi-visit persistence is claimed complete.
+
+| Status | Direction |
+| --- | --- |
+| Agreed direction | Fictional coordination prototype; purple/lilac identity and rounded cards; no family features; replace symptom/SOS flow with “Please contact me”; distinguish recorded requests from worker acknowledgment. |
+| Current Home layout direction | Shared follow-up card connects responsible worker, assigned demo station and scheduled visit. Expandable explanation belongs inside that card; essential status/schedule remain visible. |
+| Current design proposal | Visits page with upcoming/later/previous records, expanded details and state variants. Mother preference submission is recommended but requires new saved request/review behavior. |
+| Still unresolved | Final bottom-tab count/names; permanent Station/Map tab versus contextual screen; exact future-visit coverage; routing provider, origin and travel mode; reschedule/cancellation implementation priority. |
+
+### Mother Home
+
+Use a compact header with InaAlaga, FIL/EN selected state, and a small “Fictional demo” label. Greeting example: “Good morning, Maria!” Example alias, worker and dates are fictional seed content, not hardcoded status.
+
+One rounded “Your follow-up” card contains:
+
+- Responsibility: “Ana has accepted your follow-up” with “Demo worker.” Render acceptance only after the worker's saved action. Before that, use “Awaiting worker acceptance.”
+- “Assigned demo station” and “Tanza BHS.” This is the responsible demonstration station, not automatically the visit destination or a claim about an actual worker's employer.
+- A divider followed by “Scheduled visit,” type, date/time and location. Example: “Home follow-up · Oct 19, 9:00 AM · Your home.” Show the scheduled visitor only when recorded; case ownership does not prove who will visit.
+- “How your follow-up works” disclosure at the bottom, collapsed by default. Suggested expanded copy: “Your assigned worker coordinates your follow-up. Scheduled visit details appear above. ‘Please contact me’ records a request; acknowledgment appears after the worker accepts the request. This fictional demo is not monitored for emergencies.”
+
+“Scheduled visit” replaces the ambiguous “Next confirmed visit”; a saved worker schedule does not imply the mother separately confirmed it. Before scheduling, say “No visit scheduled yet.” The status and next visit are static/readable, not hidden behind card expansion. The contact button sits directly below the shared card.
+
+```text
+InaAlaga                         FIL / [EN]
+Fictional demo
+Good morning, Maria!
++----------------------------------------+
+| YOUR FOLLOW-UP                         |
+| Ana has accepted your follow-up        |
+| Demo worker                           |
+| Assigned demo station: Tanza BHS        |
+| -------------------------------------- |
+| SCHEDULED VISIT                        |
+| Home follow-up · Oct 19, 9:00 AM        |
+| Your home                             |
+| -------------------------------------- |
+| How your follow-up works             v |
++----------------------------------------+
+[             Please contact me          ]
+```
+
+### Visits page and expandable records
+
+Home answers “What happens next?” Visits answers “What is scheduled and what happened previously?” A separate Visits destination is useful when multiple saved records exist; do not invent a history to fill the screen. The existing P0 flow still requires only one scheduled follow-up. Multiple appointments and their history are proposed app extensions, not simulated long-term care.
+
+Order: page title; next scheduled visit expanded; later visits as compact expandable rows; previous records as compact expandable rows; contact updates when present; one shared contact action/status. Do not add a calendar grid or filters initially.
+
+| Record | Always visible | Expanded details |
+| --- | --- | --- |
+| Next scheduled | Type, date/time, location and recorded visitor | Essential details already visible; proposed “Request a different time” entry point |
+| Later scheduled | Date/time, type/location summary, “Scheduled,” “View details” | Full location, recorded visitor, conditional station-location link, proposed change-request entry point, “Hide details” |
+| Previous completed | Date, type, “Completed,” “View details” | Scheduled time/location, recorded worker, completion-recorded timestamp explicitly labeled as an audit event rather than actual ending time |
+| Previous cancelled | Date, type, “Cancelled” | Cancellation-recorded time, mother-appropriate saved reason if present, replacement schedule status |
+
+Home visits say “Your home” and have no station-route action. Station visits, if enabled, name the actual scheduled destination and offer “View station location.” Do not assume the assigned worker is the scheduled visitor. No clinical results or symptom assessment fields are added.
+
+### Mother state coverage for Figma
+
+Design reusable variants, not disconnected static screens. A failed save must never show success. Persistence, refresh and cross-role behavior still require implementation tests.
+
+| State | Mother-facing behavior |
+| --- | --- |
+| Pending responsibility | “Awaiting worker acceptance”; assigned station if known; no invented owner |
+| Unassigned | “Demo station not assigned yet”; no fabricated station/route |
+| No scheduled visit | “No visit scheduled yet. Your schedule will appear here when your worker adds a visit.” |
+| No later/previous records | “No other visits scheduled” / “No completed visits yet,” adjusted if cancelled history exists |
+| Request saving | “Saving request…”; prevent duplicate submission |
+| Request saved | “Request recorded · Awaiting acknowledgment” |
+| Request acknowledged | “Request acknowledged,” with saved acknowledging worker; not “contacted” or “resolved” |
+| Request save failure | “Couldn’t save your request” with Retry; preserve entered preference if applicable |
+| Contact attempted, not reached | Separate Contact updates entry with time and recorded worker. It does not automatically complete, cancel or mark a scheduled visit missed. |
+| Scheduled time passed, outcome absent | “Awaiting visit update”; do not automatically infer completion, a missed visit or clinical urgency |
+| Completed | Only after saved worker completion; recording timestamp distinct from event time |
+| Rescheduled — proposed | Current schedule prominent; previous date/time in expanded details; retain change history |
+| Cancelled — proposed | Retain cancelled record; show no upcoming visit if no replacement exists; do not silently remove it |
+| Loading / read failure | Loading indicator; “Couldn’t load visits” and Retry, distinct from a genuine empty schedule |
+
+“Please contact me” is prominent on Home and proposed on Visits, with one shared saved state across destinations. Do not duplicate pending requests when switching tabs. Omit the persistent SOS-style action from Station/Map and Settings. Eligibility for a new request after acknowledgment remains to be specified; acknowledgment alone is not resolution.
+
+### Preferred schedule request — proposed extension
+
+Recommended visit action: “Request a different time.” Open a bottom sheet showing the current visit, preferred date, and Morning/Afternoon/Any time. Prefer a broad time preference over an exact slot picker until worker availability exists. Provide “Send request” and a dismiss action.
+
+Copy: “Your worker will review this. Your current visit stays scheduled until a change is confirmed.” After saving: “Change requested · Preferred: Oct 20, afternoon · Awaiting worker review.” A request is neither a booking nor proof that the worker read it. Acknowledgment, acceptance of the preferred time and the actual schedule update are separate events.
+
+This supersedes the earlier suggestion to use a generic contact request for every schedule change, if this extension is selected. It requires a visit-linked request type, preferred date/time period, status/audit history, station-scoped worker review and a visible outcome for the mother. The worker must be able to retain the existing schedule or arrange another time; do not silently accept a preference. Define request editing, duplicates, date validation and competing worker updates before implementation. Without this extension, explain that “Please contact me” can be used to discuss the visit and that the schedule remains unchanged. Neither approach is implemented yet.
+
+### Station and map design
+
+Preserve the useful intent of the original Maps design: understand the assigned station and, where relevant, locate the scheduled destination. Keep distance/time in Figma as a proposed useful feature, not as established live functionality. Remove the old emergency-destination card and symptom/SOS action from this release.
+
+- Label “Assigned demo station,” not “Closest station” or automatically “For your visits.” For a home visit, explicitly state the visit is at home; station travel is secondary reference information.
+- A contextual link may open a focused station screen with Back. A permanent Map/Station tab remains unresolved; do not add/remove tabs merely to fill space.
+- Leaflet is the planned optional map display library, not a selected routing provider. Route distance/time needs a separately selected service, named origin/destination and travel mode. No live GPS is authorized by this revision.
+- Use independently fictional home coordinates if demonstrating a household route. Barangay reference points are not homes. Figma values such as “1.2 km · About 10 min” must be annotated as illustrative; runtime values must identify their route source/mode and estimation basis. Display “Route unavailable” when needed.
+- Keep mother-facing route estimates separate from the frozen simulation travel assumptions. Routing APIs do not establish official catchments, referral acceptance or verified entrances. Tanza's supported reference location is not a verified entrance; Linao West remains approximate.
+- Schematic views must say “Illustration only · Not a real map,” avoid an implied known user position, and not pair fabricated measured journeys with active-looking route/call controls. Implemented map views need attribution and uncertainty labels. Phone and external route actions require reviewed destinations/contact details.
+
+### Navigation, visual system and remaining design work
+
+Original tabs were Home, Visits, Health center and More. Home/Visits now have distinct proposed purposes; Station can be contextual or a tab. More is justified only by useful supported secondary content. Settings may instead open from the header. Final tab count is not agreed. Retain visible text labels for any tabs.
+
+Use purple/lilac branding, rounded mobile cards and concise natural language. Start with 16 px side margins/card padding and 12–16 px section gaps, readable 16 px body text and large touch targets. Avoid fixed-height empty cards or large decorative gaps. Some unused space below content is acceptable; adding screens to fill a viewport is not a requirement. Verify at actual mobile size, including expanded cards, longer Filipino strings and enlarged text. Status meaning uses words/icons, never color alone; no clinical severity palette. Language selection must be visually clear. Family controls, symptom forms, learning library and live-SMS promises remain excluded.
+
+Next Figma work: create Home accepted/pending/unassigned variants; Visits default/expanded/empty/history/change/error variants; shared request-state components; proposed preference sheet and worker review counterpart; station/map alternatives with illustrative route annotations. Review navigation after these screens have meaningful content. All UI completion and application acceptance checks remain pending until actual artifacts and persisted behavior are verified.
 
 <!-- pagebreak -->
 
