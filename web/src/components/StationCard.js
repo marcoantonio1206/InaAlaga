@@ -12,8 +12,14 @@ export default function StationCard({ stationName }) {
         <Icon name="pin" size={18} />
         {t("stationLabel")}
       </div>
-      <h2 className="text-xl font-extrabold">{stationName}</h2>
-      <p className="text-muted">{t("stationNote")}</p>
+            {stationName ? (
+        <>
+          <h2 className="text-xl font-extrabold">{stationName}</h2>
+          <p className="text-muted">{t("stationNote")}</p>
+        </>
+      ) : (
+        <p className="text-muted">{t("stationNone")}</p>
+      )}
     </Card>
   );
 }

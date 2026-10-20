@@ -1,4 +1,5 @@
 export function getStatus(caseData, nowIso) {
+  if (caseData.handoff_state === "unassigned") return "unassigned";
   if (caseData.visits.some((v) => v.state === "completed")) return "completed";
   if (caseData.handoff_state !== "acknowledged") return "pending";
   const next = caseData.visits.find((v) => v.state === "scheduled");

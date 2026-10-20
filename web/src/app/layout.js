@@ -13,11 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={nunito.variable}>
       <body className="antialiased">
-        <LangProvider>
-          <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-brand-50 shadow-xl">
-            {children}
-          </div>
-        </LangProvider>
+        <LangProvider>{children}</LangProvider>
       </body>
     </html>
   );

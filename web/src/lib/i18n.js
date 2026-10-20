@@ -60,6 +60,10 @@ const strings = {
     navStation: "Istasyon",
     navMore: "Iba pa",
     tabSoon: "Ginagawa pa ang pahinang ito.",
+    statusUnassigned: "Sinusuri",
+    unassignedTitle: "Na-save ang iyong detalye",
+    unassignedBody: "Sinusuri ng coordinator kung aling demonstration station ang mag-fo-follow up. Wala pang worker na tumanggap.",
+    stationNone: "Wala pang itinalagang demonstration station.",
   },
   en: {
     imMother: "I am the mother",
@@ -118,6 +122,10 @@ const strings = {
     navStation: "Station",
     navMore: "More",
     tabSoon: "This page is being built.",
+    statusUnassigned: "Being reviewed",
+    unassignedTitle: "Your details were saved",
+    unassignedBody: "A coordinator is reviewing which demonstration station will follow up. No worker has accepted it yet.",
+    stationNone: "No demonstration station assigned yet.",
   },
 };
 

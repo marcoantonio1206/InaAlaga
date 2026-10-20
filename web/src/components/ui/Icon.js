@@ -43,6 +43,13 @@ const paths = {
       <circle cx="19" cy="12" r="1.5" />
     </>
   ),
+  plus: (
+    <>
+      <rect x="4" y="4" width="16" height="16" rx="2" />
+      <path d="M12 8v8M8 12h8" />
+    </>
+  ),
+  list: <path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" />,
 };
 
 export default function Icon({ name, size = 20, className = "" }) {

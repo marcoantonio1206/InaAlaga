@@ -10,6 +10,7 @@ const MAP = {
   scheduled: { icon: "calendar", label: "statusScheduled", title: "schedTitle", body: "schedBody" },
   overdue: { icon: "alert", label: "statusOverdue", title: "overdueTitle", body: "overdueBody" },
   completed: { icon: "check", label: "statusCompleted", title: "doneTitle", body: "doneBody" },
+  unassigned: { icon: "clock", label: "statusUnassigned", title: "unassignedTitle", body: "unassignedBody" },
 };
 
 export default function StatusCard({ status }) {
