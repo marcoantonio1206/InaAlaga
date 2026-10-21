@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import LangToggle from "@/components/LangToggle";
 import { useLang } from "@/lib/i18n";
 
-const DEMO_TOKEN = "demo-pending";
+const DEMO_TOKEN = "ia-0042";
 
 export default function ConsentPage() {
   const { t } = useLang();

@@ -13,3 +13,15 @@ export async function getCaseByToken() {
 export async function createContactRequest() {
   return notReady();
 }
+
+export async function listCases() {
+  return notReady();
+}
+
+export async function getCaseById() {
+  return notReady();
+}
+
+export async function createDischarge() {
+  return notReady();
+}
