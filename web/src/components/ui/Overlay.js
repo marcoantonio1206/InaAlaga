@@ -6,6 +6,10 @@ import { useEffect, useRef } from "react";
 // backdrop click and Escape close it, focus moves inside on open,
 // page scroll is locked while open. Everything is rendered inline (no portal)
 // so Tailwind tokens and the layout font apply unchanged.
+// Open overlays in the order they opened; Escape closes only the topmost, so a
+// Modal inside a SlideOver does not take the panel (and its form input) with it.
+const openStack = [];
+
 function useOverlay(open, onClose) {
   const panelRef = useRef(null);
   // Keep the latest handler in a ref so the effect below depends only on
@@ -19,8 +23,10 @@ function useOverlay(open, onClose) {
     if (!open) return undefined;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const entry = {};
+    openStack.push(entry);
     const onKey = (e) => {
-      if (e.key === "Escape") onCloseRef.current();
+      if (e.key === "Escape" && openStack[openStack.length - 1] === entry) onCloseRef.current();
     };
     document.addEventListener("keydown", onKey);
     const first = panelRef.current?.querySelector(
@@ -30,6 +36,7 @@ function useOverlay(open, onClose) {
     return () => {
       document.body.style.overflow = prev;
       document.removeEventListener("keydown", onKey);
+      openStack.splice(openStack.indexOf(entry), 1);
     };
   }, [open]);
 
