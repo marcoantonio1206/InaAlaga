@@ -59,7 +59,7 @@ export default function RequestPanel({ requestState, onRequest }) {
         {saving ? t("requestSaving") : t("requestButton")}
       </Button>
       {failed ? (
-        <p role="alert" className="text-sm font-bold text-red-700">
+        <p role="alert" className="text-sm font-bold text-danger-ink">
           {t("requestFailed")}
         </p>
       ) : null}
