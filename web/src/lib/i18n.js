@@ -77,6 +77,12 @@ const strings = {
     stationMapTitle: "Mapa ng itinalagang istasyon",
     stationOpenMap: "Buksan sa mapa",
     stationEmergency: "Sa emergency, tumawag sa 911 o pumunta sa pinakamalapit na ospital. Hindi emergency service ang app na ito.",
+    visitsUpcoming: "Susunod na bisita",
+    visitsPrevious: "Mga nakaraang bisita",
+    visitsNoneUpcoming: "Wala pang naka-iskedyul na bisita. Lalabas dito ang iskedyul kapag nagdagdag ang iyong health worker.",
+    visitsNonePrevious: "Wala pang natapos na bisita.",
+    visitCancelled: "Kinansela",
+    visitEndedLabel: "Natapos:",
   },
   en: {
     imMother: "I am the mother",
@@ -152,6 +158,12 @@ const strings = {
     stationMapTitle: "Map of assigned station",
     stationOpenMap: "Open in map",
     stationEmergency: "In an emergency, call 911 or go to the nearest hospital. This app is not an emergency service.",
+    visitsUpcoming: "Next visit",
+    visitsPrevious: "Previous visits",
+    visitsNoneUpcoming: "No visit scheduled yet. Your schedule will appear here when your worker adds a visit.",
+    visitsNonePrevious: "No completed visits yet.",
+    visitCancelled: "Cancelled",
+    visitEndedLabel: "Ended:",
   },
 };
 

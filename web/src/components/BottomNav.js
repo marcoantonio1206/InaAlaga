@@ -9,7 +9,6 @@ const TABS = [
   { key: "navHome", icon: "home", path: "" },
   { key: "navVisits", icon: "calendar", path: "/visits" },
   { key: "navStation", icon: "pin", path: "/station" },
-  { key: "navMore", icon: "dots", path: "/more" },
 ];
 
 export default function BottomNav({ token }) {
@@ -18,7 +17,7 @@ export default function BottomNav({ token }) {
   const base = `/m/${token}`;
   return (
     <nav aria-label="Main" className="sticky bottom-0 border-t border-brand-200 bg-white px-2 py-2">
-      <ul className="grid grid-cols-4 gap-1">
+      <ul className="grid grid-cols-3 gap-1">
         {TABS.map((tab) => {
           const href = base + tab.path;
           const active = pathname === href;
