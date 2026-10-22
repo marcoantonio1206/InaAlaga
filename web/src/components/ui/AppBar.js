@@ -4,19 +4,15 @@ import Link from "next/link";
 // web/public/logo-mark.svg and swap the <svg> below for <img src="/logo-mark.svg" alt="" />.
 export function Mark() {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" className="shrink-0">
-      <circle cx="20" cy="20" r="19" fill="none" stroke="currentColor" strokeWidth="2" />
-      <path
-        d="M13 24c0-5 3.5-8 7-8s7 3 7 8M16 14.5a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
+    <img
+      src="/logo-mark.svg"
+      alt=""
+      width="40"
+      height="40"
+      className="h-10 w-10 shrink-0 object-contain"
+    />
   );
 }
-
 export function Bell() {
   return (
     <span className="text-white/90" title="No notifications in this demo">
