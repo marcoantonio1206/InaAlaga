@@ -1,6 +1,3 @@
-
-
-Claude · MD
 # InaAlaga web app: conventions for AI-assisted frontend work
  
 This file lives at `web/CLAUDE.md`. Read it before generating any component from Figma. It overrides generic Next.js or Tailwind defaults.
@@ -67,12 +64,20 @@ Case shape (mock): `{ id, alias, barangay, station_name, handoff_state: "unassig
 Functions the BHW workspace needs (names are agreed; implement exactly these):
  
 ```
-listStationCases(stationName)                         cases for one station only, sorted by due_at
-acknowledgeCase(caseId, { worker_name })              sets handoff_state "acknowledged", owner, acknowledged_at; idempotent
-scheduleVisit(caseId, { scheduled_for, location_type, worker_name })
-recordContactOutcome(caseId, visitId, { outcome: "completed"|"attempted", started_at, completed_at })
-acknowledgeRequest(caseId, { worker_name })           request_state "recorded" -> "acknowledged"
+listStationCases(stationName)                          cases for one station only, sorted by due_at
+listWorkerSchedule(workerName)                          scheduled home follow-ups where worker_name matches; empty until one is saved
+acknowledgeCase(caseId, { worker_name })                pending -> acknowledged with owner_worker + acknowledged_at; if already owned by another worker, throw "Owner conflict" and change nothing
+scheduleVisit(caseId, { scheduled_for, worker_name })   location is home; adds visit { state: "scheduled" }
+recordVisitOutcome(caseId, visitId, { started_at, ended_at, outcome: "completed" })   the only action that completes a case
+acknowledgeRequest(caseId, { worker_name })             request_state "recorded" -> "acknowledged"
+recordContactAttempt(caseId, { method, started_at, ended_at, outcome: "not_reached"|"reached" })   appends to case.contact_attempts; never changes visit state
 ```
+ 
+Add `owner_worker`, `acknowledged_at`, `contact_attempts: []` and `events: []` to the case shape. Every successful save appends an event `{ at, type, actor }` shown in Case detail as chronological history.
+ 
+Routes: `/bhw` (Cases, station-scoped inbox), `/bhw/cases/[caseId]` (Case detail: responsibility, home follow-up, contact requests, contact attempts, read-only discharge details, event history), `/bhw/schedule` (Schedule). Forms (accept review, schedule, visit outcome, acknowledge request, contact attempt) are components under `components/bhw/` rendered inside Case detail, not separate routes. Demo workers: "Ana" at Tanza, "Bea" at Linao West; a simple worker switcher in the BHW header selects which one is acting. Desktop: top navigation. Phone: fixed bottom tabs Cases / Schedule.
+ 
+Save is the boundary: state changes only after a successful save; a failed save keeps the form entries and offers Retry; "Update needed" appears when a scheduled time has passed with no saved outcome and is cleared only by saving an outcome. Acknowledged request is not contact; reached by phone is not a completed home visit. The visual spec is `docs/bhw_flowchart.png`; the visual style is the existing hospital screens.
  
 Queue order for the BHW inbox is `due_at` ascending, ties by `recorded_at` then `id`. The ordering reason shown to the worker is "Earliest follow-up target first". Never order by, or display, any risk score.
  
@@ -95,4 +100,3 @@ Queue order for the BHW inbox is `due_at` ascending, ties by `recorded_at` then 
 4. After each screen: `npm run lint`, then open the route in `npm run dev` at 360 px and at desktop width.
 5. Commit per screen with a message naming the Figma frame.
  
-Claude finished the response
