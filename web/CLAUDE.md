@@ -14,11 +14,11 @@ This file lives at `web/CLAUDE.md`. Read it before generating any component from
  
 ```
 src/app/(mobile)/           mother views, 360 px first. /consent, /m/[token], /m/[token]/visits, /station, /more
-src/app/hospital/           facilitator desktop views (sidebar layout, 1100 px content). /patients, /patients/[caseId], /discharge
+src/app/hospital/           facilitator desktop views (top bar, 1180 px content). /patients is the only screen; ?case=ID opens the profile slide-over, ?new=1 opens the discharge dialog; /patients/[caseId] and /discharge redirect there
 src/app/bhw/                BHW workspace (TO BUILD). Mobile-first, 360 px, must also work at desktop width
 src/components/             mother components (StatusCard, VisitCard, RequestPanel, BottomNav, MotherHeader, DemoNotice ...)
 src/components/ui/          primitives: Card, Badge, Button, Icon
-src/components/hospital/    Sidebar, PageHeader, Pill, Field
+src/components/hospital/    TopBar, PageHeader, Pill, Field, Overlay (Modal + SlideOver), PatientProfile, DischargeDialog
 src/components/bhw/         (TO BUILD) BHW-specific pieces
 src/lib/data/index.js       switches mock.js | supabase.js by NEXT_PUBLIC_DATA_SOURCE; re-exports functions
 src/lib/status.js           mother status: unassigned | pending | acknowledged | scheduled | overdue | completed

@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/hospital/PageHeader";
 import Pill from "@/components/hospital/Pill";
+import { SlideOver } from "@/components/hospital/Overlay";
+import PatientProfile from "@/components/hospital/PatientProfile";
+import DischargeDialog from "@/components/hospital/DischargeDialog";
 import { listCases, getDemoNow } from "@/lib/data";
 import { formatDot, formatDotYear, initials, overdueLabel } from "@/lib/format";
 import { responsibility, visitSummary } from "@/lib/hospitalStatus";
@@ -16,8 +18,14 @@ const FILTERS = [
   { key: "unassigned", label: "Unassigned" },
 ];
 
-export default function PatientListPage() {
+// URL is the source of truth for the overlays:
+//   /hospital/patients?case=IA-0042  -> profile panel
+//   /hospital/patients?new=1         -> discharge dialog
+function PatientsScreen() {
   const router = useRouter();
+  const params = useSearchParams();
+  const selectedId = params.get("case");
+  const dialogOpen = params.get("new") === "1";
   const now = getDemoNow();
   const [cases, setCases] = useState(null);
   const [failed, setFailed] = useState(false);
@@ -37,7 +45,11 @@ export default function PatientListPage() {
     return () => {
       active = false;
     };
-  }, [attempt]);
+  }, [attempt, selectedId, dialogOpen]);
+
+  const openCase = useCallback((id) => router.push(`/hospital/patients?case=${id}`), [router]);
+  const openNew = useCallback(() => router.push("/hospital/patients?new=1"), [router]);
+  const closeAll = useCallback(() => router.push("/hospital/patients"), [router]);
 
   const counts = useMemo(() => {
     const base = { all: 0, pending: 0, acknowledged: 0, unassigned: 0 };
@@ -76,12 +88,13 @@ export default function PatientListPage() {
             className="h-12 w-full rounded-lg border border-brand-200 bg-white px-3 text-base"
           />
         </div>
-        <Link
-          href="/hospital/discharge"
+        <button
+          type="button"
+          onClick={openNew}
           className="flex h-12 items-center rounded-xl bg-brand-900 px-6 font-bold text-white"
         >
           + Record discharge
-        </Link>
+        </button>
       </div>
       <div className="mb-4 flex flex-wrap gap-2">
         {FILTERS.map((f) => (
@@ -101,7 +114,7 @@ export default function PatientListPage() {
 
       {failed ? (
         <div className="rounded-2xl border border-brand-200 bg-white p-6">
-          <p className="mb-3 font-bold">Couldn't load the patient list.</p>
+          <p className="mb-3 font-bold">Couldn&apos;t load the patient list.</p>
           <button
             type="button"
             onClick={() => {
@@ -118,14 +131,14 @@ export default function PatientListPage() {
       ) : (
         <div className="overflow-hidden rounded-2xl border border-brand-200 bg-white">
           <table className="w-full text-left">
-            <thead className="bg-brand-900 text-sm text-white">
+            <thead className="bg-brand-600 text-sm text-white">
               <tr>
-                <th className="px-4 py-3 font-bold">Mother / case</th>
-                <th className="px-4 py-3 font-bold">Responsibility</th>
-                <th className="px-4 py-3 font-bold">Visit / contact</th>
-                <th className="px-4 py-3 font-bold">Demo target</th>
-                <th className="px-4 py-3 font-bold">Demo station</th>
-                <th className="w-8 px-4 py-3">
+                <th className="px-5 py-4 font-bold">Mother / case</th>
+                <th className="px-5 py-4 font-bold">Responsibility</th>
+                <th className="px-5 py-4 font-bold">Visit / contact</th>
+                <th className="px-5 py-4 font-bold">Demo target</th>
+                <th className="px-5 py-4 font-bold">Demo station</th>
+                <th className="w-10 px-5 py-4">
                   <span className="sr-only">Open</span>
                 </th>
               </tr>
@@ -135,42 +148,49 @@ export default function PatientListPage() {
                 const r = responsibility(c);
                 const done = c.visits.some((v) => v.state === "completed");
                 const late = done ? null : overdueLabel(c.due_at, now);
+                const selected = selectedId?.toLowerCase() === c.id.toLowerCase();
                 return (
                   <tr
                     key={c.id}
-                    onClick={() => router.push(`/hospital/patients/${c.id}`)}
-                    className="cursor-pointer border-t border-brand-200 hover:bg-brand-50"
+                    onClick={() => openCase(c.id)}
+                    aria-selected={selected}
+                    className={`cursor-pointer border-t border-brand-200 ${
+                      selected ? "bg-brand-50" : "hover:bg-brand-50"
+                    }`}
                   >
-                    <td className="px-4 py-3">
+                    <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         <span
                           aria-hidden="true"
-                          className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-900 text-sm font-bold text-white"
+                          className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-900 text-sm font-bold text-white"
                         >
                           {initials(c.alias)}
                         </span>
                         <div>
-                          <Link
-                            href={`/hospital/patients/${c.id}`}
-                            onClick={(e) => e.stopPropagation()}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openCase(c.id);
+                            }}
                             className="font-bold"
                           >
                             {c.alias}
-                          </Link>
+                          </button>
                           <p className="text-sm text-muted">{c.id}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-5 py-4">
                       <Pill tone={r.tone}>{r.label}</Pill>
                     </td>
-                    <td className="px-4 py-3 text-sm">{visitSummary(c)}</td>
-                    <td className="px-4 py-3 text-sm">
+                    <td className="px-5 py-4 text-sm">{visitSummary(c)}</td>
+                    <td className="px-5 py-4 text-sm">
                       <p className={late ? "text-warn-ink" : ""}>{formatDot(c.due_at)}</p>
                       {late ? <p className="text-warn-ink">{late}</p> : null}
                     </td>
-                    <td className="px-4 py-3 text-sm">{c.station_name ?? "Not assigned"}</td>
-                    <td className="px-4 py-3 text-brand-900" aria-hidden="true">
+                    <td className="px-5 py-4 text-sm">{c.station_name ?? "Not assigned"}</td>
+                    <td className="px-5 py-4 text-brand-900" aria-hidden="true">
                       ›
                     </td>
                   </tr>
@@ -178,14 +198,14 @@ export default function PatientListPage() {
               })}
               {rows.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-6 text-center text-muted">
+                  <td colSpan={6} className="px-5 py-6 text-center text-muted">
                     No records match.
                   </td>
                 </tr>
               ) : null}
             </tbody>
           </table>
-          <p className="border-t border-brand-200 px-4 py-3 text-sm text-muted">
+          <p className="border-t border-brand-200 px-5 py-3 text-sm text-muted">
             Showing {rows.length} of {cases.length} fictional records
           </p>
         </div>
@@ -193,6 +213,30 @@ export default function PatientListPage() {
       <p className="mt-3 text-sm text-muted">
         Demo targets are administrative deadlines, not clinical urgency scores.
       </p>
+
+      <SlideOver
+        open={Boolean(selectedId)}
+        onClose={closeAll}
+        title="Patient profile"
+        subtitle="Saved handoff details and responsibility"
+      >
+        {selectedId ? <PatientProfile caseId={selectedId} /> : null}
+      </SlideOver>
+
+      <DischargeDialog
+        open={dialogOpen}
+        onClose={closeAll}
+        onSaved={() => setAttempt((n) => n + 1)}
+        onViewHandoff={openCase}
+      />
     </>
+  );
+}
+
+export default function PatientListPage() {
+  return (
+    <Suspense fallback={<p className="p-6 text-muted">Loading…</p>}>
+      <PatientsScreen />
+    </Suspense>
   );
 }
