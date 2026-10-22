@@ -20,7 +20,7 @@ function Mark() {
 export default function TopBar() {
   return (
     <header className="bg-brand-900 text-white shadow-md">
-      <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-4 px-6 py-3 lg:px-8">
+      <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-4 px-6 py-2 lg:px-8">
         <Link href="/hospital/patients" className="flex items-center gap-3">
           <Mark />
           <span className="text-2xl tracking-tight">

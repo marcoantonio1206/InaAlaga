@@ -80,19 +80,19 @@ export default function PatientProfile({ caseId }) {
   ];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       <Card>
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <span
               aria-hidden="true"
-              className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-900 text-lg font-bold text-white"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-900 text-base font-bold text-white"
             >
               {initials(c.alias)}
             </span>
             <div className="flex flex-col gap-1">
-              <p className="text-sm font-bold uppercase tracking-wide text-brand-900">Mother alias</p>
-              <p className="text-xl font-extrabold">{c.alias}</p>
+              <p className="text-xs font-bold uppercase tracking-wide text-brand-900">Mother alias</p>
+              <p className="text-xl font-extrabold leading-tight">{c.alias}</p>
               <Pill tone={r.tone}>
                 {c.handoff_state === "pending" ? "Awaiting worker acceptance" : r.label}
               </Pill>
@@ -102,15 +102,10 @@ export default function PatientProfile({ caseId }) {
         </div>
       </Card>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <h2 className="text-xl font-extrabold">Responsibility</h2>
+      <Card>
+        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
           <Item label="Assigned demo station" value={c.station_name ?? "Not assigned"} />
           <Item label="Responsible worker" value={worker} />
-          <p className="text-sm text-muted">{note}</p>
-        </Card>
-        <Card>
-          <h2 className="text-xl font-extrabold">Follow-up handoff</h2>
           <Item label="Demo follow-up target" value={formatDotYear(c.due_at)} />
           <Item
             label="Visit"
@@ -122,31 +117,33 @@ export default function PatientProfile({ caseId }) {
                   : "No visit scheduled yet"
             }
           />
-          <p className="text-sm text-muted">Administrative demo target, not medical guidance.</p>
-        </Card>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <h2 className="text-xl font-extrabold">Mother</h2>
-          <Item label="Fictional alias" value={c.alias} />
-          <Item label="Barangay" value={c.barangay} />
-        </Card>
-        <Card>
-          <h2 className="text-xl font-extrabold">Discharge details</h2>
-          <Item label="Birth" value={formatDotYear(c.birth_at)} />
-          <Item label="Discharged" value={formatDotYear(c.discharge_at)} />
-        </Card>
-        <Card>
-          <h2 className="text-xl font-extrabold">Facility</h2>
-          <Item label="Discharge facility" value="Cagayan Valley Medical Center" />
-          <p className="text-sm text-muted">Fictional record. SMS links are simulated in the demo.</p>
-        </Card>
-      </div>
+        </div>
+        <p className="text-sm text-muted">{note} Administrative demo target, not medical guidance.</p>
+      </Card>
 
       <Card>
-        <h2 className="text-xl font-extrabold">Handoff timeline</h2>
-        <ol className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-3">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-lg font-extrabold">Mother</h2>
+            <Item label="Fictional alias" value={c.alias} />
+            <Item label="Barangay" value={c.barangay} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-lg font-extrabold">Discharge details</h2>
+            <Item label="Birth" value={formatDotYear(c.birth_at)} />
+            <Item label="Discharged" value={formatDotYear(c.discharge_at)} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-lg font-extrabold">Facility</h2>
+            <Item label="Discharge facility" value="Cagayan Valley Medical Center" />
+            <p className="text-sm text-muted">Fictional record. SMS links are simulated in the demo.</p>
+          </div>
+        </div>
+      </Card>
+
+      <Card>
+        <h2 className="text-lg font-extrabold">Handoff timeline</h2>
+        <ol className="grid gap-3 md:grid-cols-4">
           {steps.map((s) => (
             <li key={s.label} className="flex flex-col gap-1">
               <Pill tone={s.tone}>{s.label}</Pill>
@@ -155,9 +152,6 @@ export default function PatientProfile({ caseId }) {
           ))}
         </ol>
       </Card>
-      <p className="text-sm text-muted">
-        Hospital staff record the handoff. Worker acceptance and scheduling happen in the worker view.
-      </p>
     </div>
   );
 }

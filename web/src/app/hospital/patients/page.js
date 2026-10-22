@@ -75,41 +75,39 @@ function PatientsScreen() {
         title="Patient list"
         subtitle={`Demo snapshot: ${formatDotYear(now)} Philippine time`}
       />
-      <div className="mb-3 flex items-end gap-3">
-        <div className="flex flex-1 flex-col gap-1.5">
-          <label htmlFor="search" className="text-sm font-bold">
-            Search
-          </label>
-          <input
-            id="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search mother alias or case ID"
-            className="h-12 w-full rounded-lg border border-brand-200 bg-white px-3 text-base"
-          />
+      <div className="mb-3 flex flex-wrap items-center gap-3">
+        <label htmlFor="search" className="sr-only">
+          Search
+        </label>
+        <input
+          id="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search mother alias or case ID"
+          className="h-10 min-w-[260px] flex-1 rounded-lg border border-brand-200 bg-white px-3 text-base"
+        />
+        <div className="flex flex-wrap gap-2">
+          {FILTERS.map((f) => (
+            <button
+              key={f.key}
+              type="button"
+              aria-pressed={filter === f.key}
+              onClick={() => setFilter(f.key)}
+              className={`rounded-full px-3 py-1 text-sm font-bold ${
+                filter === f.key ? "bg-brand-900 text-white" : "bg-brand-200 text-brand-900"
+              }`}
+            >
+              {f.label} · {counts[f.key]}
+            </button>
+          ))}
         </div>
         <button
           type="button"
           onClick={openNew}
-          className="flex h-12 items-center rounded-xl bg-brand-900 px-6 font-bold text-white"
+          className="flex h-10 items-center rounded-xl bg-brand-900 px-5 font-bold text-white"
         >
           + Record discharge
         </button>
-      </div>
-      <div className="mb-4 flex flex-wrap gap-2">
-        {FILTERS.map((f) => (
-          <button
-            key={f.key}
-            type="button"
-            aria-pressed={filter === f.key}
-            onClick={() => setFilter(f.key)}
-            className={`rounded-full px-3 py-1 text-sm font-bold ${
-              filter === f.key ? "bg-brand-900 text-white" : "bg-brand-200 text-brand-900"
-            }`}
-          >
-            {f.label} · {counts[f.key]}
-          </button>
-        ))}
       </div>
 
       {failed ? (
@@ -133,12 +131,12 @@ function PatientsScreen() {
           <table className="w-full text-left">
             <thead className="bg-brand-600 text-sm text-white">
               <tr>
-                <th className="px-5 py-4 font-bold">Mother / case</th>
-                <th className="px-5 py-4 font-bold">Responsibility</th>
-                <th className="px-5 py-4 font-bold">Visit / contact</th>
-                <th className="px-5 py-4 font-bold">Demo target</th>
-                <th className="px-5 py-4 font-bold">Demo station</th>
-                <th className="w-10 px-5 py-4">
+                <th className="px-5 py-3 font-bold">Mother / case</th>
+                <th className="px-5 py-3 font-bold">Responsibility</th>
+                <th className="px-5 py-3 font-bold">Visit / contact</th>
+                <th className="px-5 py-3 font-bold">Demo target</th>
+                <th className="px-5 py-3 font-bold">Demo station</th>
+                <th className="w-10 px-5 py-3">
                   <span className="sr-only">Open</span>
                 </th>
               </tr>
@@ -158,11 +156,11 @@ function PatientsScreen() {
                       selected ? "bg-brand-50" : "hover:bg-brand-50"
                     }`}
                   >
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-2">
                       <div className="flex items-center gap-3">
                         <span
                           aria-hidden="true"
-                          className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-900 text-sm font-bold text-white"
+                          className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-900 text-xs font-bold text-white"
                         >
                           {initials(c.alias)}
                         </span>
@@ -181,16 +179,16 @@ function PatientsScreen() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-2">
                       <Pill tone={r.tone}>{r.label}</Pill>
                     </td>
-                    <td className="px-5 py-4 text-sm">{visitSummary(c)}</td>
-                    <td className="px-5 py-4 text-sm">
+                    <td className="px-5 py-2 text-sm">{visitSummary(c)}</td>
+                    <td className="px-5 py-2 text-sm">
                       <p className={late ? "text-warn-ink" : ""}>{formatDot(c.due_at)}</p>
                       {late ? <p className="text-warn-ink">{late}</p> : null}
                     </td>
-                    <td className="px-5 py-4 text-sm">{c.station_name ?? "Not assigned"}</td>
-                    <td className="px-5 py-4 text-brand-900" aria-hidden="true">
+                    <td className="px-5 py-2 text-sm">{c.station_name ?? "Not assigned"}</td>
+                    <td className="px-5 py-2 text-brand-900" aria-hidden="true">
                       ›
                     </td>
                   </tr>
@@ -205,14 +203,12 @@ function PatientsScreen() {
               ) : null}
             </tbody>
           </table>
-          <p className="border-t border-brand-200 px-5 py-3 text-sm text-muted">
-            Showing {rows.length} of {cases.length} fictional records
+          <p className="border-t border-brand-200 px-5 py-2 text-sm text-muted">
+            Showing {rows.length} of {cases.length} fictional records · Demo targets are administrative
+            deadlines, not clinical urgency scores.
           </p>
         </div>
       )}
-      <p className="mt-3 text-sm text-muted">
-        Demo targets are administrative deadlines, not clinical urgency scores.
-      </p>
 
       <SlideOver
         open={Boolean(selectedId)}

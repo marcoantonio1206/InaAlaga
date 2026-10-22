@@ -203,25 +203,40 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
     );
   }
 
+  const editFooter = (
+    <div className="flex flex-wrap items-center justify-between gap-3">
+      <p className="text-sm text-muted">* Required fields</p>
+      <div className="flex gap-3">
+        <button type="button" onClick={close} className={outline}>
+          Cancel
+        </button>
+        <button type="button" onClick={review} disabled={!complete} className={primary}>
+          Review handoff
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <Modal
       open={open}
       onClose={close}
       title="Record discharge"
       subtitle="Fictional information only · All dates and times use Philippine time"
+      footer={editFooter}
     >
       {errorList.length > 0 ? (
-        <div role="alert" className="mb-4 rounded-2xl bg-danger-bg p-4 text-danger-ink">
+        <div role="alert" className="mb-3 rounded-2xl bg-danger-bg p-3 text-sm text-danger-ink">
           <p className="font-bold">Check the highlighted fields</p>
           {errorList.map((m) => (
             <p key={m}>{m}</p>
           ))}
         </div>
       ) : null}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         <Card>
-          <h2 className="text-xl font-extrabold">Mother</h2>
-          <div className="grid gap-4 md:grid-cols-2">
+          <h2 className="text-lg font-extrabold">Mother and birth</h2>
+          <div className="grid gap-3 md:grid-cols-2">
             <Field label="Mother alias *" htmlFor="alias" error={errors.alias}>
               <input
                 id="alias"
@@ -247,23 +262,15 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
                 <option value={OTHER_BARANGAY}>{OTHER_BARANGAY}</option>
               </select>
             </Field>
-          </div>
-        </Card>
-        <Card>
-          <h2 className="text-xl font-extrabold">Birth</h2>
-          <Field label="Date and time of birth *" htmlFor="birth" error={errors.birth}>
-            <input
-              id="birth"
-              type="datetime-local"
-              value={values.birth}
-              onChange={(e) => update("birth", e.target.value)}
-              className={controlClass(errors.birth)}
-            />
-          </Field>
-        </Card>
-        <Card>
-          <h2 className="text-xl font-extrabold">Discharge details</h2>
-          <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Date and time of birth *" htmlFor="birth" error={errors.birth}>
+              <input
+                id="birth"
+                type="datetime-local"
+                value={values.birth}
+                onChange={(e) => update("birth", e.target.value)}
+                className={controlClass(errors.birth)}
+              />
+            </Field>
             <Field label="Discharge date and time *" htmlFor="discharge" error={errors.discharge}>
               <input
                 id="discharge"
@@ -273,7 +280,26 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
                 className={controlClass(errors.discharge)}
               />
             </Field>
-            <Field label="Facility · provided by demo workspace" htmlFor="facility">
+          </div>
+        </Card>
+        <Card>
+          <h2 className="text-lg font-extrabold">Follow-up handoff</h2>
+          <div className="grid gap-3 md:grid-cols-2">
+            <Field
+              label="Demo follow-up target *"
+              htmlFor="due"
+              hint="Administrative demo target, not medical guidance."
+              error={errors.due}
+            >
+              <input
+                id="due"
+                type="datetime-local"
+                value={values.due}
+                onChange={(e) => update("due", e.target.value)}
+                className={controlClass(errors.due)}
+              />
+            </Field>
+            <Field label="Facility · provided by demo workspace" htmlFor="facility" hint="Read only.">
               <input
                 id="facility"
                 value="Cagayan Valley Medical Center"
@@ -283,49 +309,21 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
             </Field>
           </div>
         </Card>
-        <Card>
-          <h2 className="text-xl font-extrabold">Follow-up target</h2>
-          <Field
-            label="Demo follow-up target *"
-            htmlFor="due"
-            hint="Administrative demo target, not medical guidance."
-            error={errors.due}
-          >
-            <input
-              id="due"
-              type="datetime-local"
-              value={values.due}
-              onChange={(e) => update("due", e.target.value)}
-              className={controlClass(errors.due)}
-            />
-          </Field>
-        </Card>
         <Card tone="tint">
           {!values.barangay ? (
-            <p className="text-muted">Choose a barangay to see the suggested demo station.</p>
+            <p className="text-sm text-muted">Choose a barangay to see the suggested demo station.</p>
           ) : station ? (
             <>
               <h2 className="font-bold text-brand-900">Suggested demo station: {station}</h2>
-              <p className="text-muted">Based on the demo barangay lookup. A worker has not accepted responsibility yet.</p>
+              <p className="text-sm text-muted">Based on the demo barangay lookup. A worker has not accepted responsibility yet.</p>
             </>
           ) : (
             <>
               <h2 className="font-bold text-warn-ink">No matching demo station</h2>
-              <p className="text-muted">Saving will record this case as unassigned for coordinator review.</p>
+              <p className="text-sm text-muted">Saving will record this case as unassigned for coordinator review.</p>
             </>
           )}
         </Card>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-muted">* Required fields</p>
-          <div className="flex gap-3">
-            <button type="button" onClick={close} className={outline}>
-              Cancel
-            </button>
-            <button type="button" onClick={review} disabled={!complete} className={primary}>
-              Review handoff
-            </button>
-          </div>
-        </div>
       </div>
     </Modal>
   );
