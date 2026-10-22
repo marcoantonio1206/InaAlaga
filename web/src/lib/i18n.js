@@ -74,6 +74,9 @@ const strings = {
     unassignedTitle: "Na-save ang iyong detalye",
     unassignedBody: "Sinusuri ng coordinator kung aling demonstration station ang mag-fo-follow up. Wala pang worker na tumanggap.",
     stationNone: "Wala pang itinalagang demonstration station.",
+    stationMapTitle: "Mapa ng itinalagang istasyon",
+    stationOpenMap: "Buksan sa mapa",
+    stationEmergency: "Sa emergency, tumawag sa 911 o pumunta sa pinakamalapit na ospital. Hindi emergency service ang app na ito.",
   },
   en: {
     imMother: "I am the mother",
@@ -146,6 +149,9 @@ const strings = {
     unassignedTitle: "Your details were saved",
     unassignedBody: "A coordinator is reviewing which demonstration station will follow up. No worker has accepted it yet.",
     stationNone: "No demonstration station assigned yet.",
+    stationMapTitle: "Map of assigned station",
+    stationOpenMap: "Open in map",
+    stationEmergency: "In an emergency, call 911 or go to the nearest hospital. This app is not an emergency service.",
   },
 };
 
