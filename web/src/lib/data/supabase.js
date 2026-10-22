@@ -25,3 +25,35 @@ export async function getCaseById() {
 export async function createDischarge() {
   return notReady();
 }
+
+export async function listStationCases() {
+  return notReady();
+}
+
+export async function listWorkerSchedule() {
+  return notReady();
+}
+
+export async function acknowledgeCase() {
+  return notReady();
+}
+
+export async function scheduleVisit() {
+  return notReady();
+}
+
+export async function recordVisitOutcome() {
+  return notReady();
+}
+
+export async function acknowledgeRequest() {
+  return notReady();
+}
+
+export async function recordContactAttempt() {
+  return notReady();
+}
+
+export async function resetDemoData() {
+  return notReady();
+}
