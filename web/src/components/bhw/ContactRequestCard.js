@@ -39,7 +39,6 @@ export default function ContactRequestCard({ c, worker, onSaved }) {
 
   return (
     <Card>
-      <h2 className="text-xl font-extrabold">Acknowledge request · Review</h2>
       <Pill tone="warn">Mother recorded “Please contact me”</Pill>
       <p className="text-sm">
         Recorded {c.request_recorded_at ? formatDot(c.request_recorded_at) : "in this demo"}. The request

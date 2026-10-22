@@ -62,7 +62,7 @@ export default function BhwSchedulePage() {
             return (
               <li key={`${c.id}-${visit.id}`}>
                 <Link
-                  href={`/bhw/cases/${c.id}`}
+                  href={`/bhw?case=${c.id}`}
                   className="flex items-center gap-3 rounded-2xl border border-brand-200 bg-white p-4 hover:bg-brand-50"
                 >
                   <Icon name="calendar" size={22} className="shrink-0 text-brand-900" />

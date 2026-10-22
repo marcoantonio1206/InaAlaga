@@ -54,7 +54,6 @@ export default function AcceptCard({ c, worker, onSaved, onRefresh }) {
 
   return (
     <Card>
-      <h2 className="text-xl font-extrabold">Accept responsibility · Review</h2>
       <Pill tone="lilac">Awaiting worker acceptance</Pill>
       <p className="text-sm">
         Case <span className="font-bold">{c.id}</span> ({c.alias}, {c.barangay}) assigned to{" "}

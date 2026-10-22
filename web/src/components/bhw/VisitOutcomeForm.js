@@ -45,7 +45,6 @@ export default function VisitOutcomeForm({ c, visit, updateNeeded, onSaved }) {
   return (
     <Card>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl font-extrabold">Home follow-up</h2>
         <Pill tone={updateNeeded ? "warn" : "lilac"}>
           {updateNeeded ? "Update needed" : "Scheduled · visit remains open"}
         </Pill>
@@ -62,7 +61,6 @@ export default function VisitOutcomeForm({ c, visit, updateNeeded, onSaved }) {
           The scheduled visit remains open until its own outcome is saved.
         </p>
       )}
-      <h3 className="mt-2 font-extrabold">Record home-visit outcome</h3>
       <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
         <div className="grid gap-3 md:grid-cols-2">
           <Field label="Visit started" htmlFor="out-started" error={errors.started}>

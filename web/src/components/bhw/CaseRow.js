@@ -4,7 +4,7 @@ import Pill from "@/components/hospital/Pill";
 import { formatDot, initials, overdueLabel } from "@/lib/format";
 import { STATE_LABEL, bhwState, visitLine, requestLine } from "@/lib/bhwStatus";
 
-export default function CaseRow({ c, now }) {
+export default function CaseRow({ c, now, href }) {
   const state = bhwState(c, now);
   const s = STATE_LABEL[state];
   const late = state === "completed" ? null : overdueLabel(c.due_at, now);
@@ -13,7 +13,7 @@ export default function CaseRow({ c, now }) {
   return (
     <li>
       <Link
-        href={`/bhw/cases/${c.id}`}
+        href={href ?? `/bhw?case=${c.id}`}
         className="flex items-start gap-3 rounded-2xl border border-brand-200 bg-white p-4 hover:bg-brand-50"
       >
         <span

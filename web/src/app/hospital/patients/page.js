@@ -4,7 +4,7 @@ import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/hospital/PageHeader";
 import Pill from "@/components/hospital/Pill";
-import { SlideOver } from "@/components/hospital/Overlay";
+import { SlideOver } from "@/components/ui/Overlay";
 import PatientProfile from "@/components/hospital/PatientProfile";
 import DischargeDialog from "@/components/hospital/DischargeDialog";
 import { listCases, getDemoNow } from "@/lib/data";

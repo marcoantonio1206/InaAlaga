@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Modal } from "@/components/hospital/Overlay";
+import { Modal } from "@/components/ui/Overlay";
 import Pill from "@/components/hospital/Pill";
 import Field, { controlClass } from "@/components/hospital/Field";
 import Card from "@/components/ui/Card";

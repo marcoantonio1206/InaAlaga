@@ -24,7 +24,6 @@ export default function ScheduleForm({ c, worker, onSaved }) {
 
   return (
     <Card>
-      <h2 className="text-xl font-extrabold">Schedule home follow-up</h2>
       <p className="text-sm text-muted">
         Enter date and time in Asia/Manila. The current worker is recorded as visitor. A saved schedule
         appears for the mother and on your Schedule; it does not mean contact happened.
