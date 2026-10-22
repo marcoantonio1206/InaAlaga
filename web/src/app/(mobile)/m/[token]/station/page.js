@@ -11,7 +11,7 @@ export default function StationPage() {
     <main>
       <MotherHeader alias={data.alias} />
       <div className="flex flex-col gap-3 p-4">
-        <StationCard stationName={data.station_name} />
+        <StationCard stationName={data.station_name} showMap />
       </div>
       <DemoNotice />
     </main>
