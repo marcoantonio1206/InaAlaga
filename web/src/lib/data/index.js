@@ -20,3 +20,5 @@ export const recordVisitOutcome = source.recordVisitOutcome;
 export const acknowledgeRequest = source.acknowledgeRequest;
 export const recordContactAttempt = source.recordContactAttempt;
 export const resetDemoData = source.resetDemoData;
+
+export { getScenarioSummary } from "./planning";
