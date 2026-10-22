@@ -1,0 +1,11 @@
+origin_psgc,origin_name,station_id,assigned_station,distance_km,one_way_minutes,round_trip_travel_minutes,method,source_date,speed_kmh_assumed,minimum_one_way_minutes,clinical_or_measured_time
+0201529047,Linao West,demo_linao_west,True,0.024628,5,10,Haversine straight-line distance; assumed 15 km/h; 5-minute minimum,Extracted 2026-10-18; exact OSM cutoff unverified,15,5,False
+0201529047,Linao West,demo_tanza,False,3.253667,13.014668,26.029337,Haversine straight-line distance; assumed 15 km/h; 5-minute minimum,Extracted 2026-10-18; exact OSM cutoff unverified,15,5,False
+0201529002,Atulayan Norte,demo_linao_west,True,1.192974,5,10,Haversine straight-line distance; assumed 15 km/h; 5-minute minimum,Extracted 2026-10-18; exact OSM cutoff unverified,15,5,False
+0201529002,Atulayan Norte,demo_tanza,False,2.379281,9.517125,19.03425,Haversine straight-line distance; assumed 15 km/h; 5-minute minimum,Extracted 2026-10-18; exact OSM cutoff unverified,15,5,False
+0201529049,Pallua Sur,demo_linao_west,True,3.500915,14.003662,28.007324,Haversine straight-line distance; assumed 15 km/h; 5-minute minimum,Extracted 2026-10-18; exact OSM cutoff unverified,15,5,False
+0201529049,Pallua Sur,demo_tanza,False,3.671378,14.685511,29.371021,Haversine straight-line distance; assumed 15 km/h; 5-minute minimum,Extracted 2026-10-18; exact OSM cutoff unverified,15,5,False
+0201529019,Caritan Norte,demo_linao_west,False,2.270944,9.083776,18.167552,Haversine straight-line distance; assumed 15 km/h; 5-minute minimum,Extracted 2026-10-18; exact OSM cutoff unverified,15,5,False
+0201529019,Caritan Norte,demo_tanza,True,1.645381,6.581525,13.163049,Haversine straight-line distance; assumed 15 km/h; 5-minute minimum,Extracted 2026-10-18; exact OSM cutoff unverified,15,5,False
+0201529045,Libag Sur,demo_linao_west,False,6.806551,27.226204,54.452408,Haversine straight-line distance; assumed 15 km/h; 5-minute minimum,Extracted 2026-10-18; exact OSM cutoff unverified,15,5,False
+0201529045,Libag Sur,demo_tanza,True,3.533219,14.132876,28.265752,Haversine straight-line distance; assumed 15 km/h; 5-minute minimum,Extracted 2026-10-18; exact OSM cutoff unverified,15,5,False
