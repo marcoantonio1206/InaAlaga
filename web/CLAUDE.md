@@ -17,15 +17,15 @@ src/app/(mobile)/           mother views, 360 px first. /consent, /inbox/[token]
                             [token] is an opaque, expiring link token, never a case ID (PRD M01). Unknown and expired tokens show InvalidLink with no case details
 src/app/hospital/           facilitator desktop views (top bar, 1180 px content). /patients is the only screen; ?case=ID opens the profile slide-over, ?new=1 opens the discharge dialog; /patients/[caseId] and /discharge redirect there
 src/app/bhw/                BHW workspace. /bhw is the Cases list (table on desktop, cards on phones); ?case=ID opens the case-detail slide-over; /bhw/schedule; /bhw/cases/[caseId] redirects to ?case=
-src/app/coordinator/        coordinator planning view (desktop, 900 px content). ?scenario=ID selects a precomputed v1 simulation scenario; an unknown ID shows "unavailable"
-src/components/coordinator/ RateChart (on-time rate by policy), DifferenceChart (paired differences around zero)
-src/data/planning_v1.json   compact slice of simulation/results/v1/results.json; regenerate with `python3 -m simulation.export_planning`, never edit by hand
-src/lib/planning.js         planning labels and formatting; null values display as "Unavailable", never 0
+src/app/coordinator/        coordinator planning view (desktop, 900 px content). Five selects pick one factorial setting; no match shows "No matching scenario"
+public/scenario_summary.csv copy of simulation/results/factorial_v1/scenario_summary.csv; re-copy after rerunning the factorial study, never edit by hand
+src/lib/csv.js              minimal CSV parser (no library)
+src/lib/planning.js         selector options, policy labels, matching and formatting; null values display as "Unavailable", never 0
 src/components/             mother components (StatusCard, VisitCard, RequestPanel, BottomNav, MotherHeader, DemoNotice, AccessShell + SkeletonBlocks for pre-case screens, InvalidLink ...)
 src/components/ui/          primitives: Card, Badge, Button, Icon, AppBar (shared purple header + RoleChip), Overlay (Modal + SlideOver)
 src/components/hospital/    TopBar (wraps AppBar), PageHeader, Pill, Field, PatientProfile, DischargeDialog
 src/components/bhw/         BhwShell, CaseRow, CaseDetail (panel body; every action opens a Modal), AcceptCard, ScheduleForm, VisitOutcomeForm, ContactRequestCard, ContactAttemptForm, EventHistory, LoadState, useSave
-src/lib/data/index.js       switches mock.js | supabase.js by NEXT_PUBLIC_DATA_SOURCE; re-exports functions. getPlanningResults (lib/data/planning.js) is outside the switch: simulation results never come from demo records (PRD D01)
+src/lib/data/index.js       switches mock.js | supabase.js by NEXT_PUBLIC_DATA_SOURCE; re-exports functions. getScenarioSummary (lib/data/planning.js) is outside the switch: simulation results never come from demo records (PRD D01)
 src/lib/status.js           mother status: unassigned | pending | acknowledged | scheduled | overdue | completed
 src/lib/hospitalStatus.js   responsibility() and visitSummary() labels for hospital tables
 src/lib/i18n.js             LangProvider + useLang(); strings.fil / strings.en (mother views only)

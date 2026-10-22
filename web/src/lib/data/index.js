@@ -21,4 +21,4 @@ export const acknowledgeRequest = source.acknowledgeRequest;
 export const recordContactAttempt = source.recordContactAttempt;
 export const resetDemoData = source.resetDemoData;
 
-export { getPlanningResults } from "./planning";
+export { getScenarioSummary } from "./planning";
