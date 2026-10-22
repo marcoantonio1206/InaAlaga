@@ -1,48 +1,88 @@
-# InaAlaga — team handoff
+# InaAlaga
 
-Project state: October 18, 2026. Start with [team context](docs/TEAM_HANDOFF.md), then [PRD](docs/InaAlaga_PRD.md), then [location findings](data/locations/tuguegarao_review/README.md).
+**Smart postnatal follow-up: every discharged mother gets a named owner and a deadline.**
+Team BAIthropic · University of the Philippines Los Baños · Philippine Junior Data Science Challenge 2026
 
-The synthetic generator and scheduling simulation are implemented and tested; the application remains unbuilt. This is a curated handoff, not the complete local master folder or chat export.
+Live demo: **https://inaalaga.vercel.app** · All data in the demo is fictional.
 
-## Published statistics verification
+| Role | Link | What it does |
+| --- | --- | --- |
+| Hospital staff | [/hospital/patients](https://inaalaga.vercel.app/hospital/patients) | Records a discharge and routes the mother to her home barangay station |
+| Barangay health worker | [/bhw](https://inaalaga.vercel.app/bhw) | Accepts responsibility, schedules the home visit, records the outcome; switch between Ana (Tanza) and Bea (Linao West) |
+| Mother | [/m/mQ7vX2rLp9TzK4dWb8NcYs](https://inaalaga.vercel.app/m/mQ7vX2rLp9TzK4dWb8NcYs) | Private link (simulated SMS) showing her follow-up status, with a "Please contact me" button; Filipino and English |
+| City coordinator | [/coordinator](https://inaalaga.vercel.app/coordinator) | Simulation results: which scheduling policy gets more mothers contacted on time with the same workers |
 
-Read the [PSA NDHS verification report](data/context/psa_ndhs_verification/README.md) before citing maternal-care figures. It records exact table cells, population definitions, source links and remaining provenance limits. The [checked indicators](data/context/psa_ndhs_verification/checked_indicators.csv) are published aggregates, not respondent records.
+## The problem
 
-## Full-factorial uncertainty study
+In the Philippines, 93.7% of births now happen in a health facility, but the share of mothers checked within two days barely moved between 2022 and 2025 (75.4% to 76.6%) (PSA, 2026). In Cagayan Valley, facility delivery is 94.7% and timely postnatal checks fell from 79.9% to 61.2%. Using the 2022 NDHS microdata we found that the published indicator mostly measures checks done *before* discharge: **44% of facility-born mothers nationally had no post-discharge check at all within two months**, and only about one in five had one within 48 hours of discharge. Our hypothesis is a handoff failure: once a mother leaves the facility, nobody owns her follow-up.
 
-The [expanded report and heatmaps](simulation/reports/factorial_v1/FINDINGS.md) cover 162 combinations and 64,800 matched policy runs. [Full scenario table](simulation/results/factorial_v1/scenario_summary.csv). This explores assumptions and interactions; local operating conditions are still unverified. Original results remain intact. Reproduce with `python3 -m simulation.factorial --replications 100`.
+## What we built
 
-## Simulation implementation and results
+1. **A handoff workflow** (this app). Discharge is recorded once at the facility, routed to the mother's home barangay station, accepted by a named worker, scheduled, and closed only when a visit outcome is saved. Acceptance, scheduling, contact attempts and visit completion are separate saved events, so nothing is assumed done.
+2. **A capacity simulation** (`simulation/`). A discrete-event model of the first home follow-up: synthetic discharges across five Tuguegarao barangays, two stations, worker shifts, travel and service time. Four policies are compared on identical cases: A reference workflow, B faster handoff, C faster handoff with earliest-deadline-first ordering, D reference delay with deadline ordering. 162 configurations × 100 paired replications. Headline: a fast handoff with a named owner is what raises on-time contact; deadline ordering adds a little in most settings and nothing when workers are saturated.
+3. **A tested negative result.** The proposal planned a logistic-regression risk score from NDHS microdata. We fit it (survey-weighted, PSU-grouped cross-validation, n = 2,542 facility births): AUC 0.65 overall, 0.54 once region is removed, 0.40 within Cagayan Valley. Survey fields cannot predict who gets missed, so the product prioritises by follow-up deadline instead of scoring mothers.
 
-Start with [simulation instructions](simulation/README.md), [all scenario findings](simulation/FINDINGS.md), and [versioned dashboard results](simulation/results/v1/results.json). The first full grid contains 30 configurations × 100 matched replications × four policies (12,000 policy runs), with ties and reversals retained. These are hypothetical scenario outputs, not validated local outcomes. From the repository root run:
+Dropped from the original proposal and listed as future work: SMS danger-sign triage (no clinician-labelled messages), PhilHealth and 4Ps predictors (not in the pregnancy recode), live SMS and server-side access control.
+
+## Run it locally
 
 ```sh
-python3 -m unittest discover -s tests -v
-python3 -m simulation.run --suite full --replications 100
+cd web
+npm install
+npm run dev        # http://localhost:3000
+npm run lint
+npm test           # mother-access and planning-view unit tests
 ```
 
-Python standard library only. The seed/config/source hashes and output checksums are bundled. The historical location reports describe the state at their review time; use the handoff and simulation documentation for current implementation status.
+`web/.env.example` → `web/.env.local` with `NEXT_PUBLIC_DATA_SOURCE=mock`. Mock mode needs no accounts; saved demo actions persist in the browser (reset from the BHW page). The Supabase data source is stubbed and not required.
 
-## Current pilot inputs
+Deployment: Vercel, root directory `web`, framework Next.js, the env variable above. Project owner runs `deploy.ps1` after merging to `main`.
 
-The [pilot v2 specification](data/geography/pilot_v2/README.md) is the current five-barangay selection, station lookup and approximate travel matrix. It supersedes the earlier grouping in the historical location review. Reproduce it with `python3 data/geography/build_pilot_v2.py`. These are geographic/model inputs, not policy results or verified catchments.
+## Reproduce the analysis
 
-## Included
+```sh
+python3 -m unittest discover -s tests -v                 # 21 simulation checks
+python3 -m simulation.run --suite full --replications 100  # 30-configuration grid → simulation/results/v1/
+python3 -m simulation.factorial --replications 100         # 162-configuration study → simulation/results/factorial_v1/
+python3 data/geography/build_pilot_v2.py                   # pilot barangays, stations, travel matrix
+```
 
-Team-authored planning documents, a small OSM geographic extract and extraction script, and narrative location findings/source links. The location report describes additional local working tables that are intentionally not included here.
+Python 3.10+, standard library only. Seeds, config hashes and output checksums are bundled. The coordinator page reads `web/public/scenario_summary.csv`, a copy of `simulation/results/factorial_v1/scenario_summary.csv`.
 
-## Intentionally excluded
+The NDHS microdata (DHS Program, PHGR82FL) is restricted and not included; register at dhsprogram.com to obtain it. Published aggregates used for context are documented in `data/context/psa_ndhs_verification/`.
 
-DHS microdata, all restricted audit outputs, raw conversation logs, secrets, raw NHFR exports and registry-derived joined tables whose reuse terms are unresolved, the national GeoPackage, and WHO extracts pending separate license packaging. A private repository does not waive third-party terms. Facility identities in narrative findings are context, not a licensed registry dump or referral directory. The full location-matching script depends on excluded registry tables and is also withheld.
+## Repository map
 
-## Geography and reproduction
+Older handoff notes, including what is intentionally excluded from the repo and how to re-extract the OSM geography: `docs/HANDOFF_NOTES.md`.
+```
+web/            Next.js 16 app (JavaScript, Tailwind v4). Roles under src/app: hospital, bhw, (mobile) mother, coordinator
+simulation/     Discrete-event simulation, experiment runners, results and findings
+tests/          Simulation unit tests
+data/           Pilot geography (OSM, PSA), demo seeds, published-statistics verification
+docs/           PRD, team handoff, architecture notes, dated progress reports with screenshots
+```
 
-OSM files are already extracted; use the small GeoJSON files for the pilot. Re-extraction requires a separately obtained Philippines Geofabrik GeoPackage and `python3 data/geography/extract_tuguegarao.py /path/to/philippines.gpkg`. The national file is not bundled. Source snapshot cutoff is not independently verified.
+Start with `docs/TEAM_HANDOFF.md`, then `docs/InaAlaga_PRD.md`.
 
-## Attribution and licensing
+## Tech stack
 
-Geographic database material: © OpenStreetMap contributors, distributed by Geofabrik GmbH; Open Database License 1.0 (ODbL). Preserve attribution and applicable database share-alike obligations. See https://www.openstreetmap.org/copyright and data/geography/tuguegarao_osm/sources.txt. Source-specific terms apply separately from team-authored documents; no blanket software license is assigned by this handoff. Sources cited in documents are not automatically included datasets.
+Next.js 16 (App Router), React 19, Tailwind CSS 4, Supabase client (stubbed); Python 3 for simulation and data pipelines; Vercel hosting.
 
-## Continuing with Claude
+## Limitations
 
-Select this README, docs/TEAM_HANDOFF.md, docs/InaAlaga_PRD.md and the location README first. Add relevant geographic files as needed. Keep measured facts, decisions, assumptions, and unresolved questions separate. Agree on pilot station allocation before policy experiments.
+- Fictional prototype. No real patients, no live SMS, no institutional partner. Access checks run in the browser only until server routes exist.
+- Simulation inputs (demand, staffing, delays, travel) are stated assumptions, not Tuguegarao measurements; replication ranges describe scenario randomness, not uncertainty about the real city.
+- NDHS is regionally representative; Cagayan Valley estimates rest on about 100 women. The handoff-failure explanation is a hypothesis.
+- Station assignments use straight-line distance to demonstration stations, not official catchments.
+
+## Data sources and attribution
+
+- Philippine Statistics Authority and ICF (2023). *2022 Philippine National Demographic and Health Survey: Final report.* Published tables: CC BY 4.0. Microdata: DHS Program terms, not redistributed.
+- Philippine Statistics Authority (2026). *2025 NDHS key indicators: Statistical tables.*
+- OpenStreetMap contributors via Geofabrik, © OpenStreetMap contributors, ODbL 1.0 (`data/geography/`).
+- Philippine Statistics Authority. PSGC and 2024 POPCEN barangay population.
+- World Health Organization (2022). *Recommendations on maternal and newborn care for a positive postnatal experience.*
+
+## Team
+
+BAIthropic, UPLB: Iesou Aguila, Quin Xyrah Eunice Almeyda, Henry Gabriel Buban, Mark Daniel Cascara, Marco Antonio Tumaob.
