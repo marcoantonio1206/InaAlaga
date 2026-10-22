@@ -19,7 +19,7 @@ function mapUrls({ lat, lon }) {
   };
 }
 
-export default function StationCard({ stationName }) {
+export default function StationCard({ stationName, showMap = false }) {
   const { t } = useLang();
   const coords = stationName ? LOCATIONS[stationName] : null;
   const urls = coords ? mapUrls(coords) : null;
@@ -33,7 +33,7 @@ export default function StationCard({ stationName }) {
       {stationName ? (
         <>
           <h2 className="text-xl font-extrabold">{stationName}</h2>
-          {urls ? (
+          {showMap && urls ? (
             <>
               <iframe
                 src={urls.embed}
