@@ -8,24 +8,30 @@ import { useEffect, useRef } from "react";
 // so Tailwind tokens and the layout font apply unchanged.
 function useOverlay(open, onClose) {
   const panelRef = useRef(null);
+  // Keep the latest handler in a ref so the effect below depends only on
+  // `open`. Re-running it on every render would steal focus while typing.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!open) return undefined;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (e) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
     document.addEventListener("keydown", onKey);
     const first = panelRef.current?.querySelector(
-      "input, select, textarea, button, [href], [tabindex]:not([tabindex='-1'])"
+      "input:not([readonly]), select, textarea, button:not([aria-label='Close']), [href]"
     );
     first?.focus();
     return () => {
       document.body.style.overflow = prev;
       document.removeEventListener("keydown", onKey);
     };
-  }, [open, onClose]);
+  }, [open]);
 
   return panelRef;
 }
