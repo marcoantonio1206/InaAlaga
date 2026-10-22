@@ -201,7 +201,6 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
               {saving ? "Saving…" : "Save discharge"}
             </button>
           </div>
-          <p className="text-sm text-muted">Example review state after an explicit target has been entered.</p>
         </div>
       </Modal>
     );
