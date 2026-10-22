@@ -13,10 +13,11 @@ This file lives at `web/CLAUDE.md`. Read it before generating any component from
 ## Folder map
  
 ```
-src/app/(mobile)/           mother views, 360 px first. /consent, /m/[token], /m/[token]/visits, /station, /more
+src/app/(mobile)/           mother views, 360 px first. /consent, /inbox/[token] (simulated SMS), /m/[token], /m/[token]/visits, /station, /more
+                            [token] is an opaque, expiring link token, never a case ID (PRD M01). Unknown and expired tokens show InvalidLink with no case details
 src/app/hospital/           facilitator desktop views (top bar, 1180 px content). /patients is the only screen; ?case=ID opens the profile slide-over, ?new=1 opens the discharge dialog; /patients/[caseId] and /discharge redirect there
 src/app/bhw/                BHW workspace. /bhw is the Cases list (table on desktop, cards on phones); ?case=ID opens the case-detail slide-over; /bhw/schedule; /bhw/cases/[caseId] redirects to ?case=
-src/components/             mother components (StatusCard, VisitCard, RequestPanel, BottomNav, MotherHeader, DemoNotice ...)
+src/components/             mother components (StatusCard, VisitCard, RequestPanel, BottomNav, MotherHeader, DemoNotice, AccessShell + SkeletonBlocks for pre-case screens, InvalidLink ...)
 src/components/ui/          primitives: Card, Badge, Button, Icon, AppBar (shared purple header + RoleChip), Overlay (Modal + SlideOver)
 src/components/hospital/    TopBar (wraps AppBar), PageHeader, Pill, Field, PatientProfile, DischargeDialog
 src/components/bhw/         BhwShell, CaseRow, CaseDetail (panel body; every action opens a Modal), AcceptCard, ScheduleForm, VisitOutcomeForm, ContactRequestCard, ContactAttemptForm, EventHistory, LoadState, useSave
@@ -73,6 +74,8 @@ acknowledgeRequest(caseId, { worker_name })             request_state "recorded"
 recordContactAttempt(caseId, { method, started_at, ended_at, outcome: "not_reached"|"reached" })   appends to case.contact_attempts; never changes visit state
 ```
  
+Mother access (no login or registration; PRD §1, §8 and the Figma implementation notes): saving a discharge issues the mother's private link. `getCaseByToken(token)` resolves only live tokens; `getSimulatedMessage(token)` returns `{ alias, expires_at }` for the simulated SMS (also for expired links, which then fail on open); `getMotherLink(caseId)` returns the live `{ token, expires_at }` for hospital views; `createDischarge` returns `{ case, duplicate, link }`; `getDemoMotherToken()` is Maria's seeded link used by `/consent`. Mock links last 14 days from the demo clock. Tokens live in the browser in mock mode, so this demonstrates the flow but is not access control until server routes exist.
+
 Add `owner_worker`, `acknowledged_at`, `contact_attempts: []` and `events: []` to the case shape. Every successful save appends an event `{ at, type, actor }` shown in Case detail as chronological history.
  
 Routes: `/bhw` (Cases, station-scoped inbox), `/bhw/cases/[caseId]` (Case detail: responsibility, home follow-up, contact requests, contact attempts, read-only discharge details, event history), `/bhw/schedule` (Schedule). Forms (accept review, schedule, visit outcome, acknowledge request, contact attempt) are components under `components/bhw/` rendered inside Case detail, not separate routes. Demo workers: "Ana" at Tanza, "Bea" at Linao West; a simple worker switcher in the BHW header selects which one is acting. Desktop: top navigation. Phone: fixed bottom tabs Cases / Schedule.

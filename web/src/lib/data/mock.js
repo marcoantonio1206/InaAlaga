@@ -123,34 +123,63 @@ const store = {
   }),
 };
 
+// Mother access links (PRD M01): an opaque token maps to one case key and
+// expires. A case ID is never a valid link. Seeded tokens are fixed so demo
+// URLs stay stable; links issued by createDischarge are random.
+const DEMO_MOTHER_TOKEN = "mQ7vX2rLp9TzK4dWb8NcYs";
+const LINK_DAYS = 14;
+const SEED_EXPIRY = "2026-11-02T12:00:00+08:00";
+
+const links = {
+  [DEMO_MOTHER_TOKEN]: { case_key: "ia-0042", expires_at: SEED_EXPIRY },
+  Hc3Rt8VnQ1xZ6mBk0LwPa5: { case_key: "ia-0043", expires_at: SEED_EXPIRY },
+  Za9Lf2Gq7Ws4Ne1Vy6Tk3R: { case_key: "ia-0044", expires_at: SEED_EXPIRY },
+  Pb4Kx8Mj1Dq6Rz3Uf9Ln2S: { case_key: "ia-0045", expires_at: SEED_EXPIRY },
+  Ww5Ty0Ec7Hr2Jn8Bm4Xq1V: { case_key: "ia-0046", expires_at: SEED_EXPIRY },
+  Ne6Sa3Lu9Fk1Op7Ci2Zd5G: { case_key: "ia-0047", expires_at: SEED_EXPIRY },
+  Rv2Xo8Qy4Mi6Tg0Bh3Kp7J: { case_key: "preview-acknowledged", expires_at: SEED_EXPIRY },
+  Dt1Yw5Sn9Ce3Ak7Ux0Fr4L: { case_key: "preview-scheduled", expires_at: SEED_EXPIRY },
+  Jq8Zm2Vb6Hx0Pe4Ng1Wt9C: { case_key: "preview-overdue", expires_at: SEED_EXPIRY },
+  Gk3Ua7Rf1Lo5Ys9Dj2Mv6E: { case_key: "preview-completed", expires_at: SEED_EXPIRY },
+  // An older link for Maria that has already expired, for the "link can't be used" state.
+  Xs0Ib4Nh8Tc2Ek6Qa9Wz3P: { case_key: "ia-0042", expires_at: "2026-10-18T12:00:00+08:00" },
+};
+
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Per-browser persistence so saved demo actions survive a reload or a typed URL.
 // Browser storage is a convenience only: it may be empty or throw (private
 // windows, cleared site data), and the app must work without it.
 const submitted = new Map();
-const STORAGE_KEY = "inaalaga-mock-store-v1";
+const STORAGE_KEY = "inaalaga-mock-store-v2";
 const SEED = structuredClone(store);
-let hydrated = false;
+const SEED_LINKS = structuredClone(links);
 
+function replace(target, source) {
+  Object.keys(target).forEach((k) => delete target[k]);
+  Object.assign(target, source);
+}
+
+// Re-read on every call so a tab opened later (e.g. a mother link opened from
+// the hospital view) and the tab that opened it see each other's saves.
 function hydrate() {
-  if (hydrated || typeof window === "undefined") return;
-  hydrated = true;
+  if (typeof window === "undefined") return;
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
     const saved = JSON.parse(raw);
-    Object.keys(store).forEach((k) => delete store[k]);
-    Object.assign(store, saved);
+    if (!saved.cases || !saved.links) return;
+    replace(store, saved.cases);
+    replace(links, saved.links);
   } catch {
-    // ignore: fall back to the in-memory seed
+    // ignore: keep the in-memory state
   }
 }
 
 function persist() {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ cases: store, links }));
   } catch {
     // ignore: storage unavailable
   }
@@ -158,8 +187,8 @@ function persist() {
 
 export async function resetDemoData() {
   await wait(200);
-  Object.keys(store).forEach((k) => delete store[k]);
-  Object.assign(store, structuredClone(SEED));
+  replace(store, structuredClone(SEED));
+  replace(links, structuredClone(SEED_LINKS));
   submitted.clear();
   try {
     window.localStorage.removeItem(STORAGE_KEY);
@@ -172,11 +201,70 @@ export function getDemoNow() {
   return DEMO_NOW;
 }
 
+export function getDemoMotherToken() {
+  return DEMO_MOTHER_TOKEN;
+}
+
+function linkFor(token) {
+  return typeof token === "string" && Object.hasOwn(links, token) ? links[token] : null;
+}
+
+function isLive(link) {
+  return new Date(link.expires_at) > new Date(DEMO_NOW);
+}
+
+// Unknown and expired tokens resolve to nothing, so they reveal no case details.
+function caseForToken(token) {
+  const link = linkFor(token);
+  if (!link || !isLive(link)) return null;
+  return store[link.case_key] ?? null;
+}
+
+function newToken() {
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function issueLink(caseKey) {
+  const token = newToken();
+  const expires_at = new Date(new Date(DEMO_NOW).getTime() + LINK_DAYS * 86400000).toISOString();
+  links[token] = { case_key: caseKey, expires_at };
+  return { token, expires_at };
+}
+
+// Most recently expiring live link for a case, or null.
+function liveLinkForCase(caseKey) {
+  const found = Object.entries(links)
+    .filter(([, l]) => l.case_key === caseKey && isLive(l))
+    .sort(([, a], [, b]) => new Date(b.expires_at) - new Date(a.expires_at))[0];
+  return found ? { token: found[0], expires_at: found[1].expires_at } : null;
+}
+
 export async function getCaseByToken(token) {
   await wait(250);
   hydrate();
-  const found = store[token];
+  const found = caseForToken(token);
   return found ? structuredClone(found) : null;
+}
+
+// What the simulated SMS shows. The message exists even when its link has
+// expired; opening an expired link is what fails.
+export async function getSimulatedMessage(token) {
+  await wait(250);
+  hydrate();
+  const link = linkFor(token);
+  const found = link ? store[link.case_key] : null;
+  return found ? { alias: found.alias, expires_at: link.expires_at } : null;
+}
+
+export async function getMotherLink(caseId) {
+  await wait(200);
+  hydrate();
+  const key = Object.keys(store).find(
+    (k) => store[k].id.toLowerCase() === String(caseId).toLowerCase()
+  );
+  if (!key) throw new Error("Unknown case");
+  return liveLinkForCase(key);
 }
 
 function pushEvent(c, type, actor, detail) {
@@ -186,7 +274,7 @@ function pushEvent(c, type, actor, detail) {
 export async function createContactRequest(token) {
   await wait(400);
   hydrate();
-  const found = store[token];
+  const found = caseForToken(token);
   if (!found) throw new Error("Unknown link");
   if (found.request_state === "none") {
     found.request_state = "recorded";
@@ -353,7 +441,12 @@ export async function createDischarge(input) {
   await wait(500);
   hydrate();
   if (submitted.has(input.idempotency_key)) {
-    return { case: structuredClone(submitted.get(input.idempotency_key)), duplicate: true };
+    const prior = submitted.get(input.idempotency_key);
+    return {
+      case: structuredClone(prior),
+      duplicate: true,
+      link: liveLinkForCase(prior.id.toLowerCase()),
+    };
   }
   if (!input.alias || !input.barangay || !input.birth_at || !input.discharge_at || !input.due_at) {
     throw new Error("Missing fields");
@@ -377,7 +470,9 @@ export async function createDischarge(input) {
     assigned_at: station ? DEMO_NOW : null,
   });
   store[id.toLowerCase()] = created;
+  // Saving the discharge is the mother's registration: it issues her private link.
+  const link = issueLink(id.toLowerCase());
   submitted.set(input.idempotency_key, created);
   persist();
-  return { case: structuredClone(created), duplicate: false };
+  return { case: structuredClone(created), duplicate: false, link };
 }

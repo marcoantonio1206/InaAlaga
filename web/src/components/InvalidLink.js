@@ -1,18 +1,15 @@
 "use client";
 
-import Card from "./ui/Card";
-import DemoNotice from "./DemoNotice";
+import AccessShell from "./AccessShell";
 import { useLang } from "@/lib/i18n";
 
+// Shown for unknown and expired links alike, so a bad link reveals nothing.
 export default function InvalidLink() {
   const { t } = useLang();
   return (
-    <main className="flex min-h-dvh flex-col justify-center gap-4 p-5">
-      <Card>
-        <h1 className="text-xl font-extrabold">{t("invalidTitle")}</h1>
-        <p className="text-muted">{t("invalidBody")}</p>
-      </Card>
-      <DemoNotice />
-    </main>
+    <AccessShell title={t("invalidTitle")}>
+      <p className="text-muted">{t("invalidBody")}</p>
+      <p className="text-sm text-muted">{t("invalidNoDetails")}</p>
+    </AccessShell>
   );
 }

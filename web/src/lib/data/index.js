@@ -4,6 +4,9 @@ import * as supabase from "./supabase";
 const source = process.env.NEXT_PUBLIC_DATA_SOURCE === "supabase" ? supabase : mock;
 
 export const getCaseByToken = source.getCaseByToken;
+export const getSimulatedMessage = source.getSimulatedMessage;
+export const getMotherLink = source.getMotherLink;
+export const getDemoMotherToken = source.getDemoMotherToken;
 export const createContactRequest = source.createContactRequest;
 export const getDemoNow = source.getDemoNow;
 export const listCases = source.listCases;

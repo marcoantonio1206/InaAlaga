@@ -4,8 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import LangToggle from "@/components/LangToggle";
 import { useLang } from "@/lib/i18n";
-
-const DEMO_TOKEN = "ia-0042";
+import { getDemoMotherToken } from "@/lib/data";
 
 export default function ConsentPage() {
   const { t } = useLang();
@@ -33,7 +32,7 @@ export default function ConsentPage() {
         </p>
         <button
           type="button"
-          onClick={() => router.push(`/m/${DEMO_TOKEN}`)}
+          onClick={() => router.push(`/inbox/${getDemoMotherToken()}`)}
           className="h-[52px] rounded-xl bg-brand-900 text-base font-bold text-white"
         >
           {t("agree")}

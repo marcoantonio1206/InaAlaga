@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { CaseProvider, useCase } from "@/lib/caseContext";
 import BottomNav from "@/components/BottomNav";
 import InvalidLink from "@/components/InvalidLink";
+import AccessShell, { SkeletonBlocks } from "@/components/AccessShell";
 import Button from "@/components/ui/Button";
 import { useLang } from "@/lib/i18n";
 
@@ -12,15 +13,19 @@ function Gate({ token, children }) {
   const { t } = useLang();
 
   if (phase === "loading") {
-    return <p className="p-8 text-center text-muted">{t("loading")}</p>;
+    return (
+      <AccessShell title={t("loadingFollowUp")}>
+        <SkeletonBlocks />
+      </AccessShell>
+    );
   }
   if (phase === "invalid") return <InvalidLink />;
   if (phase === "error") {
     return (
-      <main className="flex min-h-dvh flex-col justify-center gap-4 p-5">
-        <p className="text-center font-bold">{t("loadFailed")}</p>
+      <AccessShell title={t("loadFailedTitle")}>
+        <p className="text-muted">{t("loadFailedBody")}</p>
         <Button onClick={reload}>{t("retry")}</Button>
-      </main>
+      </AccessShell>
     );
   }
   return (

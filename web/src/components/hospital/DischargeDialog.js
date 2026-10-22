@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Modal } from "@/components/ui/Overlay";
 import Pill from "@/components/hospital/Pill";
 import Field, { controlClass } from "@/components/hospital/Field";
+import MotherLink from "@/components/hospital/MotherLink";
 import Card from "@/components/ui/Card";
 import { BARANGAYS, OTHER_BARANGAY, lookupStation } from "@/lib/demoGeography";
 import { validateDischarge, toManilaIso } from "@/lib/validation";
@@ -129,6 +130,9 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
             </>
           )}
           <p className="text-sm text-muted">No visit scheduled yet.</p>
+          <div className="border-t border-brand-200 pt-3">
+            <MotherLink link={result.link} />
+          </div>
         </Card>
         <div className="mt-5 flex flex-wrap gap-3">
           {unassigned ? (

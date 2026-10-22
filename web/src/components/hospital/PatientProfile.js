@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Pill from "@/components/hospital/Pill";
 import Card from "@/components/ui/Card";
-import { getCaseById } from "@/lib/data";
+import MotherLink from "@/components/hospital/MotherLink";
+import { getCaseById, getMotherLink } from "@/lib/data";
 import { formatDot, formatDotYear, initials } from "@/lib/format";
 import { responsibility } from "@/lib/hospitalStatus";
 
@@ -31,6 +32,21 @@ export default function PatientProfile({ caseId }) {
       })
       .catch(() => {
         if (active) setC(null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [caseId]);
+
+  const [link, setLink] = useState(undefined); // undefined loading · null none · false failed
+  useEffect(() => {
+    let active = true;
+    getMotherLink(caseId)
+      .then((data) => {
+        if (active) setLink(data);
+      })
+      .catch(() => {
+        if (active) setLink(false);
       });
     return () => {
       active = false;
@@ -137,6 +153,11 @@ export default function PatientProfile({ caseId }) {
             <h2 className="text-lg font-extrabold">Facility</h2>
             <Item label="Discharge facility" value="Cagayan Valley Medical Center" />
             <p className="text-sm text-muted">Fictional record. SMS links are simulated in the demo.</p>
+            {link === undefined ? (
+              <p className="text-sm text-muted">Loading link…</p>
+            ) : (
+              <MotherLink link={link} />
+            )}
           </div>
         </div>
       </Card>

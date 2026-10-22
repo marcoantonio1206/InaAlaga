@@ -7,24 +7,26 @@ const CaseContext = createContext(null);
 
 export function CaseProvider({ token, children }) {
   const [state, setState] = useState({ phase: "loading", data: null });
-
-  const load = useCallback(async () => {
-    try {
-      const data = await getCaseByToken(token);
-      setState(data ? { phase: "ready", data } : { phase: "invalid", data: null });
-    } catch {
-      setState({ phase: "error", data: null });
-    }
-  }, [token]);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    let active = true;
+    getCaseByToken(token)
+      .then((data) => {
+        if (active) setState(data ? { phase: "ready", data } : { phase: "invalid", data: null });
+      })
+      .catch(() => {
+        if (active) setState({ phase: "error", data: null });
+      });
+    return () => {
+      active = false;
+    };
+  }, [token, attempt]);
 
   const reload = useCallback(() => {
     setState({ phase: "loading", data: null });
-    load();
-  }, [load]);
+    setAttempt((n) => n + 1);
+  }, []);
 
   const requestContact = useCallback(async () => {
     const updated = await createContactRequest(token);

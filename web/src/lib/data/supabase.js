@@ -6,7 +6,19 @@ export function getDemoNow() {
   return new Date().toISOString();
 }
 
+export function getDemoMotherToken() {
+  return notReady();
+}
+
 export async function getCaseByToken() {
+  return notReady();
+}
+
+export async function getSimulatedMessage() {
+  return notReady();
+}
+
+export async function getMotherLink() {
   return notReady();
 }
 
