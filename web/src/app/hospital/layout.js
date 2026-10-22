@@ -5,7 +5,7 @@ export default function HospitalLayout({ children }) {
     <div className="min-h-dvh bg-brand-50">
       <TopBar />
       <div className="px-6 py-5 lg:px-8">
-        <div className="mx-auto max-w-[1180px]">{children}</div>
+        <div className="mx-auto max-w-[900px]">{children}</div>
       </div>
     </div>
   );

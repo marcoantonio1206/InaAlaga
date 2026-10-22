@@ -20,15 +20,23 @@ function Mark() {
 export default function TopBar() {
   return (
     <header className="bg-brand-900 text-white shadow-md">
-      <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-4 px-6 py-2 lg:px-8">
+      <div className="mx-auto flex max-w-[900px] items-center justify-between gap-4 px-6 py-3 lg:px-8">
         <Link href="/hospital/patients" className="flex items-center gap-3">
           <Mark />
-          <span className="text-2xl tracking-tight">
+          <span className="text-[26px] tracking-tight">
             <span className="font-extrabold">Ina</span>
             <span className="font-light">Alaga</span>
           </span>
         </Link>
-        <div className="flex items-center gap-3 rounded-xl bg-white/95 px-3 py-2 text-brand-900">
+        <div className="flex items-center gap-5">
+          <span className="text-white/90" title="No notifications in this demo">
+            <span className="sr-only">Notifications: none in this demo</span>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Z" />
+              <path d="M10 20a2 2 0 0 0 4 0" />
+            </svg>
+          </span>
+        <div className="flex items-center gap-3 rounded-xl bg-white/95 px-3 py-1.5 text-brand-900">
           <span
             aria-hidden="true"
             className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-950 text-white"
@@ -39,9 +47,10 @@ export default function TopBar() {
             </svg>
           </span>
           <div className="leading-tight">
-            <p className="font-bold">Facility staff</p>
-            <p className="text-xs text-muted">Cagayan Valley Medical Center</p>
+            <p className="text-sm font-bold">Facility staff</p>
+            <p className="text-[11px] text-muted">Cagayan Valley Medical Center</p>
           </div>
+        </div>
         </div>
       </div>
     </header>
