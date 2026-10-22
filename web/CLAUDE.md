@@ -25,7 +25,7 @@ src/components/             mother components (StatusCard, VisitCard, RequestPan
 src/components/ui/          primitives: Card, Badge, Button, Icon, AppBar (shared purple header + RoleChip), Overlay (Modal + SlideOver)
 src/components/hospital/    TopBar (wraps AppBar), PageHeader, Pill, Field, PatientProfile, DischargeDialog
 src/components/bhw/         BhwShell, CaseRow, CaseDetail (panel body; every action opens a Modal), AcceptCard, ScheduleForm, VisitOutcomeForm, ContactRequestCard, ContactAttemptForm, EventHistory, LoadState, useSave
-src/lib/data/index.js       switches mock.js | supabase.js by NEXT_PUBLIC_DATA_SOURCE; re-exports functions. getScenarioSummary (lib/data/planning.js) is outside the switch: simulation results never come from demo records (PRD D01)
+src/lib/data/index.js       switches mock.js | api.js by NEXT_PUBLIC_DATA_SOURCE (api.js calls app/api routes, which use the server-only supabase.js); re-exports functions. getScenarioSummary (lib/data/planning.js) is outside the switch: simulation results never come from demo records (PRD D01)
 src/lib/status.js           mother status: unassigned | pending | acknowledged | scheduled | overdue | completed
 src/lib/hospitalStatus.js   responsibility() and visitSummary() labels for hospital tables
 src/lib/i18n.js             LangProvider + useLang(); strings.fil / strings.en (mother views only)
@@ -62,7 +62,7 @@ Radii and spacing in use: cards `rounded-2xl p-4`, buttons `h-[52px] rounded-xl`
 ## Data layer: how to add a BHW action
  
 1. Add the function to `lib/data/mock.js` operating on `store` with a `wait()` delay, returning `structuredClone(...)`.
-2. Add the same name to `lib/data/supabase.js` as `notReady()` stub.
+2. Add the same name to `lib/data/supabase.js` (server only, service-role key), an `app/api` route handler that calls it, and a `fetch` wrapper in `lib/data/api.js`.
 3. Re-export it from `lib/data/index.js`.
 Case shape (mock): `{ id, alias, barangay, station_name, handoff_state: "unassigned"|"pending"|"acknowledged", request_state: "none"|"recorded"|"acknowledged", birth_at, discharge_at, due_at, recorded_at, assigned_at, visits: [{ id, state: "scheduled"|"attempted"|"completed"|"cancelled", scheduled_for, location_type: "home"|"station", worker_name }] }`.
  

@@ -1,7 +1,9 @@
 import * as mock from "./mock";
-import * as supabase from "./supabase";
+// In supabase mode the browser goes through the API routes (./api.js);
+// only app/api route handlers import ./supabase.js directly.
+import * as api from "./api";
 
-const source = process.env.NEXT_PUBLIC_DATA_SOURCE === "supabase" ? supabase : mock;
+const source = process.env.NEXT_PUBLIC_DATA_SOURCE === "supabase" ? api : mock;
 
 export const getCaseByToken = source.getCaseByToken;
 export const getSimulatedMessage = source.getSimulatedMessage;
