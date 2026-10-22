@@ -384,6 +384,7 @@ export async function acknowledgeRequest(caseId, { worker_name }) {
   await wait(400);
   hydrate();
   const c = findCase(caseId);
+  if (c.handoff_state === "unassigned") throw new Error("No station assigned");
   if (c.request_state !== "recorded") throw new Error("No open request");
   c.request_state = "acknowledged";
   c.request_acknowledged_by = worker_name;
@@ -397,6 +398,7 @@ export async function recordContactAttempt(caseId, { method, started_at, ended_a
   await wait(400);
   hydrate();
   const c = findCase(caseId);
+  if (c.handoff_state === "unassigned") throw new Error("No station assigned");
   if (!["not_reached", "reached"].includes(outcome)) throw new Error("Unsupported outcome");
   if (new Date(ended_at) < new Date(started_at)) throw new Error("Ended before started");
   const attempt = {

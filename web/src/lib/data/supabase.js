@@ -534,11 +534,12 @@ export async function acknowledgeRequest(caseId, { worker_name }) {
   const supabase = getSupabase();
   const { data: existingCase, error: fetchError } = await supabase
     .from('cases')
-    .select('request_state')
+    .select('request_state, handoff_state')
     .eq('id', caseId)
     .single();
 
   if (fetchError || !existingCase) throw new Error('Unknown case');
+  if (existingCase.handoff_state === 'unassigned') throw new Error('No station assigned');
   if (existingCase.request_state !== 'recorded') throw new Error('No open request');
 
   const { error: updateError } = await supabase
@@ -573,6 +574,14 @@ export async function recordContactAttempt(caseId, { method, started_at, ended_a
 
   const dbMethod = ATTEMPT_METHOD[method];
   if (!dbMethod) throw new Error(`Unsupported contact method: ${method}`);
+
+  const { data: existingCase, error: fetchError } = await supabase
+    .from('cases')
+    .select('handoff_state')
+    .eq('id', caseId)
+    .single();
+  if (fetchError || !existingCase) throw new Error('Unknown case');
+  if (existingCase.handoff_state === 'unassigned') throw new Error('No station assigned');
 
   const { error: insertError } = await supabase.from('contact_attempts').insert({
     case_id: caseId,

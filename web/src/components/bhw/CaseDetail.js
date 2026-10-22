@@ -75,6 +75,8 @@ export default function CaseDetail({ caseId, onChanged }) {
   const done = completedVisit(c);
   const late = state === "completed" ? null : overdueLabel(c.due_at, now);
   const otherStation = c.station_name && c.station_name !== worker.station;
+  // Unassigned cases wait for coordinator review; no worker action applies yet.
+  const canAct = !otherStation && c.handoff_state !== "unassigned";
   const canAccept = c.handoff_state === "pending" && !otherStation;
   const canSchedule = c.handoff_state === "acknowledged" && !open && !done && !otherStation;
 
@@ -201,7 +203,7 @@ export default function CaseDetail({ caseId, onChanged }) {
             <>
               <Pill tone="warn">Mother recorded “Please contact me”</Pill>
               <p className="text-sm text-muted">Awaiting acknowledgment.</p>
-              {!otherStation ? (
+              {canAct ? (
                 <button type="button" onClick={() => setModal("ack")} className={primaryBtn}>
                   Acknowledge request
                 </button>
@@ -212,7 +214,7 @@ export default function CaseDetail({ caseId, onChanged }) {
         <Card>
           <h2 className="text-lg font-extrabold">Contact attempts</h2>
           <AttemptList attempts={c.contact_attempts} />
-          {!otherStation ? (
+          {canAct ? (
             <button type="button" onClick={() => setModal("attempt")} className={outlineBtn}>
               {c.contact_attempts.length ? "Another attempt" : "Record contact attempt"}
             </button>
