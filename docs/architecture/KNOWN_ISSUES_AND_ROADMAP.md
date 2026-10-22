@@ -32,7 +32,7 @@ Each item gives evidence and why it matters. "Confirmed" means verified by execu
 | W01, M01, Q01 | No server, sessions, scoped tokens or session-scoped reset |
 | M02 | Home is not the v1.1 single "Your follow-up" card; worker name not shown on acceptance; contact attempts not shown; Visits/More are placeholders |
 | R01 | No polling; acknowledgment visible to mother only after reload |
-| D01–D03 | Coordinator operations view, planning dashboard over `simulation/results/*`, scenario selector and map/schematic are entirely absent |
+| D01–D03 | Planning view built 2026-10-22 at `/coordinator` (v1 scenario selector, on-time and paired-difference charts, workload, limitations). Still absent: coordinator operations view over saved demo events, factorial-grid results, and the map/schematic (D03) |
 | Role launcher / SMS inbox | Absent; hospital and BHW are reachable only by typing URLs |
 | Station correction | No coordinator path to assign an unassigned case |
 | Supabase | `@supabase/supabase-js` installed but unused; no schema, RLS or importer for `data/app_demo` seeds |
