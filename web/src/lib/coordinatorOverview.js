@@ -7,7 +7,7 @@ export const OVERVIEW_GROUPS = [
   {
     key: "unassigned",
     title: "Unassigned",
-    hint: "No station or worker yet. The facility can assign a BHW.",
+    hint: "No station or worker yet.",
     icon: "alert",
     tone: "warn",
     match: (c) => c.handoff_state === "unassigned",
@@ -16,7 +16,7 @@ export const OVERVIEW_GROUPS = [
   {
     key: "pending",
     title: "Awaiting acceptance",
-    hint: "Assigned, but no worker has accepted responsibility.",
+    hint: "No worker has accepted responsibility yet.",
     icon: "clock",
     tone: "lilac",
     match: (c) => c.handoff_state === "pending",
@@ -25,7 +25,7 @@ export const OVERVIEW_GROUPS = [
   {
     key: "visits",
     title: "Visits awaiting an update",
-    hint: "The scheduled time has passed and no outcome or arrangement is saved.",
+    hint: "Visit time has passed with no saved outcome.",
     icon: "calendar",
     tone: "warn",
     match: (c, now) => c.visits.some((v) => visitNeedsUpdate(v, now)),
@@ -37,7 +37,7 @@ export const OVERVIEW_GROUPS = [
   {
     key: "requests",
     title: "Open contact requests",
-    hint: "The mother asked to be contacted; no worker has acknowledged it.",
+    hint: "Mother asked for contact; not yet acknowledged.",
     icon: "message",
     tone: "warn",
     match: (c) => c.request_state === "recorded",

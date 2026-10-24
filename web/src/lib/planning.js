@@ -48,11 +48,11 @@ export const DEFAULTS = {
 };
 
 export const POLICIES = [
-  { key: "A", label: "A Reference workflow", short: "Reference workflow" },
-  { key: "B", label: "B Faster handoff", short: "Faster handoff" },
-  { key: "C", label: "C Faster handoff + earliest deadline first", short: "Faster handoff + deadline ordering" },
-  { key: "D", label: "D Reference delay + earliest deadline first", short: "Reference delay + deadline ordering" },
-];
+  { key: "A", name: "Reference workflow", short: "Reference workflow" },
+  { key: "B", name: "Faster handoff", short: "Faster handoff" },
+  { key: "C", name: "Faster handoff + earliest deadline first", short: "Faster handoff + deadline ordering" },
+  { key: "D", name: "Reference delay + earliest deadline first", short: "Reference delay + deadline ordering" },
+].map((p) => ({ ...p, label: `${p.key} ${p.name}` }));
 
 // Comparisons in the order they are explained. `key` is the CSV column prefix.
 export const COMPARISONS = [

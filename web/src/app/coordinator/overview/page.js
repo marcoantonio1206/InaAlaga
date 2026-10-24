@@ -43,9 +43,11 @@ function Group({ group, onOpen }) {
           </h2>
           <p className="text-sm text-muted">{group.hint}</p>
         </div>
-        <Pill tone={group.items.length ? group.tone : "ok"}>
-          {group.items.length ? `${group.items.length} ${group.items.length === 1 ? "case" : "cases"}` : "None"}
-        </Pill>
+        <span className="shrink-0 whitespace-nowrap">
+          <Pill tone={group.items.length ? group.tone : "ok"}>
+            {group.items.length ? `${group.items.length} ${group.items.length === 1 ? "case" : "cases"}` : "None"}
+          </Pill>
+        </span>
       </div>
       {group.items.length ? (
         <ul className="flex flex-col divide-y divide-brand-200">
@@ -101,7 +103,7 @@ function OverviewScreen() {
         <>
           <RefreshStatus refreshing={refreshing} refresh={refresh} error={error} subject="saved activity" />
           <p className="mb-3 text-sm text-muted">{cases.length} saved {cases.length === 1 ? "case" : "cases"} in total. A case can appear in more than one group.</p>
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-3 lg:grid-cols-2">
             {groups.map((g) => <Group key={g.key} group={g} onOpen={openCase} />)}
           </div>
           <p className="mt-3 text-xs text-muted">Follow-up targets and visit updates are administrative, not clinical urgency.</p>

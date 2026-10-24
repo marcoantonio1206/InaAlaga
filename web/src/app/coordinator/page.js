@@ -62,6 +62,20 @@ function ScenarioSelector({ selected, onChange }) {
   );
 }
 
+function PolicyName({ policy }) {
+  return (
+    <span className="flex items-center gap-2 font-bold">
+      <span aria-hidden="true" className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-900 text-sm font-extrabold text-white">
+        {policy.key}
+      </span>
+      <span>
+        <span className="sr-only">{policy.key} </span>
+        {policy.name}
+      </span>
+    </span>
+  );
+}
+
 function ContactShare({ row }) {
   const sentences = summarize(row);
   return (
@@ -71,8 +85,8 @@ function ContactShare({ row }) {
         {POLICIES.map((p) => {
           const rate = row[`${p.key}_on_time_rate_mean`];
           return (
-            <li key={p.key} className="grid gap-1 md:grid-cols-[300px_1fr_64px] md:items-center md:gap-3">
-              <p className="font-bold">{p.label}</p>
+            <li key={p.key} className="grid gap-1 md:grid-cols-[380px_1fr_64px] md:items-center md:gap-3">
+              <PolicyName policy={p} />
               <div className="h-6 rounded bg-brand-200" aria-hidden="true">
                 {rate != null ? (
                   <div className="h-full rounded bg-brand-600" style={{ width: `${rate * 100}%` }} />
@@ -165,7 +179,7 @@ function Evidence({ row, selected }) {
               <tbody>
                 {POLICIES.map((p) => (
                   <tr key={p.key} className="border-t border-brand-200">
-                    <td className="px-3 py-2 font-bold">{p.label}</td>
+                    <td className="px-3 py-2"><PolicyName policy={p} /></td>
                     <td className="px-3 py-2 text-right tabular-nums">{pct(row[`${p.key}_on_time_rate_mean`])}</td>
                     <td className="px-3 py-2 text-right tabular-nums">{pct(row[`${p.key}_unserved_rate_mean`])}</td>
                     <td className="px-3 py-2 text-right tabular-nums">{pct(row[`${p.key}_utilization_mean`])}</td>
