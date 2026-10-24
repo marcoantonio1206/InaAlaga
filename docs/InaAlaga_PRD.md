@@ -2,15 +2,25 @@
 
 ## Hackathon prototype and simulation plan
 
-Version 1.1 | Prepared October 18, 2026 | UI revision October 19, 2026 | Team BAIthropic, UPLB
+Version 1.2 | Prepared October 18, 2026 | Implementation revision October 24, 2026 | Team BAIthropic, UPLB
 
-**Revision status:** Section 3 records the current mother UI/UX direction and proposed extensions discussed on October 19. This is a design specification, not implemented functionality or an updated Figma file. The simulation is implemented; the app remains unbuilt. For later evidence and approved operational assumptions, read `FINAL_ASSUMPTIONS_REVIEW.md` alongside the historical research sections below. The Markdown PRD is current; the existing DOCX is the earlier version and has not been regenerated.
+**Revision status:** Updated to the implemented prototype and locally verified progress through October 24. Mother, BHW and hospital facilitator workflows are implemented; coordinator planning displays the completed simulation, while its operational overview and presentation polish remain pending. Read `TEAM_HANDOFF.md`, `UI_PROGRESS_2026-10-24.md` and `FACILITATOR_PROGRESS_2026-10-24.md` for detailed evidence. The Markdown PRD is authoritative; the older PRD.docx is not updated or used.
 
-**Delivery target:** hosted demonstration and submission by October 24, 2026, 11:59 PM Asia/Manila, subject to the official primer. Application requirements specify work still to build and verify; the simulation is implemented as documented in the later assumptions review.
+**Delivery target:** hosted demonstration and submission by October 24, 2026, 11:59 PM Asia/Manila, subject to the official primer. Latest application validation: 49 automated tests and the production build passed; lint has no errors and one existing image optimization warning. Recent browser workflow checks used local mock mode. These checks do not establish hosted readiness or remote database integration.
 
-InaAlaga will demonstrate how hospital discharge records can reach a barangay health team, acquire a responsible worker, and lead to a recorded follow-up. A separate simulation will help a proposed city maternal-health coordinator compare handoff and scheduling policies under limited worker capacity. Every patient and worker record in the public demonstration will be fictional.
+InaAlaga demonstrates how fictional hospital discharge records reach a barangay health team, acquire a responsible worker, and lead to a recorded follow-up. A separate, precomputed simulation supports comparison of handoff and scheduling policies under assumed worker capacity. All demonstration mother and worker records are independently fictional.
 
-The release will prioritize a reproducible analytical comparison and one complete handoff. The mother view remains essential, but family management, broad educational content, automated medical triage, and predictive scoring are deferred. The team has approved the revised direction and the Next.js, TypeScript, Supabase, and offline Python stack. Detailed defaults in this PRD are proposed implementation choices, not confirmed local practice.
+The implemented application uses **Next.js/React with vanilla JavaScript (JS/JSX), Tailwind CSS, a browser-local mock data adapter and an optional Supabase PostgreSQL adapter**. Offline Python generates the analytical outputs. Family management, automated medical triage and predictive scoring remain outside this release.
+
+### Implementation checkpoint — October 24
+
+| Area | Implemented and checked locally | Remaining limits |
+| --- | --- | --- |
+| Hospital facilitator | Discharge edit/review/save; explicit follow-up target; persisted mother link; named BHW assignment for unassigned cases; shared mother-details layout; automatic/manual refresh | Reassignment and station correction after assignment are not implemented |
+| BHW | Station inbox, named acceptance, multiple home/station appointments, individual visit outcomes, request acknowledgment, separate contact attempts, overdue arrangement; refresh on Cases/profile/Schedule | Exact-start collisions are blocked; travel/duration conflicts, rescheduling/cancellation controls and future completion-time validation remain pending |
+| Mother | Home, Visits and Stations; FIL/EN; saved next/future/previous visits, countdown, worker status, repeat contact requests after acknowledgment, scoped expiring links and station map | No real SMS, live GPS, route estimates or visit-change request workflow |
+| Coordinator | Five-setting selector over 162 precomputed scenarios; A/B/C/D comparison, paired differences, simulation ranges and assumptions | Saved-activity overview, clearer interpretation/negative-result wording, additional metrics and header consistency are recommendations, not implemented |
+| Persistence and release | Browser-local persistence/cross-tab updates, reset confirmation, mocked workflow tests and browser walkthroughs | No cross-device sharing in mock mode; migrations 004–006 not applied remotely; Supabase integration, hosted smoke test and final submission evidence still need verification |
 
 ### Primary decision
 
@@ -61,7 +71,7 @@ Family permissions and supportive actions; learning library; full maternal/newbo
 
 ### Changes from earlier designs
 
-The mother application prioritizes a compact Home page and a distinct Visits design for schedules/history. A station/map view and secondary settings remain under design review; the original four tabs are not automatically removed or retained. Section 3 distinguishes the required single-follow-up flow from proposed multi-visit and schedule-change extensions. The dashboard remains the analytical centerpiece. The BHW queue explains administrative order, not medical risk. Reusable Figma components are retained; the connected story takes priority over optional screens.
+The mother application now has Home, Visits and Stations. Multiple saved appointments, station destinations and FIL/EN strings are implemented. Preferred schedule requests and rescheduling/cancellation controls remain proposals. The simulation continues to model only the first routine home follow-up. The dashboard remains the analytical centerpiece. The BHW queue explains administrative order, not medical risk. Reusable Figma components are retained; the connected story takes priority over optional screens.
 
 <!-- pagebreak -->
 
@@ -71,40 +81,43 @@ The mother application prioritizes a compact Home page and a distinct Visits des
 
 | User | Can do | Boundary |
 | --- | --- | --- |
-| Hospital discharge staff | Create a fictional discharge and review assigned station | Cannot claim a worker accepted it |
+| Hospital discharge staff | Record discharge, review routing and assign an unassigned mother to a supported BHW | Assignment is pending; cannot accept on the worker’s behalf |
 | BHW | View assigned cases, acknowledge, schedule and record outcomes | No clinical diagnosis or automated treatment |
-| Mother | Read her status, see confirmed visit and request contact | Cannot mark a worker contact complete |
-| Coordinator | Review workload and compare simulated policies | Scenario results do not change real services |
+| Mother | Read status, saved visits and station information; request contact again after acknowledgment | Cannot complete contact or directly change a visit |
+| Coordinator | Compare precomputed simulated policies; saved-activity overview remains pending | Simulation results are independent of app records and do not change services |
 
 ### Demonstration story
 
-1. Staff open a seeded demo workspace and enter a fictional alias, barangay, birth time, discharge time and follow-up due time. The form rejects discharge before birth and a due time before discharge.
-2. A saved barangay-to-station lookup assigns an eligible demo station. Confirmation says “Assigned to [station], awaiting acknowledgment.” If the lookup fails, the record is visibly unassigned for coordinator action; the system does not invent a destination.
-3. The BHW inbox displays that same case. A worker acknowledges it, storing worker ID and server timestamp. Only then may the mother see “Your health worker has accepted the follow-up.”
-4. The worker schedules a home follow-up. The mother opens her scoped demo link from a simulated SMS inbox and sees the date, location type and worker status. Scheduling alone does not mean contact occurred.
-5. The mother submits “Please contact me.” The application saves a contact request, displays “Request recorded in this demonstration,” and exposes it to the BHW. It never says that someone has read it before acknowledgment.
-6. The worker acknowledges the request, then records a contact outcome. A successful contact updates the mother view and the operational dashboard. An unsuccessful attempt remains distinct from success.
-7. The presenter switches to planning results and compares policies on identical fictional demand. A scenario change selects another precomputed result with its assumptions displayed.
+1. A facilitator enters a fictional alias, barangay, birth and discharge time, and explicitly entered follow-up target. The target starts blank. Date-order validation precedes review/save; the facility is read-only and review/save actions stay accessible.
+2. Saved routing selects a station and pending BHW (Ana/Tanza or Bea/Linao West). Unsupported routing stays unassigned. The facilitator can choose a supported BHW for an unassigned case; assignment saves station, worker and an audit event without acceptance or scheduling.
+3. The correct station inbox displays the case. The named worker accepts responsibility, saving the owner and actual action time. Another station or a conflicting named worker cannot accept through the assignment flow.
+4. The worker schedules a future home visit or station check-up in Philippine time. The actual visit destination/visitor is separate from the coordinating station/case owner. Multiple appointments persist; exact-start duplicates for the mother or visitor are blocked.
+5. The mother opens her opaque, case-scoped link through the simulated message preview. New links expire 14 days after recording. Home shows the next unresolved visit and worker status; Visits groups next, future and previous records. A passed appointment remains unresolved until a saved outcome or arrangement is recorded.
+6. “Please contact me” saves an open request. The BHW acknowledges separately and records a contact attempt as reached/not reached. After acknowledgment the mother may submit another request; an already-open request is not duplicated. Phone contact does not complete a scheduled visit. Facilitator list/profile show the saved updates.
+7. A responsible accepted BHW can choose “Arranged with mother” for an overdue target or currently passed open appointments. It records who/when and clears those warnings without rescheduling, completing a visit or proving successful contact. A later appointment becoming overdue raises a new warning.
+8. The presenter opens coordinator Planning and selects a precomputed scenario. All displayed results and assumptions follow that setting. Entering or editing a mother does not recalculate the simulation. A coordinator operational overview is still pending.
 
 ### States and clocks
 
-Store handoff, appointment, contact request and contact outcome as separate states. Handoff is unassigned, pending or acknowledged. Visit is unscheduled, scheduled, attempted, completed or cancelled. Requests are open or acknowledged. “Overdue” is derived from current time, due_at and absence of successful contact; it is not a replacement for those states.
+Handoff is unassigned, pending or acknowledged. Stored visits have scheduled/completed/cancelled states; unscheduled means no saved appointment, while contact attempts are separate records. The UI supports cancelled history but does not yet provide cancellation controls. Requests are none, recorded or acknowledged. Overdue and visit-update warnings are derived administrative states, not medical urgency labels. Saved arrangement metadata suppresses only the relevant warnings and remains separate from contact success and visit outcomes.
 
-Record birth_at, discharge_at, routed_at, acknowledged_at, scheduled_for, contact_started_at and contact_completed_at separately. Store UTC timestamps; display Asia/Manila. Deadline-based queue order uses due_at, never the mother's survey-derived risk. The synthetic demo clock is explicit and separate from audit timestamps.
+Store entered birth/discharge/target/visit times separately from real action timestamps, including recording, assignment, acceptance, request acknowledgment and arrangement. Persist timezone-aware instants and display Asia/Manila. Operational status/countdowns now use actual current time. The fixed October 19 reference remains only for historical fixtures and explicit simulation/seed context. Historical events are not rewritten; missing facilitator timeline timestamps display “Time not recorded.”
 
 <!-- pagebreak -->
 
 ## 3 Functional requirements and acceptance criteria
 
-P0 means required for the submission. P1 is added only after the core flow and simulation pass. Owners A–E are defined in Section 9.
+P0 means required for the submission. The table states requirements, not a blanket completion claim. Use the implementation checkpoint and verification section for current evidence. Owners A–E are the original planning placeholders in Section 9.
 
 | ID | Priority and owner | Requirement and acceptance test |
 | --- | --- | --- |
 | H01 | P0 C | Discharge creation persists a case and assignment event. Refresh retains it; double submission with the same idempotency key produces one case. |
-| H02 | P0 C | Missing or ambiguous routing remains unassigned. A seeded unmapped barangay produces a visible exception, not a false success. |
+| H02 | P0 C | Missing routing remains unassigned. A facilitator can assign a supported BHW, saving the station/worker/audit event without acceptance; conflicting repeat assignments are rejected. |
 | W01 | P0 B and C | BHW queue shows only the authorized station's cases, acknowledgment status, due time and ordering reason. Cross-station requests are rejected server-side. |
 | W02 | P0 C | Acknowledgment sets one owner and a server timestamp. Repeated acknowledgment does not duplicate events or silently replace the owner. |
-| W03 | P0 B and C | Scheduling, attempt and completion are distinct actions. Completion requires an outcome and cannot precede discharge or contact start. |
+| W03 | P0 B and C | Scheduling, contact attempt and visit completion are separate. New schedules must be strictly in the future at save time; individual outcomes retain history. Validation that rejects future completion timestamps is still pending. |
+| W04 | P0 B and C | Responsible accepted BHW can record an overdue arrangement idempotently; currently overdue warnings clear without changing schedule/outcome fields, and later overdue visits can warn again. |
+| R02 | P0 B | Facilitator list/profile and BHW Cases/profile/Schedule refresh every five seconds while visible, on return to the tab and storage changes; manual Refresh, serialized requests and stale-response suppression preserve last loaded data on failure. |
 | M01 | P0 A and C | Mother link returns only its case. A different case ID or expired token does not reveal another record. |
 | M02 | P0 A | Mother page shows pending, acknowledged, scheduled, overdue and completed states with words and icons. A request-contact action is separate from visit completion. |
 | R01 | P0 C | Contact requests persist and become visible to the assigned BHW on refresh/poll. Notification-delivery claims are never generated by a database write alone. |
@@ -116,90 +129,23 @@ P0 means required for the submission. P1 is added only after the core flow and s
 
 ### Screens and interaction
 
-Core views remain the demo launcher/SMS inbox, hospital form/confirmation, BHW queue/detail, mother experience, and coordinator operations/planning. The mother experience now has a Home/Visits design direction rather than a fixed one-screen restriction. Desktop views target 1280 px; mother/BHW views must work at 360 px. Frontend work starts from agreed fields, not final Figma completion.
+Implemented views: launcher/message preview, facilitator patient list and discharge review/save, BHW Cases/detail/Schedule, mother Home/Visits/Stations, and coordinator Planning. Reset is at `/demonstration/settings` with confirmation; browser-local reset restores sample data across perspectives. Database-mode reset is unavailable in the current UI. Mobile and desktop presentation remain final release checks.
 
-P1 items include reviewed FIL/EN strings, station-versus-home visit selection, map pin highlighting and CSV scenario export. Plain English remains a release fallback. Additional UI proposals below do not silently expand P0 or change the first-home-follow-up simulation.
+### Mother Home and Visits — implemented
 
-### Figma and mother UI progress — October 19
+Home presents the next scheduled visit/countdown, responsible worker and coordinating station, with an expandable explanation and contact request action. Completed visits appear in Visits history. Acceptance is shown only after saving worker acceptance; scheduling is not a separate mother confirmation. Never infer that the case owner is the scheduled visitor.
 
-The old exports and PJDSC minutes are historical design references. The October 18 alignment review remains useful evidence of those exports; this section supersedes its blanket recommendation to consolidate everything into one page. Current progress consists of reviewed content hierarchy, text wireframes, and interaction/state proposals. No app, updated native Figma frames, live map routing, or multi-visit persistence is claimed complete.
+Visits groups the earliest unresolved appointment as Next visit, later appointments as Future visits and completed/cancelled records as Previous visits. Future records use a soft orange tint, completed badges use green, and expanded details preserve visitor/location/history. A passed appointment is not silently completed or marked missed. Arranged-with-mother status does not replace a saved visit outcome.
 
-| Status | Direction |
-| --- | --- |
-| Agreed direction | Fictional coordination prototype; purple/lilac identity and rounded cards; no family features; replace symptom/SOS flow with “Please contact me”; distinguish recorded requests from worker acknowledgment. |
-| Current Home layout direction | Shared follow-up card connects responsible worker, assigned demo station and scheduled visit. Expandable explanation belongs inside that card; essential status/schedule remain visible. |
-| Current design proposal | Visits page with upcoming/later/previous records, expanded details and state variants. Mother preference submission is recommended but requires new saved request/review behavior. |
-| Still unresolved | Final bottom-tab count/names; permanent Station/Map tab versus contextual screen; exact future-visit coverage; routing provider, origin and travel mode; reschedule/cancellation implementation priority. |
+Home visits say “Your home.” Station check-ups name the actual saved destination and link to its station location. A request acknowledgment is separate from a contact outcome; reached phone contact leaves a scheduled visit open. Request state is shared across mother destinations, and a new request is allowed after acknowledgment without duplicating an open request. Loading, invalid/expired access, failure and empty states remain distinct. FIL/EN strings cover Home, Visits, Stations, countdowns and access/error states; stored names retain their original spelling.
 
-### Mother Home
+### Shared facilitator/BHW mother details — implemented
 
-Use a compact header with InaAlaga, FIL/EN selected state, and a small “Fictional demo” label. Greeting example: “Good morning, Maria!” Example alias, worker and dates are fictional seed content, not hardcoded status.
+Both roles use the same mother-details component: compact name/case/status header, station/worker/target summary, full-width visits, grouped contact requests/attempts, collapsed discharge details and event history. Roles retain their own actions. Facilitators assign unassigned cases and open mother links; BHWs accept, schedule and record follow-up actions. Facilitator list rows keep the Unassigned/pending/accepted responsibility summary compact; named pending BHW information belongs in the profile. Empty list contact summaries are hidden; saved updates remain visible.
 
-One rounded “Your follow-up” card contains:
+### Discharge and refresh behavior — implemented
 
-- Responsibility: “Ana has accepted your follow-up” with “Demo worker.” Render acceptance only after the worker's saved action. Before that, use “Awaiting worker acceptance.”
-- “Assigned demo station” and “Tanza BHS.” This is the responsible demonstration station, not automatically the visit destination or a claim about an actual worker's employer.
-- A divider followed by “Scheduled visit,” type, date/time and location. Example: “Home follow-up · Oct 19, 9:00 AM · Your home.” Show the scheduled visitor only when recorded; case ownership does not prove who will visit.
-- “How your follow-up works” disclosure at the bottom, collapsed by default. Suggested expanded copy: “Your assigned worker coordinates your follow-up. Scheduled visit details appear above. ‘Please contact me’ records a request; acknowledgment appears after the worker accepts the request. This fictional demo is not monitored for emergencies.”
-
-“Scheduled visit” replaces the ambiguous “Next confirmed visit”; a saved worker schedule does not imply the mother separately confirmed it. Before scheduling, say “No visit scheduled yet.” The status and next visit are static/readable, not hidden behind card expansion. The contact button sits directly below the shared card.
-
-```text
-InaAlaga                         FIL / [EN]
-Fictional demo
-Good morning, Maria!
-+----------------------------------------+
-| YOUR FOLLOW-UP                         |
-| Ana has accepted your follow-up        |
-| Demo worker                           |
-| Assigned demo station: Tanza BHS        |
-| -------------------------------------- |
-| SCHEDULED VISIT                        |
-| Home follow-up · Oct 19, 9:00 AM        |
-| Your home                             |
-| -------------------------------------- |
-| How your follow-up works             v |
-+----------------------------------------+
-[             Please contact me          ]
-```
-
-### Visits page and expandable records
-
-Home answers “What happens next?” Visits answers “What is scheduled and what happened previously?” A separate Visits destination is useful when multiple saved records exist; do not invent a history to fill the screen. The existing P0 flow still requires only one scheduled follow-up. Multiple appointments and their history are proposed app extensions, not simulated long-term care.
-
-Order: page title; next scheduled visit expanded; later visits as compact expandable rows; previous records as compact expandable rows; contact updates when present; one shared contact action/status. Do not add a calendar grid or filters initially.
-
-| Record | Always visible | Expanded details |
-| --- | --- | --- |
-| Next scheduled | Type, date/time, location and recorded visitor | Essential details already visible; proposed “Request a different time” entry point |
-| Later scheduled | Date/time, type/location summary, “Scheduled,” “View details” | Full location, recorded visitor, conditional station-location link, proposed change-request entry point, “Hide details” |
-| Previous completed | Date, type, “Completed,” “View details” | Scheduled time/location, recorded worker, completion-recorded timestamp explicitly labeled as an audit event rather than actual ending time |
-| Previous cancelled | Date, type, “Cancelled” | Cancellation-recorded time, mother-appropriate saved reason if present, replacement schedule status |
-
-Home visits say “Your home” and have no station-route action. Station visits, if enabled, name the actual scheduled destination and offer “View station location.” Do not assume the assigned worker is the scheduled visitor. No clinical results or symptom assessment fields are added.
-
-### Mother state coverage for Figma
-
-Design reusable variants, not disconnected static screens. A failed save must never show success. Persistence, refresh and cross-role behavior still require implementation tests.
-
-| State | Mother-facing behavior |
-| --- | --- |
-| Pending responsibility | “Awaiting worker acceptance”; assigned station if known; no invented owner |
-| Unassigned | “Demo station not assigned yet”; no fabricated station/route |
-| No scheduled visit | “No visit scheduled yet. Your schedule will appear here when your worker adds a visit.” |
-| No later/previous records | “No other visits scheduled” / “No completed visits yet,” adjusted if cancelled history exists |
-| Request saving | “Saving request…”; prevent duplicate submission |
-| Request saved | “Request recorded · Awaiting acknowledgment” |
-| Request acknowledged | “Request acknowledged,” with saved acknowledging worker; not “contacted” or “resolved” |
-| Request save failure | “Couldn’t save your request” with Retry; preserve entered preference if applicable |
-| Contact attempted, not reached | Separate Contact updates entry with time and recorded worker. It does not automatically complete, cancel or mark a scheduled visit missed. |
-| Scheduled time passed, outcome absent | “Awaiting visit update”; do not automatically infer completion, a missed visit or clinical urgency |
-| Completed | Only after saved worker completion; recording timestamp distinct from event time |
-| Rescheduled — proposed | Current schedule prominent; previous date/time in expanded details; retain change history |
-| Cancelled — proposed | Retain cancelled record; show no upcoming visit if no replacement exists; do not silently remove it |
-| Loading / read failure | Loading indicator; “Couldn’t load visits” and Retry, distinct from a genuine empty schedule |
-
-“Please contact me” is prominent on Home and proposed on Visits, with one shared saved state across destinations. Do not duplicate pending requests when switching tabs. Omit the persistent SOS-style action from Station/Map and Settings. Eligibility for a new request after acknowledgment remains to be specified; acknowledgment alone is not resolution.
+The follow-up target starts blank and requires deliberate entry. “Facility” and “Follow-up target” use short labels; targets are administrative deadlines. The saved audit time is the actual save time, separate from entered dates. Duplicate discharge retries with the same idempotency key return one case/link. Facilitator and BHW refresh buttons show “Refreshing…” while busy; background failures retain last loaded data with Retry. Refreshing does not reset search/filter state or open forms; switching BHW identity remounts the case panel.
 
 ### Preferred schedule request — proposed extension
 
@@ -207,26 +153,17 @@ Recommended visit action: “Request a different time.” Open a bottom sheet sh
 
 Copy: “Your worker will review this. Your current visit stays scheduled until a change is confirmed.” After saving: “Change requested · Preferred: Oct 20, afternoon · Awaiting worker review.” A request is neither a booking nor proof that the worker read it. Acknowledgment, acceptance of the preferred time and the actual schedule update are separate events.
 
-This supersedes the earlier suggestion to use a generic contact request for every schedule change, if this extension is selected. It requires a visit-linked request type, preferred date/time period, status/audit history, station-scoped worker review and a visible outcome for the mother. The worker must be able to retain the existing schedule or arrange another time; do not silently accept a preference. Define request editing, duplicates, date validation and competing worker updates before implementation. Without this extension, explain that “Please contact me” can be used to discuss the visit and that the schedule remains unchanged. Neither approach is implemented yet.
+This supersedes the earlier suggestion to use a generic contact request for every schedule change, if this extension is selected. It requires a visit-linked request type, preferred date/time period, status/audit history, station-scoped worker review and a visible outcome for the mother. The worker must be able to retain the existing schedule or arrange another time; do not silently accept a preference. Define request editing, duplicates, date validation and competing worker updates before implementation. Without this extension, explain that “Please contact me” can be used to discuss the visit and that the schedule remains unchanged. The dedicated preference workflow is not implemented; the existing contact request can be used to discuss a visit without changing its schedule.
 
-### Station and map design
+### Stations, navigation and visual system — implemented and remaining
 
-Preserve the useful intent of the original Maps design: understand the assigned station and, where relevant, locate the scheduled destination. Keep distance/time in Figma as a proposed useful feature, not as established live functionality. Remove the old emergency-destination card and symptom/SOS action from this release.
+Mother navigation is Home, Visits and Stations. Stations provides a two-station selector, saved appointment context and an OpenStreetMap embed/external link with attribution. Coordination and the actual visit destination remain separate. Locations/entrances retain approximation and verification caveats. No live GPS, measured household distance, routing service or travel-time estimate is implemented. Leaflet is not part of the current runtime.
 
-- Label “Assigned demo station,” not “Closest station” or automatically “For your visits.” For a home visit, explicitly state the visit is at home; station travel is secondary reference information.
-- A contextual link may open a focused station screen with Back. A permanent Map/Station tab remains unresolved; do not add/remove tabs merely to fill space.
-- Leaflet is the planned optional map display library, not a selected routing provider. Route distance/time needs a separately selected service, named origin/destination and travel mode. No live GPS is authorized by this revision.
-- Use independently fictional home coordinates if demonstrating a household route. Barangay reference points are not homes. Figma values such as “1.2 km · About 10 min” must be annotated as illustrative; runtime values must identify their route source/mode and estimation basis. Display “Route unavailable” when needed.
-- Keep mother-facing route estimates separate from the frozen simulation travel assumptions. Routing APIs do not establish official catchments, referral acceptance or verified entrances. Tanza's supported reference location is not a verified entrance; Linao West remains approximate.
-- Schematic views must say “Illustration only · Not a real map,” avoid an implied known user position, and not pair fabricated measured journeys with active-looking route/call controls. Implemented map views need attribution and uncertainty labels. Phone and external route actions require reviewed destinations/contact details.
+Keep the established purple/lilac theme, rounded cards, visible navigation labels, clear status text/icons and simple wording. Facilitator and BHW placeholder bells are removed; repeated demo wording was reduced on facilitator screens. Coordinator still has a placeholder bell and older demonstration wording; header consistency is pending. Mother text still contains some demonstration wording, so final copy review should not be described as complete. No family controls, symptom forms, emergency monitoring or real-SMS promises are added.
 
-### Navigation, visual system and remaining design work
+Remaining coordinator polish: explain results in plain language; distinguish negative differences from ties/small gains; explain percentage points and assumptions; optionally expose saved utilization/unserved/negative-run metrics and scenario provenance; add a separate saved-record overview. These recommendations have been reviewed, not implemented. A Reset scenario control is proposed; polling is for operational records, not fixed simulation results.
 
-Original tabs were Home, Visits, Health center and More. Home/Visits now have distinct proposed purposes; Station can be contextual or a tab. More is justified only by useful supported secondary content. Settings may instead open from the header. Final tab count is not agreed. Retain visible text labels for any tabs.
-
-Use purple/lilac branding, rounded mobile cards and concise natural language. Start with 16 px side margins/card padding and 12–16 px section gaps, readable 16 px body text and large touch targets. Avoid fixed-height empty cards or large decorative gaps. Some unused space below content is acceptable; adding screens to fill a viewport is not a requirement. Verify at actual mobile size, including expanded cards, longer Filipino strings and enlarged text. Status meaning uses words/icons, never color alone; no clinical severity palette. Language selection must be visually clear. Family controls, symptom forms, learning library and live-SMS promises remain excluded.
-
-Next Figma work: create Home accepted/pending/unassigned variants; Visits default/expanded/empty/history/change/error variants; shared request-state components; proposed preference sheet and worker review counterpart; station/map alternatives with illustrative route annotations. Review navigation after these screens have meaningful content. All UI completion and application acceptance checks remain pending until actual artifacts and persisted behavior are verified.
+Final UI checks should cover narrow screens, expanded details, longer Filipino strings, keyboard access and enlarged text. Native Figma parity is not assumed from implemented browser behavior.
 
 <!-- pagebreak -->
 
@@ -261,7 +198,7 @@ PSA terms [5] permit reuse with attribution unless material states otherwise. Ch
 
 Target five selected Tuguegarao barangays and two demo service stations, supported by at least one mapped discharge facility if verified. Select varied near/far locations before looking at policy outcomes. This is a demonstrator subset, not a representative sample or citywide resource plan. Do not claim the selected stations are official catchments or actual BHW employers.
 
-Use barangay reference points, not real homes. If a reference point is an approximate settlement point, label it as such; do not call it a population-weighted centroid. Candidate station assignment uses the shortest available estimated journey to an eligible station. Store the assignment reason and allow a coordinator override with an audit event. The assignment is a demo suggestion, not a replacement for local jurisdiction rules.
+Use barangay reference points, not real homes. If a reference point is an approximate settlement point, label it as such; do not call it a population-weighted centroid. Candidate station assignment uses the shortest available estimated journey to an eligible station. The app uses a saved lookup and facilitator assignment for unassigned cases. Coordinator station override/reassignment remains unimplemented; any future override must retain an audit event. The assignment is a demo suggestion, not a replacement for local jurisdiction rules.
 
 ### Required data products
 
@@ -293,7 +230,7 @@ The supplied comparative table reports Cagayan Valley facility delivery at 94.7%
 
 Use a small discrete-event simulation with a chronological event queue. It models the first routine home follow-up task after discharge, not a clinical examination, newborn outcome, emergency response or long-term visit schedule. A completed simulated task is an operational contact; it is not evidence that adequate clinical postnatal care occurred. Every task consumes travel and service capacity.
 
-Use Python with NumPy and pandas; a standard-library heap event queue is sufficient. SimPy [10] is optional if it simplifies the implementation. Publish the algorithm and assumptions using the STRESS-DES reporting principles [11]. A cited framework does not validate local assumptions.
+The implemented Python simulation uses the standard library and a heap event queue; NumPy, pandas and SimPy [10] are not runtime requirements for the model. Publish the algorithm and assumptions using the STRESS-DES reporting principles [11]. A cited framework does not validate local assumptions.
 
 ### Core policy comparisons
 
@@ -303,13 +240,13 @@ Use Python with NumPy and pandas; a standard-library heap event queue is suffici
 | B Faster handoff | Assumed shorter handoff | First received first served |
 | C Faster handoff and deadlines | Same shorter handoff as B | Earliest due time first |
 
-Add Policy D, reference delay with deadline ordering, as a low-cost diagnostic using the same engine if ready by October 21. It completes a two-by-two comparison but is not required for the UI. Policy A is a hypothetical comparator, never asserted to be observed Tuguegarao practice.
+Policy D, reference delay with earliest-deadline ordering, is implemented in the engine, factorial results and coordinator chart. It completes the two-by-two comparison. Policy A is a hypothetical comparator, never asserted to be observed Tuguegarao practice.
 
 ### Time and queue rules
 
 Use minutes from simulation start. Cases become available at discharge plus policy-specific handoff delay. Model acknowledgment as part of that delay, not an additional unmeasured capacity benefit. Each station has a fixed worker pool and shift calendar shared across policies. At shift start, handoff arrival or task completion, an idle worker selects from available cases at its station.
 
-Ties use receipt time then case ID. Tasks are non-preemptive. A home task consumes outbound travel, contact duration and return travel; the worker is unavailable for the whole interval. Contact is recorded complete at the end of service, before the return leg. Permit a start only if the entire trip fits the shift. Prevent overlapping tasks and count a case once.
+FIFO ties use case ID; earliest-deadline ties use receipt time then case ID. Idle workers break ties by fixed worker ID. All events at a timestamp are processed before dispatch. If the queue head cannot fit within the remaining shift, it waits rather than being bypassed by a shorter task; this rule applies to all policies. Tasks are non-preemptive. A home task consumes outbound travel, contact duration and return travel; the worker is unavailable for the whole interval. Contact is recorded complete at the end of service, before the return leg. Permit a start only if the entire trip fits the shift. Prevent overlapping tasks and count a case once.
 
 Use 14 days of new cases and 7 additional days to drain the queue. Within each day, distribute the sampled arrivals uniformly across 24 hours. Score every case introduced during the 14-day window, including never-served cases. Report any unfinished tasks at the end. This is a terminating experiment starting empty, not a steady-state city forecast; test initial backlog separately.
 
@@ -323,7 +260,7 @@ App alerts remain outside this routine simulation. No emergency benefit or clini
 
 ### Initial scenario values
 
-All numeric values here are proposed engineering assumptions for stress testing, not measured staffing or clinical standards. D may revise them after documenting reasons, before final comparisons are run.
+These values are engineering assumptions, not measured staffing or clinical standards. The completed runs freeze their own designs/manifests; changes require a new version rather than rewriting existing evidence.
 
 | Parameter | Initial definition | Sensitivity requirement |
 | --- | --- | --- |
@@ -342,6 +279,12 @@ Due windows are synthetic administrative targets, not a prescription for differe
 
 Generate cases, service times, locations and staffing before policy execution. Pair seeds across policies. Run 100 replications per configuration: first the three demand levels at base assumptions; then change one uncertain factor at a time across demand levels; finally combine high demand, long service and slow travel. Include abundant-capacity and zero-capacity checks. Freeze the configuration before selecting headline results.
 
+### Completed analytical outputs
+
+Model v1.0.0 and the original 30-configuration results remain in `simulation/results/v1/`. The factorial study in `simulation/results/factorial_v1/` contains 162 configurations × 100 paired replications × four policies = 64,800 policy runs. The coordinator serves an identical copy of its scenario summary at `web/public/scenario_summary.csv`; settings select one row without interpolation or live computation. Python result JSON/CSV files and manifests remain the reproducible evidence.
+
+Across the stated grid, B−A mean differences are positive in all 162 configurations. C−B has 44 positive, three zero and seven negative means across 54 distinct settings; reference-delay settings repeat B/C outputs and are not independent evidence. Numerical signs are not statistical significance or probabilities of local benefit. See `simulation/reports/factorial_v1/FINDINGS.md` and `FINAL_ASSUMPTIONS_REVIEW.md` for assumptions and limitations. No model outputs were changed by the application workflow updates.
+
 ### Metrics and interpretation
 
 - **Primary:** number completing contact by due_at divided by all introduced cases. Missed, late and never-served cases remain in the denominator.
@@ -354,35 +297,29 @@ Generate cases, service times, locations and staffing before policy execution. P
 
 ## 8 Architecture and data contracts
 
-### Small deployment architecture
+### Implemented application stack and data modes
 
-Use one Next.js application with TypeScript, Tailwind CSS and Route Handlers [12]. Supabase PostgreSQL stores demo cases and events [13]. Deploy the web app to a compatible hosting service such as Vercel; confirm account access and current limits on October 18. Python runs offline and exports versioned JSON; no Python inference server or live simulation API is required. Leaflet [14] can display the small pilot map.
+The application root is `web/`. Runtime source uses **vanilla JavaScript (JS/JSX), React and Next.js App Router/Route Handlers**, with Tailwind CSS. Shared JavaScript modules provide runtime validation. Python runs offline; the browser reads precomputed simulation CSV. No Python inference service, live simulation endpoint or Leaflet runtime is needed.
 
-Frontend views call server endpoints, which validate a session's role and record/station scope before database access. Supabase service credentials remain server-only; public database reads/writes are blocked by default [15]. A visible role selector creates a scoped demo session, not a production identity system. Every input says fictional data only. Do not collect actual phone numbers, addresses or symptoms.
+`NEXT_PUBLIC_DATA_SOURCE=mock` uses browser-local storage, fictional seed records and cross-tab storage updates. It is scoped to that browser/origin and does not share updates across devices. `NEXT_PUBLIC_DATA_SOURCE=supabase` routes browser calls through API handlers to the Supabase PostgreSQL adapter; service credentials stay server-side. Staff role switching is a prototype identity mechanism, not production authentication. Do not claim that local tests prove full server-side authorization or deployed session isolation.
 
-### Minimum database entities
+The SQL schema/migrations define sessions, stations/workers, cases, visits, requests, contact attempts and audit events. Migrations 002–003 add independent visit destinations/multiple appointments and exact-start uniqueness. Migrations 004–005 add atomic named assignment/acceptance and default pending workers. Migration 006 adds arrangement metadata and a responsible-owner transactional RPC. Apply 001–006 in order to a reviewed database before using all features in Supabase mode; recent migrations have not been applied remotely or integration-tested in this progress update. The stored model supports multiple appointments rather than one active first-follow-up row.
 
-| Entity | Key fields and constraints |
-| --- | --- |
-| demo_sessions | UUID, created_at, expires_at; all mutable demo rows scoped to session |
-| stations and barangays | IDs, sources, verification status, reference points; assignment lookup version |
-| cases | ID, session, alias, barangay, birth_at, discharge_at, due_at, station, owner; valid timestamp ordering |
-| followups | Case ID, state, scheduled_for, start, completion, outcome, worker; one active first-follow-up task |
-| contact_requests | Case ID, created_at, acknowledged_at, worker; no free-text medical advice |
-| events | Session, case, event type, actor role/ID, server time, before/after status; append-only through endpoints |
-| access_tokens | Hashed random token, session, case scope, role, expiry; reject invalid or expired token |
+Mother access uses opaque case-scoped expiring links; a case ID is not an access token. Mock access/expiry tests pass. Do not describe the current implementation as a separately audited hashed-token authentication system. No real names, phone numbers, home addresses or medical symptoms are collected for this demonstration.
 
-Simulation files use separate fictional cohort IDs and a result manifest. Changing a demo case never silently recalculates planning results. The UI explains that planning uses an independently generated cohort. No database table is seeded from DHS respondent rows.
+### Implemented endpoint and refresh contract
 
-### Minimal endpoint contract
+Routes include `/api/sessions/seed`, `/api/sessions/[id]/reset`, `/api/cases`, `/api/cases/[id]`, `/api/stations/[name]/cases`, `/api/workers` and `/api/workers/[name]/schedule`; case actions cover assign, acknowledge, arrange, visits, attempts and request acknowledgment. `/api/visits/[id]/outcome` records an individual visit outcome. Mother-token routes provide the case, simulated message and contact request; `/api/cases/[id]/link` provides its mother link. These are the current route paths, not the earlier proposed `/api/demo/*` or `/api/scenarios` endpoints. Browser-local reset is implemented; database-mode reset remains unavailable in the UI despite the existing server route.
 
-POST /api/demo/session creates an expiring workspace. POST /api/cases creates a routed or unassigned case. GET /api/cases and GET /api/cases/[id] enforce scope. POST actions acknowledge, schedule, record contact, submit request and acknowledge request. POST /api/demo/reset is restricted to its workspace. GET /api/scenarios returns versioned public result JSON. Every write requires validation, session scope and an idempotency key where retries could duplicate records.
+Use timezone-aware ISO timestamps, shared JavaScript validation, pinned lockfiles and `.env.example` without secrets. New visits must be strictly in the future at actual save time, checked in the form, adapter and API. Exact-start collisions do not check travel time or visit duration. Facilitator list/profile and BHW Cases/profile/Schedule poll every five seconds while visible and refresh on focus/visibility/storage changes; each has manual Refresh and failure recovery. Mother views also update saved follow-up state across tabs.
 
-Use ISO timestamps and a shared TypeScript schema. Pin dependencies and include .env.example without secrets. Poll updates every five seconds or use manual refresh; realtime subscriptions are optional. Backend and frontend developers agree one example payload on October 18 before building independent screens.
+Simulation cohorts use separate fictional IDs and versioned manifests. Changing a demo case never recalculates planning results. The core model uses Python's standard library; plotting dependencies are separate. No DHS respondent rows seed the app or simulation.
 
 <!-- pagebreak -->
 
-## 9 Team assignments and schedule
+## 9 Original team assignments and schedule (historical plan)
+
+The planning estimates and milestones below are retained as historical context, not current completion evidence. Use the October 24 checkpoint, Section 10 and team handoff for release status.
 
 ### Capacity and ownership
 
@@ -438,7 +375,9 @@ Hand-calculate at least two small queues with different deadlines and one overlo
 
 ### Application acceptance
 
-Use a short scripted test or Playwright flow: create case; refresh; view at correct station; reject other-station access; acknowledge; schedule; open mother link; submit request; acknowledge; record attempt then successful contact; confirm dashboard counts. Repeat the complete story twice with reset. Test an unmapped barangay, duplicate submit, expired link, future completion timestamp, empty state, failed save and two independent workspaces.
+The latest local validation passed 49 automated tests, the default production build and lint (one existing AppBar image warning). Tests cover timestamps, link isolation/expiry, discharge idempotency, named assignment/ownership, cross-tab persistence/reset, polling races/recovery, station visits, multiple appointments, translations, future scheduling and overdue arrangements. Browser checks verified discharge through correct BHW acceptance, scheduling, mother request, acknowledgment and contact logging, plus automatic/manual BHW updates. These are mock-mode checks, not a remote Supabase validation.
+
+Remaining release acceptance: use a short scripted test or browser flow: create case; refresh; view at correct station; reject other-station access; acknowledge; schedule; open mother link; submit request; acknowledge; record attempt then successful contact; confirm facilitator updates and, once implemented, coordinator overview counts. Repeat the complete story twice with reset. Retain coverage for unmapped assignment, duplicate saves, expired links, empty/error states and independent workspaces. Future completion-time rejection is a known outstanding validation item, not a passed check. Verify database migrations/integration and the final hosted build separately.
 
 Mother text must distinguish request recorded, request acknowledged, scheduled visit and completed contact. A failed write keeps entered values and offers retry. Never show a success state before the server confirms it.
 
@@ -509,9 +448,9 @@ Unsupported: “NDHS proves handoff failure”; “The city will improve coverag
 ### Decisions and remaining tasks
 
 - **Approved by the team:** revised scope; predictive model deferred; hosted synthetic demo; selected stack; coordinator as primary decision-maker; minimal mother view; hackathon focus.
-- **Specified in this PRD:** first routine home-follow-up simulation, bounded pilot, three policies, engineering defaults, team roles and acceptance criteria. These require implementation and ordinary team review, not renewed permission for routine work.
+- **Implemented:** mother/facilitator/BHW workflows described above, four-policy simulation and 162-scenario planning view. JavaScript/JSX is the application language; Python is the offline analysis language.
 - **Unresolved:** real local coordinator title, verified facility/catchment rules, local operational inputs, data acquisition and exact file terms, organizer response, clinical/workflow validation. These limit claims; they are not secretly assumed solved.
-- **Next working session:** assign A–E; create the payload/schema and hosted skeleton; acquire small public pilot inputs; implement the deterministic event queue; update the proposal and Figma scope to this document.
+- **Next working session:** polish coordinator interpretation and assumptions, distinguish worse/tied results, add the separate operational overview if feasible, and align header controls. Then run the final four-perspective walkthrough, verify the hosted target/data mode, and finalize deck/video/repository evidence before the deadline. No coordinator polish is marked complete by this PRD update.
 
 Release is accepted only when all P0 requirements pass, the evidence package can be reproduced, the submission contains no prohibited data, and the team can explain a result together with the conditions where it may fail.
 
