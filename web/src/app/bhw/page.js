@@ -1,6 +1,10 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import useLiveResource from "@/lib/hooks/useLiveResource";
+import RefreshStatus from "@/components/bhw/RefreshStatus";
+import useCurrentTime from "@/lib/hooks/useCurrentTime";
+
+import { Suspense, useCallback, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/hospital/PageHeader";
 import Pill from "@/components/hospital/Pill";
@@ -9,11 +13,12 @@ import { SlideOver } from "@/components/ui/Overlay";
 import CaseRow from "@/components/bhw/CaseRow";
 import CaseDetail from "@/components/bhw/CaseDetail";
 import { Loading, LoadFailed, Empty } from "@/components/bhw/LoadState";
-import { listStationCases, getDemoNow } from "@/lib/data";
+import { listStationCases } from "@/lib/data";
 import { useWorker } from "@/lib/bhwWorkers";
 import { STATE_LABEL, bhwState, visitLine, requestLine, openVisit } from "@/lib/bhwStatus";
 import { visitTypeLabel, visitDestination } from "@/lib/visitLocation";
-import { formatDot, formatDotYear, initials, overdueLabel, displayStationName } from "@/lib/format";
+import { followupOverdueLabel } from "@/lib/visitTiming";
+import { formatDot, formatDotYear, initials, displayStationName } from "@/lib/format";
 
 function FollowUpDetails({ caseData }) {
   const visit = openVisit(caseData);
@@ -33,6 +38,7 @@ const FILTERS = [
   { key: "accepted", label: "Accepted" },
   { key: "scheduled", label: "Scheduled" },
   { key: "update_needed", label: "Update needed" },
+  { key: "arranged", label: "Arranged" },
   { key: "completed", label: "Completed" },
 ];
 
@@ -42,31 +48,15 @@ function CasesScreen() {
   const params = useSearchParams();
   const selectedId = params.get("case");
   const { worker } = useWorker();
-  const now = getDemoNow();
-  const [cases, setCases] = useState(null);
-  const [failed, setFailed] = useState(false);
-  const [attempt, setAttempt] = useState(0);
+  const now = useCurrentTime();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
 
-  useEffect(() => {
-    let active = true;
-    listStationCases(worker.station)
-      .then((data) => {
-        if (active) setCases({ station: worker.station, data });
-      })
-      .catch(() => {
-        if (active) setFailed(true);
-      });
-    return () => {
-      active = false;
-    };
-  }, [worker.station, attempt]);
-
-  const list = cases && cases.station === worker.station ? cases.data : null;
+  const load = useCallback(async () => ({ station: worker.station, data: await listStationCases(worker.station) }), [worker.station]);
+  const { data: cases, error: failed, refreshing, refresh } = useLiveResource(load);
+  const list = cases?.station === worker.station ? cases.data : null;
   const openCase = useCallback((id) => router.push(`/bhw?case=${id}`), [router]);
   const closePanel = useCallback(() => router.push("/bhw"), [router]);
-  const refresh = useCallback(() => setAttempt((n) => n + 1), []);
 
   const counts = useMemo(() => {
     const base = Object.fromEntries(FILTERS.map((f) => [f.key, 0]));
@@ -90,6 +80,7 @@ function CasesScreen() {
   return (
     <>
       <PageHeader showDemo={false} title="Cases" subtitle={`${displayStationName(worker.station)} · As of: ${formatDotYear(now)}`} />
+      <RefreshStatus refreshing={refreshing} refresh={refresh} error={failed && list !== null} subject="the station inbox" />
       <div className="mb-2 flex flex-col gap-1.5">
         <label htmlFor="search" className="text-sm font-bold">
           Search
@@ -118,13 +109,10 @@ function CasesScreen() {
         ))}
       </div>
 
-      {failed ? (
+      {failed && list === null ? (
         <LoadFailed
           message="Couldn't load the station inbox."
-          onRetry={() => {
-            setFailed(false);
-            refresh();
-          }}
+          onRetry={refresh}
         />
       ) : list === null ? (
         <Loading />
@@ -153,7 +141,7 @@ function CasesScreen() {
                 {rows.map((c) => {
                   const st = bhwState(c, now);
                   const sl = STATE_LABEL[st];
-                  const late = st === "completed" ? null : overdueLabel(c.due_at, now);
+                  const late = followupOverdueLabel(c, now);
                   const req = requestLine(c);
                   const selected = selectedId?.toLowerCase() === c.id.toLowerCase();
                   return (
@@ -234,7 +222,7 @@ function CasesScreen() {
         onClose={closePanel}
         title="Case detail"
       >
-        {selectedId ? <CaseDetail key={selectedId} caseId={selectedId} onChanged={refresh} /> : null}
+        {selectedId ? <CaseDetail key={`${selectedId}:${worker.name}`} caseId={selectedId} onChanged={refresh} /> : null}
       </SlideOver>
     </>
   );

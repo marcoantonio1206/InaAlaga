@@ -1,3 +1,5 @@
+import { assertFutureVisit } from "@/lib/visitTiming";
+import { WORKERS } from "@/lib/workerDirectory";
 import { actionTimestamp } from "@/lib/actionTime";
 import { normalizeVisitLocation, visitTypeLabel } from "@/lib/visitLocation";
 // Server-only: uses the service-role key, which Next.js never ships to the
@@ -94,6 +96,7 @@ function mapCase(dbCase) {
     station_name: dbCase.station_name || dbCase.stations?.name || null,
     handoff_state: dbCase.handoff_state,
     request_state: dbCase.request_state,
+    assigned_worker: workerDisplayName(dbCase.assigned_worker?.name),
     owner_worker: dbCase.owner_worker_id ? workerDisplayName(dbCase.workers?.name) : null,
     acknowledged_at: dbCase.acknowledged_at,
     birth_at: dbCase.birth_at,
@@ -101,6 +104,8 @@ function mapCase(dbCase) {
     due_at: dbCase.due_at,
     recorded_at: dbCase.recorded_at,
     assigned_at: dbCase.assigned_at,
+    overdue_arranged_at: dbCase.overdue_arranged_at,
+    overdue_arranged_by: dbCase.overdue_arranged_by,
     // Request timestamps live in contact_requests; mock.js keeps them on the case.
     request_recorded_at: request?.recorded_at ?? null,
     request_acknowledged_by: request?.acknowledged_by ?? null,
@@ -150,6 +155,7 @@ export async function getCaseByToken(token) {
       *,
       stations(name),
       workers!owner_worker_id(name),
+      assigned_worker:workers!assigned_worker_id(name),
       visits(*),
       contact_attempts(*),
       contact_requests(*),
@@ -225,6 +231,7 @@ export async function listCases() {
       *,
       stations(name),
       workers!owner_worker_id(name),
+      assigned_worker:workers!assigned_worker_id(name),
       visits(*),
       contact_attempts(*),
       contact_requests(*),
@@ -245,6 +252,7 @@ export async function getCaseById(id) {
       *,
       stations(name),
       workers!owner_worker_id(name),
+      assigned_worker:workers!assigned_worker_id(name),
       visits(*),
       contact_attempts(*),
       contact_requests(*),
@@ -328,6 +336,7 @@ export async function createDischarge(input) {
   if (!sessionId) throw new Error('No demo session. Seed one with POST /api/sessions/seed');
 
   const motherToken = crypto.randomUUID();
+  const actionAt = actionTimestamp();
 
   const { error } = await supabase
     .from('cases')
@@ -342,14 +351,14 @@ export async function createDischarge(input) {
       birth_at: input.birth_at,
       discharge_at: input.discharge_at,
       due_at: input.due_at,
-      recorded_at: DEMO_NOW,
-      assigned_at: stationId ? DEMO_NOW : null,
+      recorded_at: actionAt,
+      assigned_at: stationId ? actionAt : null,
       mother_token: motherToken
     });
 
   if (error) throw error;
 
-  await appendEvent(id, 'case_created', 'System', { method: 'discharge_form' });
+  await appendEvent(id, 'case_created', 'System', { method: 'discharge_form' }, actionAt);
 
   if (input.idempotency_key) submittedDischarges.set(input.idempotency_key, id);
   // Saving the discharge is the mother's registration: it issues her private link.
@@ -373,6 +382,7 @@ export async function listStationCases(stationName) {
       *,
       stations!inner(name),
       workers!owner_worker_id(name),
+      assigned_worker:workers!assigned_worker_id(name),
       visits(*),
       contact_attempts(*),
       contact_requests(*),
@@ -398,6 +408,7 @@ export async function listWorkerSchedule(workerName) {
         *,
         stations(name),
         workers!owner_worker_id(name),
+      assigned_worker:workers!assigned_worker_id(name),
         visits(*),
         contact_attempts(*),
         contact_requests(*),
@@ -418,51 +429,42 @@ export async function listWorkerSchedule(workerName) {
       scheduled_for: v.scheduled_for,
       location_type: v.location_type,
       station_name: v.station_name,
+      arranged_at: v.arranged_at,
+      arranged_by: v.arranged_by,
       worker_name: v.worker_name,
       scheduled_at: v.scheduled_at
     }
   }));
 }
 
+export async function listAssignableWorkers() {
+  const { data, error } = await getSupabase().from('workers')
+    .select('id, name, stations(name)').in('id', WORKERS.map((w) => w.id));
+  if (error) throw error;
+  return (data || []).flatMap((w) => {
+    const supported = WORKERS.find((known) => known.id === w.id && known.station === w.stations?.name);
+    return supported && workerDisplayName(w.name) === supported.name ? [{ ...supported }] : [];
+  });
+}
+
+export async function assignCase(caseId, { worker_id }) {
+  if (!(await listAssignableWorkers()).some((w) => w.id === worker_id)) throw new Error('Choose an available BHW.');
+  const { error } = await getSupabase().rpc('assign_case_to_worker', { p_case_id: caseId, p_worker_id: worker_id });
+  if (error) throw error;
+  return getCaseById(caseId);
+}
+
 export async function acknowledgeCase(caseId, { worker_name }) {
-  const supabase = getSupabase();
-  const actionAt = actionTimestamp();
   const workerId = await findWorkerId(worker_name);
   if (!workerId) throw new Error('Unknown worker');
-
-  const { data: existingCase, error: fetchError } = await supabase
-    .from('cases')
-    .select('*')
-    .eq('id', caseId)
-    .single();
-
-  if (fetchError || !existingCase) throw new Error('Unknown case');
-  if (existingCase.handoff_state === 'unassigned') throw new Error('No station assigned');
-  if (existingCase.handoff_state === 'acknowledged') {
-    if (existingCase.owner_worker_id !== workerId) throw new Error('Owner conflict');
-    return getCaseById(caseId);
-  }
-
-  const { error: updateError } = await supabase
-    .from('cases')
-    .update({
-      handoff_state: 'acknowledged',
-      owner_worker_id: workerId,
-      acknowledged_at: actionAt,
-      updated_at: actionAt
-    })
-    .eq('id', caseId);
-
-  if (updateError) throw updateError;
-
-  await appendEvent(caseId, 'case_accepted', worker_name, 'Accepted responsibility', actionAt);
-
+  const { error } = await getSupabase().rpc('accept_assigned_case', { p_case_id: caseId, p_worker_id: workerId });
+  if (error) throw error;
   return getCaseById(caseId);
 }
 
 export async function scheduleVisit(caseId, { scheduled_for, worker_name, location_type = "home", station_name }) {
   const location = normalizeVisitLocation({ location_type, station_name });
-  if (!Number.isFinite(Date.parse(scheduled_for))) throw new Error("Enter a valid visit date and time.");
+  assertFutureVisit(scheduled_for);
   const supabase = getSupabase();
   const actionAt = actionTimestamp();
   const { data: existingCase, error: fetchError } = await supabase
@@ -473,6 +475,7 @@ export async function scheduleVisit(caseId, { scheduled_for, worker_name, locati
 
   if (fetchError || !existingCase) throw new Error('Unknown case');
   if (existingCase.handoff_state !== 'acknowledged') throw new Error('Case not accepted');
+  assertFutureVisit(scheduled_for);
   if (new Date(scheduled_for) < new Date(existingCase.discharge_at)) throw new Error('Before discharge');
 
   // Exact-start collision checks only: duration/travel availability is not modeled here.
@@ -485,6 +488,7 @@ export async function scheduleVisit(caseId, { scheduled_for, worker_name, locati
   if (workerSlot.error) throw workerSlot.error;
   if (motherSlot.data.length) throw new Error('A visit is already scheduled for this mother at that time. Choose another time.');
   if (workerSlot.data.length) throw new Error('This worker already has a visit at that time. Choose another time.');
+  assertFutureVisit(scheduled_for);
   const visitId = `${caseId}-${crypto.randomUUID()}`;
 
   const { error: insertError } = await supabase
@@ -503,6 +507,14 @@ export async function scheduleVisit(caseId, { scheduled_for, worker_name, locati
 
   await appendEvent(caseId, 'visit_scheduled', worker_name, `${visitTypeLabel(location)} · ${location.station_name || "Your home"} · ${formatDot(scheduled_for)}`, actionAt);
 
+  return getCaseById(caseId);
+}
+
+export async function arrangeOverdue(caseId, { worker_name }) {
+  const workerId = await findWorkerId(worker_name);
+  if (!workerId) throw new Error('Unknown worker');
+  const { error } = await getSupabase().rpc('arrange_overdue_followup', { p_case_id: caseId, p_worker_id: workerId });
+  if (error) throw error;
   return getCaseById(caseId);
 }
 

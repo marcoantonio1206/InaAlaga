@@ -24,11 +24,11 @@ export function toManilaLocalInput(iso) {
 
 export function validateDischarge(values) {
   const errors = {};
-  if (!values.alias.trim()) errors.alias = "Enter a fictional alias.";
+  if (!values.alias.trim()) errors.alias = "Enter a mother alias.";
   if (!values.barangay) errors.barangay = "Choose a barangay.";
   if (!values.birth) errors.birth = "Enter the date and time of birth.";
   if (!values.discharge) errors.discharge = "Enter the discharge date and time.";
-  if (!values.due) errors.due = "Enter a demo follow-up target.";
+  if (!values.due) errors.due = "Enter a follow-up target.";
   if (values.birth && values.discharge && new Date(toManilaIso(values.discharge)) < new Date(toManilaIso(values.birth))) {
     errors.discharge = "Discharge cannot be before birth.";
   }

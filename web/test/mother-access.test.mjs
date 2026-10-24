@@ -72,7 +72,7 @@ test("the hospital profile gets the live link, not the expired one", async () =>
 test("saving a discharge issues an opaque link that expires in 14 days", async () => {
   const saved = await tabA.createDischarge(discharge("k1"));
   assert.match(saved.link.token, /^[0-9a-f]{32}$/);
-  assert.equal(saved.link.expires_at, "2026-11-02T04:00:00.000Z");
+  assert.equal(Date.parse(saved.link.expires_at) - Date.parse(saved.case.recorded_at), 14 * 86400000);
   assert.equal((await tabA.getCaseByToken(saved.link.token)).alias, "Joy Test");
   assert.equal(await tabA.getCaseByToken(saved.case.id.toLowerCase()), null);
 });

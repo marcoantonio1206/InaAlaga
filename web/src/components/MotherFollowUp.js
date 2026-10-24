@@ -34,6 +34,7 @@ export default function MotherFollowUp({ caseData, visit, status }) {
         )}
       </div>
 
+      {caseData.overdue_arranged_at && !visit?.arranged_at ? <p className="text-sm font-bold text-success-ink">{t("visitArranged")}</p> : null}
       <div className="flex flex-col gap-3 border-t border-brand-200 pt-4">
         <h2 className="font-bold">{t("assignedWorkerHeading")}</h2>
         {worker ? (

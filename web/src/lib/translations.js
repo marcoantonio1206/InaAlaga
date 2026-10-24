@@ -86,6 +86,7 @@ export const strings = {
     "completionRecordedLabel": "Itinalang natapos noong:",
     "viewVisitDetails": "Tingnan ang detalye",
     "hideVisitDetails": "Itago ang detalye",
+    "visitArranged": "Napag-usapan na ninyo ng kawani ang susunod na hakbang",
     "awaitingVisitUpdate": "Hinihintay ang ulat ng kawani",
     "yourHome": "Iyong bahay",
     "scheduledVisitHeading": "Nakatakdang pagdalaw",
@@ -127,7 +128,7 @@ export const strings = {
     "stationMapLabel": "Mapa ng istasyon",
     "loadingStation": "Kinukuha ang istasyon…",
     "countdownLabel": "Natitirang oras:",
-    "demoClockNote": "Batay sa oras na ginagamit sa demonstrasyon"
+    "demoClockNote": "Batay sa kasalukuyang oras sa Pilipinas"
   },
   "en": {
     "nextVisitHeading": "Next visit",
@@ -136,6 +137,7 @@ export const strings = {
     "completionRecordedLabel": "Completion recorded:",
     "viewVisitDetails": "View details",
     "hideVisitDetails": "Hide details",
+    "visitArranged": "Next steps agreed with your worker",
     "awaitingVisitUpdate": "Awaiting visit update",
     "yourHome": "Your home",
     "scheduledVisitHeading": "Scheduled visit",
@@ -256,6 +258,6 @@ export const strings = {
     "stationMapLabel": "Station map",
     "loadingStation": "Loading station…",
     "countdownLabel": "Time until visit:",
-    "demoClockNote": "Based on the app’s demonstration clock"
+    "demoClockNote": "Based on the current Philippine time"
   }
 };

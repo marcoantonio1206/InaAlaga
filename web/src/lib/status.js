@@ -1,10 +1,11 @@
+import { visitNeedsUpdate } from "@/lib/visitTiming";
 import { groupVisits } from "@/lib/visits";
 export function getStatus(caseData, nowIso) {
   if (caseData.handoff_state === "unassigned") return "unassigned";
   if (caseData.handoff_state !== "acknowledged") return "pending";
   const next = groupVisits(caseData.visits).next;
   if (!next) return "acknowledged";
-  return new Date(next.scheduled_for) < new Date(nowIso) ? "overdue" : "scheduled";
+  return visitNeedsUpdate(next, nowIso) ? "overdue" : "scheduled";
 }
 
 export function getCardVisit(caseData, status) {

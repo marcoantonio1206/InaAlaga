@@ -107,3 +107,15 @@ export function recordContactAttempt(caseId, { method, started_at, ended_at, out
 export async function resetDemoData() {
   throw new Error("Browser reset is only available in local demonstration mode.");
 }
+
+export function listAssignableWorkers() {
+  return request("/workers");
+}
+
+export function assignCase(caseId, { worker_id }) {
+  return request(`/cases/${enc(caseId)}/assign`, { method: "PATCH", body: { worker_id } });
+}
+
+export function arrangeOverdue(caseId, { worker_name }) {
+  return request(`/cases/${enc(caseId)}/arrange`, { method: "PATCH", body: { worker_name } });
+}

@@ -1,3 +1,4 @@
+import { visitNeedsUpdate } from "@/lib/visitTiming";
 import { groupVisits } from "@/lib/visits";
 import { visitTypeLabel, visitDestination } from "@/lib/visitLocation";
 import { formatDot, displayStationName } from "@/lib/format";
@@ -7,9 +8,9 @@ import { formatDot, displayStationName } from "@/lib/format";
 export function bhwState(c, nowIso) {
   if (c.handoff_state === "unassigned") return "unassigned";
   if (c.handoff_state !== "acknowledged") return "pending";
-  const next = groupVisits(c.visits).next;
+  const { next, scheduled } = groupVisits(c.visits);
   if (!next) return c.visits.some((v) => v.state === "completed") ? "completed" : "accepted";
-  return new Date(next.scheduled_for) < new Date(nowIso) ? "update_needed" : "scheduled";
+  return scheduled.some((v) => visitNeedsUpdate(v, nowIso)) ? "update_needed" : next.arranged_at ? "arranged" : "scheduled";
 }
 
 export const STATE_LABEL = {
@@ -18,6 +19,7 @@ export const STATE_LABEL = {
   accepted: { label: "Accepted · no visit scheduled", tone: "ok", icon: "check" },
   scheduled: { label: "Scheduled · visit remains open", tone: "lilac", icon: "calendar" },
   update_needed: { label: "Update needed · awaiting visit update", tone: "warn", icon: "alert" },
+  arranged: { label: "Arranged with mother · visit remains open", tone: "ok", icon: "check" },
   completed: { label: "Visit completed", tone: "ok", icon: "check" },
 };
 

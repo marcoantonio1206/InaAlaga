@@ -7,7 +7,7 @@ import { formatDotYear } from "@/lib/format";
 export default function MotherLink({ link }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <p className="text-sm text-muted">Mother&apos;s demo link</p>
+      <p className="text-sm text-muted">Mother&apos;s link</p>
       {link ? (
         <>
           <Link
@@ -16,10 +16,10 @@ export default function MotherLink({ link }) {
             rel="noopener"
             className="w-fit font-bold text-brand-900 underline"
           >
-            Open simulated SMS ↗
+            Open message preview ↗
           </Link>
           <p className="text-sm text-muted">
-            Private link for this case only. No SMS is sent. Expires {formatDotYear(link.expires_at)}.
+            Private link for this case only. Expires {formatDotYear(link.expires_at)}.
           </p>
         </>
       ) : (

@@ -1,5 +1,6 @@
 "use client";
 
+import { visitNeedsUpdate } from "@/lib/visitTiming";
 import MotherHeader from "@/components/MotherHeader";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
@@ -23,7 +24,7 @@ export default function VisitsPage() {
     <div className="flex flex-wrap items-center justify-between gap-2">
       <span className="font-bold">{formatDateTime(visit.scheduled_for, lang)}</span>
       <Badge icon={completed ? "check" : "calendar"} tone={completed ? "success" : visit.state === "scheduled" ? "future" : "default"}>
-        {t(completed ? "statusCompleted" : visit.state === "cancelled" ? "visitCancelled" : "statusScheduled")}
+        {t(visit.arranged_at && visit.state === "scheduled" ? "visitArranged" : completed ? "statusCompleted" : visit.state === "cancelled" ? "visitCancelled" : "statusScheduled")}
       </Badge>
     </div>
     <span className="mt-1 block text-sm text-muted">{visit.location_type === "station" ? `${t("stationCheckup")} · ${displayStationName(visit.station_name) || t("stationDestinationMissing")}` : `${t("locationHome")} · ${t("yourHome")}`}</span>
@@ -36,8 +37,9 @@ export default function VisitsPage() {
       <div className="flex flex-col gap-5 p-4">
         <section aria-labelledby="next-visit-heading" className="flex flex-col gap-2">
           <h2 id="next-visit-heading" className="text-lg font-extrabold text-brand-900">{t("nextVisitHeading")}</h2>
+          {data.overdue_arranged_at && !next?.arranged_at ? <p className="text-sm font-bold text-success-ink">{t("visitArranged")}</p> : null}
           {next ? <Card tone="next" className="gap-3">
-            <Badge icon={Date.parse(next.scheduled_for) < Date.parse(now) ? "clock" : "calendar"}>{t(Date.parse(next.scheduled_for) < Date.parse(now) ? "awaitingVisitUpdate" : "statusScheduled")}</Badge>
+            <Badge icon={visitNeedsUpdate(next, now) ? "clock" : "calendar"}>{t(next.arranged_at ? "visitArranged" : visitNeedsUpdate(next, now) ? "awaitingVisitUpdate" : "statusScheduled")}</Badge>
             <h3 className="text-[28px] font-extrabold leading-tight">{formatDateTime(next.scheduled_for, lang)}</h3>
             <VisitCountdown visit={next} />
             {details(next)}

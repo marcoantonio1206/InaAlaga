@@ -1,54 +1,41 @@
 "use client";
 
+import useLiveResource from "@/lib/hooks/useLiveResource";
+import RefreshStatus from "@/components/bhw/RefreshStatus";
+import useCurrentTime from "@/lib/hooks/useCurrentTime";
+
+import { visitNeedsUpdate } from "@/lib/visitTiming";
 import { visitTypeLabel, visitDestination } from "@/lib/visitLocation";
 
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 import Link from "next/link";
 import PageHeader from "@/components/hospital/PageHeader";
 import Pill from "@/components/hospital/Pill";
 import Icon from "@/components/ui/Icon";
 import { Loading, LoadFailed, Empty } from "@/components/bhw/LoadState";
-import { listWorkerSchedule, getDemoNow } from "@/lib/data";
+import { listWorkerSchedule } from "@/lib/data";
 import { useWorker } from "@/lib/bhwWorkers";
 import { formatDot, formatDotYear, displayStationName } from "@/lib/format";
 
 export default function BhwSchedulePage() {
   const { worker } = useWorker();
-  const now = getDemoNow();
-  const [rows, setRows] = useState(null);
-  const [failed, setFailed] = useState(false);
-  const [attempt, setAttempt] = useState(0);
-
-  useEffect(() => {
-    let active = true;
-    listWorkerSchedule(worker.name)
-      .then((data) => {
-        if (active) setRows({ worker: worker.name, data });
-      })
-      .catch(() => {
-        if (active) setFailed(true);
-      });
-    return () => {
-      active = false;
-    };
-  }, [worker.name, attempt]);
-
-  const list = rows && rows.worker === worker.name ? rows.data : null;
+  const now = useCurrentTime();
+  const load = useCallback(async () => ({ worker: worker.name, data: await listWorkerSchedule(worker.name) }), [worker.name]);
+  const { data: rows, error: failed, refreshing, refresh } = useLiveResource(load);
+  const list = rows?.worker === worker.name ? rows.data : null;
 
   return (
     <>
       <PageHeader showDemo={false} title="Schedule" subtitle={`${worker.name} · As of: ${formatDotYear(now)}`} />
+      <RefreshStatus refreshing={refreshing} refresh={refresh} error={failed && list !== null} subject="your schedule" />
       <p className="mb-4 text-sm text-muted">
         Only saved visits naming you as the recorded visitor. Visitor-scoped: a case accepted by
         you appears here only after a schedule is saved.
       </p>
-      {failed ? (
+      {failed && list === null ? (
         <LoadFailed
           message="Couldn't load your schedule."
-          onRetry={() => {
-            setFailed(false);
-            setAttempt((n) => n + 1);
-          }}
+          onRetry={refresh}
         />
       ) : list === null ? (
         <Loading />
@@ -60,7 +47,7 @@ export default function BhwSchedulePage() {
       ) : (
         <ul className="flex flex-col gap-3">
           {list.map(({ case: c, visit }) => {
-            const passed = new Date(visit.scheduled_for) < new Date(now);
+            const passed = visitNeedsUpdate(visit, now);
             return (
               <li key={`${c.id}-${visit.id}`}>
                 <Link
@@ -73,8 +60,8 @@ export default function BhwSchedulePage() {
                     <p className="text-sm text-muted">
                       {c.alias} · {c.id} · {displayStationName(visitDestination(visit))}
                     </p>
-                    <Pill tone={passed ? "warn" : "lilac"}>
-                      {passed ? "Update needed · awaiting visit update" : "Scheduled · visit remains open"}
+                    <Pill tone={visit.arranged_at ? "ok" : passed ? "warn" : "lilac"}>
+                      {visit.arranged_at ? "Arranged with mother · visit remains open" : passed ? "Update needed · awaiting visit update" : "Scheduled · visit remains open"}
                     </Pill>
                   </div>
                   <span className="text-brand-900" aria-hidden="true">

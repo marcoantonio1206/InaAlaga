@@ -1,13 +1,14 @@
 import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import Pill from "@/components/hospital/Pill";
-import { formatDot, initials, overdueLabel } from "@/lib/format";
+import { followupOverdueLabel } from "@/lib/visitTiming";
+import { formatDot, initials } from "@/lib/format";
 import { STATE_LABEL, bhwState, visitLine, requestLine } from "@/lib/bhwStatus";
 
 export default function CaseRow({ c, now, href }) {
   const state = bhwState(c, now);
   const s = STATE_LABEL[state];
-  const late = state === "completed" ? null : overdueLabel(c.due_at, now);
+  const late = followupOverdueLabel(c, now);
   const req = requestLine(c);
 
   return (

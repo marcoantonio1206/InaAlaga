@@ -9,7 +9,7 @@ import Card from "@/components/ui/Card";
 import { BARANGAYS, OTHER_BARANGAY, lookupStation } from "@/lib/demoGeography";
 import { validateDischarge, toManilaIso } from "@/lib/validation";
 import { createDischarge } from "@/lib/data";
-import { formatDotYear } from "@/lib/format";
+import { displayStationName, formatDotYear } from "@/lib/format";
 
 const EMPTY = { alias: "", barangay: "", birth: "", discharge: "", due: "" };
 
@@ -93,117 +93,57 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
   if (step === "saved" && result) {
     const c = result.case;
     const unassigned = c.handoff_state === "unassigned";
-    return (
-      <Modal
-        open={open}
-        onClose={close}
-        title="Discharge saved"
-        subtitle={
-          unassigned
-            ? "Station assignment needs coordinator review"
-            : "The fictional discharge and station assignment are recorded"
-        }
-      >
-        <Card>
-          <Pill tone={unassigned ? "warn" : "ok"}>{unassigned ? "Station not assigned" : "✓ Saved"}</Pill>
-          <h2 className="text-xl font-extrabold">
-            {c.alias} · {c.id}
-          </h2>
-          {result.duplicate ? (
-            <p className="text-muted">This discharge was already saved. No second record was created.</p>
-          ) : null}
-          {unassigned ? (
-            <>
-              <p>No matching demo station was found.</p>
-              <p>The record is saved and visible as unassigned. A coordinator must review the assignment.</p>
-              <Item label="Responsible worker" value="Not assigned" />
-              <p className="text-sm text-muted">No receiving station or worker acceptance has been recorded.</p>
-            </>
-          ) : (
-            <>
-              <div className="grid gap-4 border-b border-brand-200 pb-3 md:grid-cols-2">
-                <Item label="Assigned demo station" value={c.station_name} />
-                <Item label="Demo follow-up target" value={formatDotYear(c.due_at)} />
-              </div>
-              <Item label="Responsibility" value="Awaiting worker acceptance" />
-              <p>The case is available in the demo station inbox. No worker has accepted it yet.</p>
-            </>
-          )}
-          <p className="text-sm text-muted">No visit scheduled yet.</p>
-          <div className="border-t border-brand-200 pt-3">
-            <MotherLink link={result.link} />
-          </div>
-        </Card>
-        <div className="mt-5 flex flex-wrap gap-3">
-          {unassigned ? (
-            <button type="button" onClick={close} className={primary}>
-              Back to patient list
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => {
-                const id = c.id;
-                reset();
-                onViewHandoff(id);
-              }}
-              className={primary}
-            >
-              View handoff
-            </button>
-          )}
-          <button type="button" onClick={reset} className={outline}>
-            Record another discharge
-          </button>
+    const savedFooter = <div className="flex flex-wrap gap-3">
+      <button type="button" onClick={() => { const id = c.id; reset(); onViewHandoff(id); }} className={primary}>View handoff</button>
+      <button type="button" onClick={reset} className={outline}>Record another discharge</button>
+    </div>;
+    return <Modal open={open} onClose={close} title="Discharge saved" subtitle={unassigned ? "Choose a BHW in the handoff details" : "The discharge and station assignment are recorded"} footer={savedFooter}>
+      <Card>
+        <Pill tone={unassigned ? "warn" : "ok"}>{unassigned ? "Station not assigned" : "✓ Saved"}</Pill>
+        <h2 className="text-xl font-extrabold">{c.alias} · {c.id}</h2>
+        {result.duplicate ? <p className="text-muted">This discharge was already saved. No second record was created.</p> : null}
+        <div className="grid gap-4 border-b border-brand-200 pb-3 md:grid-cols-2">
+          <Item label="Coordinating station" value={displayStationName(c.station_name) || "Not assigned"} />
+          <Item label="Follow-up target" value={formatDotYear(c.due_at)} />
+          <Item label="Responsible worker" value={c.assigned_worker || "Not assigned"} />
+          <Item label="Recorded" value={formatDotYear(c.recorded_at)} />
         </div>
-      </Modal>
-    );
+        {unassigned ? <p>No matching station was found. Open the handoff to assign a BHW.</p> : <p>The case is available in the station inbox, awaiting worker acceptance.</p>}
+        <p className="text-sm text-muted">No visit scheduled yet.</p>
+        <div className="border-t border-brand-200 pt-3"><MotherLink link={result.link} /></div>
+      </Card>
+    </Modal>;
   }
 
   if (step === "review") {
-    return (
-      <Modal open={open} onClose={close} title="Review handoff" subtitle="Check this fictional record before saving">
-        <div className="flex flex-col gap-4">
-          <Card>
-            <h2 className="text-xl font-extrabold">Mother and discharge</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Item label="Mother alias" value={values.alias.trim()} />
-              <Item label="Birth" value={formatDotYear(toManilaIso(values.birth))} />
-              <Item label="Barangay" value={values.barangay} />
-              <Item label="Discharged" value={formatDotYear(toManilaIso(values.discharge))} />
-            </div>
-          </Card>
-          <Card>
-            <h2 className="text-xl font-extrabold">Follow-up handoff</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Item label="Demo follow-up target" value={formatDotYear(toManilaIso(values.due))} />
-              <Item label="Demo station" value={station ?? "Not assigned (coordinator review)"} />
-            </div>
-            <p className="text-sm text-muted">
-              Administrative target only. Station assignment follows the demonstration lookup.
-            </p>
-          </Card>
-          <Card tone="tint">
-            <h2 className="font-bold text-brand-900">Worker acceptance is still pending</h2>
-            <p>Saving records the discharge and station assignment. It does not confirm a visit or worker acceptance.</p>
-          </Card>
-          {saveError ? (
-            <div role="alert" className="rounded-2xl bg-danger-bg p-4 text-danger-ink">
-              <p className="font-bold">Couldn&apos;t save the record.</p>
-              <p>Your entries are kept. Try again.</p>
-            </div>
-          ) : null}
-          <div className="flex flex-wrap gap-3">
-            <button type="button" onClick={() => setStep("edit")} disabled={saving} className={outline}>
-              ‹ Edit details
-            </button>
-            <button type="button" onClick={save} disabled={saving} className={primary}>
-              {saving ? "Saving…" : "Save discharge"}
-            </button>
+    const reviewFooter = <div className="flex flex-wrap gap-3">
+      <button type="button" onClick={() => setStep("edit")} disabled={saving} className={outline}>‹ Edit details</button>
+      <button type="button" onClick={save} disabled={saving} className={primary}>{saving ? "Saving…" : "Save discharge"}</button>
+    </div>;
+    return <Modal open={open} onClose={close} disableClose={saving} title="Review handoff" subtitle="Check the details before saving" footer={reviewFooter}>
+      <div className="flex flex-col gap-4">
+        <Card>
+          <h2 className="text-xl font-extrabold">Mother and discharge</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Item label="Mother alias" value={values.alias.trim()} />
+            <Item label="Birth" value={formatDotYear(toManilaIso(values.birth))} />
+            <Item label="Barangay" value={values.barangay === OTHER_BARANGAY ? "Other barangay" : values.barangay} />
+            <Item label="Discharged" value={formatDotYear(toManilaIso(values.discharge))} />
+            <Item label="Facility" value="Cagayan Valley Medical Center" />
           </div>
-        </div>
-      </Modal>
-    );
+        </Card>
+        <Card>
+          <h2 className="text-xl font-extrabold">Follow-up handoff</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Item label="Follow-up target" value={formatDotYear(toManilaIso(values.due))} />
+            <Item label="Coordinating station" value={displayStationName(station) || "Not assigned"} />
+          </div>
+          <p className="text-sm text-muted">The station is suggested from the barangay.</p>
+        </Card>
+        <Card tone="tint"><h2 className="font-bold text-brand-900">Worker acceptance is still pending</h2><p>Saving records the discharge and assignment. It does not confirm a visit or worker acceptance.</p></Card>
+        {saveError ? <div role="alert" className="rounded-2xl bg-danger-bg p-4 text-danger-ink"><p className="font-bold">Couldn’t save the record.</p><p>Your entries are kept. Try again.</p></div> : null}
+      </div>
+    </Modal>;
   }
 
   const editFooter = (
@@ -225,7 +165,7 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
       open={open}
       onClose={close}
       title="Record discharge"
-      subtitle="Fictional information only · All dates and times use Philippine time"
+      subtitle="All dates and times use Philippine time"
       footer={editFooter}
     >
       {errorList.length > 0 ? (
@@ -245,7 +185,7 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
                 id="alias"
                 value={values.alias}
                 onChange={(e) => update("alias", e.target.value)}
-                placeholder="e.g. Maria Santos (fictional)"
+                placeholder="e.g. Maria Santos"
                 className={controlClass(errors.alias)}
               />
             </Field>
@@ -262,7 +202,7 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
                     {b.name}
                   </option>
                 ))}
-                <option value={OTHER_BARANGAY}>{OTHER_BARANGAY}</option>
+                <option value={OTHER_BARANGAY}>Other barangay</option>
               </select>
             </Field>
             <Field label="Date and time of birth *" htmlFor="birth" error={errors.birth}>
@@ -289,9 +229,9 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
           <h2 className="text-lg font-extrabold">Follow-up handoff</h2>
           <div className="grid gap-3 md:grid-cols-2">
             <Field
-              label="Demo follow-up target *"
+              label="Follow-up target *"
               htmlFor="due"
-              hint="Administrative demo target, not medical guidance."
+              hint="Administrative deadline for follow-up, not medical urgency."
               error={errors.due}
             >
               <input
@@ -302,7 +242,7 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
                 className={controlClass(errors.due)}
               />
             </Field>
-            <Field label="Facility · provided by demo workspace" htmlFor="facility" hint="Read only.">
+            <Field label="Facility" htmlFor="facility" hint="Read only.">
               <input
                 id="facility"
                 value="Cagayan Valley Medical Center"
@@ -314,15 +254,15 @@ export default function DischargeDialog({ open, onClose, onSaved, onViewHandoff 
         </Card>
         <Card tone="tint">
           {!values.barangay ? (
-            <p className="text-sm text-muted">Choose a barangay to see the suggested demo station.</p>
+            <p className="text-sm text-muted">Choose a barangay to see the suggested station.</p>
           ) : station ? (
             <>
-              <h2 className="font-bold text-brand-900">Suggested demo station: {station}</h2>
-              <p className="text-sm text-muted">Based on the demo barangay lookup. A worker has not accepted responsibility yet.</p>
+              <h2 className="font-bold text-brand-900">Suggested station: {displayStationName(station)}</h2>
+              <p className="text-sm text-muted">A worker has not accepted responsibility yet.</p>
             </>
           ) : (
             <>
-              <h2 className="font-bold text-warn-ink">No matching demo station</h2>
+              <h2 className="font-bold text-warn-ink">No matching station</h2>
               <p className="text-sm text-muted">Saving will record this case as unassigned for coordinator review.</p>
             </>
           )}

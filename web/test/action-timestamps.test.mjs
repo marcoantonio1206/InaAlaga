@@ -70,3 +70,26 @@ test('new actions record wall-clock save time, persist it, and keep entered visi
   assert.equal(actions.getDemoNow(), '2026-10-19T12:00:00+08:00', 'schedule scenario clock stays independent');
   assert.equal(toManilaLocalInput(completedAt), '2026-10-24T13:11');
 });
+
+test('facilitator discharge saves use real audit time while keeping entered dates and seed history', async (t) => {
+  t.mock.timers.enable({ apis: ['Date'], now: Date.parse('2026-10-24T11:15:16.123Z') });
+  await actions.resetDemoData();
+  const before = await actions.getCaseById('IA-0042');
+  const saved = await actions.createDischarge({
+    alias: 'Audit check', barangay: 'Caritan Norte',
+    birth_at: '2026-10-18T09:00:00+08:00', discharge_at: '2026-10-19T09:00:00+08:00',
+    due_at: '2026-10-21T09:00:00+08:00', idempotency_key: 'audit-discharge',
+  });
+  const at = new Date().toISOString();
+  assert.equal(saved.case.recorded_at, at);
+  assert.equal(saved.case.assigned_at, at);
+  assert.equal(saved.case.events.at(-1).at, at);
+  assert.equal(saved.case.discharge_at, '2026-10-19T09:00:00+08:00');
+  assert.equal(saved.case.due_at, '2026-10-21T09:00:00+08:00');
+  t.mock.timers.tick(60000);
+  const duplicate = await actions.createDischarge({ idempotency_key: 'audit-discharge' });
+  assert.equal(duplicate.case.recorded_at, at);
+  assert.equal((await reader.getCaseById(saved.case.id)).assigned_at, at);
+  assert.deepEqual(await reader.getCaseById('IA-0042'), before);
+  assert.equal(actions.getDemoNow(), '2026-10-19T12:00:00+08:00');
+});

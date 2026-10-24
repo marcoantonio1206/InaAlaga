@@ -1,3 +1,5 @@
+import { assertFutureVisit, hasUnarrangedOverdue, visitNeedsUpdate, followupOverdueLabel } from "@/lib/visitTiming";
+import { WORKERS, defaultWorkerForStation } from "@/lib/workerDirectory";
 import { actionTimestamp } from "@/lib/actionTime";
 import { assertNoDuplicateVisit } from "@/lib/visits";
 import { normalizeVisitLocation, visitTypeLabel } from "@/lib/visitLocation";
@@ -6,9 +8,10 @@ import { lookupStation, TANZA, LINAO } from "@/lib/demoGeography";
 import { formatDot } from "@/lib/format";
 
 function makeCase(fields) {
-  return {
+  const record = {
     handoff_state: "pending",
     request_state: "none",
+    assigned_worker: null,
     owner_worker: null,
     acknowledged_at: null,
     visits: [],
@@ -16,6 +19,10 @@ function makeCase(fields) {
     events: [],
     ...fields,
   };
+  if (record.handoff_state === "pending" && !record.assigned_worker && !record.owner_worker) {
+    record.assigned_worker = defaultWorkerForStation(record.station_name)?.name ?? null;
+  }
+  return record;
 }
 
 const store = {
@@ -174,6 +181,17 @@ function hydrate() {
     if (!saved.cases || !saved.links) return;
     replace(store, saved.cases);
     replace(links, saved.links);
+    // Upgrade previously saved station-only assignments without resetting records.
+    let changed = false;
+    for (const c of Object.values(store)) {
+      if (c.handoff_state !== "pending" || c.assigned_worker || c.owner_worker) continue;
+      const worker = defaultWorkerForStation(c.station_name);
+      if (!worker) continue;
+      c.assigned_worker = worker.name;
+      pushEvent(c, "case_assigned", "Station lookup", `Assigned to ${worker.name} · ${worker.short}`, actionTimestamp());
+      changed = true;
+    }
+    if (changed) persist();
   } catch {
     // ignore: keep the in-memory state
   }
@@ -228,7 +246,7 @@ function newToken() {
 
 function issueLink(caseKey) {
   const token = newToken();
-  const expires_at = new Date(new Date(DEMO_NOW).getTime() + LINK_DAYS * 86400000).toISOString();
+  const expires_at = new Date(new Date(store[caseKey]?.recorded_at ?? DEMO_NOW).getTime() + LINK_DAYS * 86400000).toISOString();
   links[token] = { case_key: caseKey, expires_at };
   return { token, expires_at };
 }
@@ -327,12 +345,37 @@ export async function listWorkerSchedule(workerName) {
   return rows.sort((a, b) => new Date(a.visit.scheduled_for) - new Date(b.visit.scheduled_for));
 }
 
+export async function listAssignableWorkers() {
+  return structuredClone(WORKERS);
+}
+
+export async function assignCase(caseId, { worker_id }) {
+  await wait(300);
+  hydrate();
+  const worker = WORKERS.find((w) => w.id === worker_id);
+  if (!worker) throw new Error("Choose an available BHW.");
+  const c = findCase(caseId);
+  if (c.assigned_worker === worker.name && c.station_name === worker.station) return structuredClone(c);
+  if (c.handoff_state !== "unassigned" || c.owner_worker) throw new Error("This case is already assigned. Refresh the record.");
+  const at = actionTimestamp();
+  c.station_name = worker.station;
+  c.assigned_worker = worker.name;
+  c.assigned_at = at;
+  c.handoff_state = "pending";
+  pushEvent(c, "case_assigned", "Facility staff", `Assigned to ${worker.name} · ${worker.short}`, at);
+  persist();
+  return structuredClone(c);
+}
+
 export async function acknowledgeCase(caseId, { worker_name }) {
   await wait(400);
   hydrate();
   const actionAt = actionTimestamp();
   const c = findCase(caseId);
   if (c.handoff_state === "unassigned") throw new Error("No station assigned");
+  const worker = WORKERS.find((w) => w.name === worker_name);
+  if (!worker || worker.station !== c.station_name) throw new Error("This worker belongs to another station.");
+  if (c.assigned_worker && c.assigned_worker !== worker_name) throw new Error("This case is assigned to another BHW.");
   if (c.handoff_state === "acknowledged") {
     if (c.owner_worker !== worker_name) throw new Error("Owner conflict");
     return structuredClone(c);
@@ -353,6 +396,7 @@ export async function scheduleVisit(caseId, { scheduled_for, worker_name, locati
   const actionAt = actionTimestamp();
   const c = findCase(caseId);
   if (c.handoff_state !== "acknowledged") throw new Error("Case not accepted");
+  assertFutureVisit(scheduled_for, actionAt);
   if (new Date(scheduled_for) < new Date(c.discharge_at)) throw new Error("Before discharge");
   assertNoDuplicateVisit(Object.values(store), caseId, worker_name, scheduled_for);
   const visit = {
@@ -365,6 +409,27 @@ export async function scheduleVisit(caseId, { scheduled_for, worker_name, locati
   };
   c.visits.push(visit);
   pushEvent(c, "visit_scheduled", worker_name, `${visitTypeLabel(visit)} · ${location.station_name || "Your home"} · ${formatDot(scheduled_for)}`, actionAt);
+  persist();
+  return structuredClone(c);
+}
+
+export async function arrangeOverdue(caseId, { worker_name }) {
+  await wait(300);
+  hydrate();
+  const c = findCase(caseId);
+  const worker = WORKERS.find((w) => w.name === worker_name);
+  if (c.handoff_state !== "acknowledged" || !worker || worker.station !== c.station_name || c.owner_worker !== worker_name) throw new Error("Only the responsible BHW can mark this arranged.");
+  const at = actionTimestamp();
+  if (!hasUnarrangedOverdue(c, at)) return structuredClone(c);
+  const targetPending = Boolean(followupOverdueLabel(c, at));
+  const resolved = [];
+  for (const v of c.visits) if (visitNeedsUpdate(v, at)) {
+    v.arranged_at = at; v.arranged_by = worker_name; resolved.push(v.id);
+  }
+  if (targetPending) {
+    c.overdue_arranged_at = at; c.overdue_arranged_by = worker_name;
+  }
+  pushEvent(c, "followup_arranged", worker_name, `Arranged with mother${resolved.length ? ` · Visits: ${resolved.join(", ")}` : " · Follow-up target"}. Visit outcomes remain separate.`, at);
   persist();
   return structuredClone(c);
 }
@@ -469,6 +534,7 @@ export async function createDischarge(input) {
   const count = Object.values(store).filter((c) => c.id.startsWith("IA-")).length;
   const id = `IA-${String(42 + count).padStart(4, "0")}`;
   const station = lookupStation(input.barangay);
+  const actionAt = actionTimestamp();
   const created = makeCase({
     id,
     alias: input.alias,
@@ -478,9 +544,12 @@ export async function createDischarge(input) {
     birth_at: input.birth_at,
     discharge_at: input.discharge_at,
     due_at: input.due_at,
-    recorded_at: DEMO_NOW,
-    assigned_at: station ? DEMO_NOW : null,
+    recorded_at: actionAt,
+    assigned_at: station ? actionAt : null,
   });
+  if (created.assigned_worker) {
+    pushEvent(created, "case_assigned", "Station lookup", `Assigned to ${created.assigned_worker} · ${station}`, actionAt);
+  }
   store[id.toLowerCase()] = created;
   // Saving the discharge is the mother's registration: it issues her private link.
   const link = issueLink(id.toLowerCase());

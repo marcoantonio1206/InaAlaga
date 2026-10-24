@@ -1,12 +1,8 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { TANZA, LINAO } from "@/lib/demoGeography";
-
-export const WORKERS = [
-  { name: "Ana", station: TANZA, short: "Tanza BHS" },
-  { name: "Bea", station: LINAO, short: "Linao West BHS" },
-];
+import { WORKERS } from "@/lib/workerDirectory";
+export { WORKERS } from "@/lib/workerDirectory";
 
 const WorkerContext = createContext(null);
 

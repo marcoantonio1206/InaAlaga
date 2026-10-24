@@ -1,5 +1,17 @@
 # InaAlaga team handoff
 
+## Latest application handoff — October 24, 2026
+
+Read [Facilitator and BHW progress](FACILITATOR_PROGRESS_2026-10-24.md) first for the updates following c99c430, then [Mother and BHW progress](UI_PROGRESS_2026-10-24.md). These newer notes supersede older UI/clock/refresh status below. The current source of requirements is `docs/InaAlaga_PRD.md`; do not use the older PRD.docx.
+
+- Facilitator discharge review/save, assignment of unassigned mothers to named BHWs, shared BHW/facilitator mother-details layout, clearer visit/contact rows, real save timestamps, automatic updates and manual Refresh are implemented.
+- BHW Cases, open profiles and Schedule now share automatic/manual refresh. Scheduling rejects times that have already passed in Philippine time. Responsible BHWs can record Arranged with mother to resolve current overdue warnings without completing or changing an appointment. Operational displays/countdowns now use the real clock; the fixed clock remains for historical fixtures/simulation.
+- A new fictional discharge was checked through persistence, correct BHW visibility/acceptance, scheduling, the scoped mother link, contact request, acknowledgment and contact logging. The latest validation passed 49 tests, production build and lint (one existing AppBar image warning). Browser checks used isolated records where mutations were needed.
+- Database mode requires migrations 004, 005 and 006 in order after 001–003. They have not been applied remotely, and Supabase integration has not been validated. Browser-local mode remains per-browser/per-origin storage, not cross-device data sharing. No hosted deployment was performed.
+- Coordinator review is complete, but polishing is **not implemented**. Recommended next: plain-language result summary, honest negative/tied comparisons, clearer assumptions, then a separate overview using saved operational records. Planning still reads the unchanged 162-scenario precomputed simulation export; it is independent of app records. Do not claim a universally best scheduling policy or measured city effectiveness. Remove the coordinator placeholder bell and align its header wording during that polish.
+
+Continue with the coordinator improvements after this checkpoint. Do not regenerate simulation outputs merely to change the presentation. Check the submission deliverables and run a final four-perspective walkthrough before release.
+
 Status: October 19, 2026 (UI and app seed update; analytical status unchanged). Read this first, then docs/InaAlaga_PRD.md and data/locations/tuguegarao_review/README.md. This summary covers the supplied project handoff and files inspected in this chat, not a complete export of every earlier conversation.
 
 ## New design and app seed artifacts

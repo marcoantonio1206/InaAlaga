@@ -1,3 +1,4 @@
+import { assertFutureVisit, PAST_VISIT_ERROR } from "@/lib/visitTiming";
 import { normalizeVisitLocation } from "@/lib/visitLocation";
 import { scheduleVisit } from '@/lib/data/supabase';
 
@@ -14,7 +15,7 @@ export async function POST(request, { params }) {
     let location;
     try {
       location = normalizeVisitLocation(body);
-      if (!Number.isFinite(Date.parse(scheduled_for))) throw new Error("Enter a valid visit date and time.");
+      assertFutureVisit(scheduled_for);
     } catch (error) {
       return Response.json({ error: error.message }, { status: 400 });
     }
@@ -22,6 +23,6 @@ export async function POST(request, { params }) {
     return Response.json(caseData);
   } catch (error) {
     console.error('scheduleVisit error:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ error: error.message }, { status: error.message === PAST_VISIT_ERROR ? 400 : 500 });
   }
 }

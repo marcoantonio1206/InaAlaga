@@ -8,6 +8,7 @@ export default function VisitCountdown({ visit }) {
   const { now } = useCase();
   const { lang, t } = useLang();
   if (visit.state !== "scheduled") return null;
+  if (visit.arranged_at) return <p className="text-sm font-bold text-success-ink">{t("visitArranged")}</p>;
   const remaining = visitCountdown(visit.scheduled_for, now, lang);
   if (!remaining) return null;
   return (

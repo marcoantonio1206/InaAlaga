@@ -14,7 +14,9 @@ export async function PATCH(request, { params }) {
     return Response.json(caseData);
   } catch (error) {
     console.error('acknowledgeCase error:', error);
-    const status = error.message === 'Owner conflict' ? 409 : 500;
+    const status = error.message === 'Owner conflict' || error.message === 'This case is assigned to another BHW.' ? 409
+      : error.message === 'This worker belongs to another station.' ? 403
+      : error.message === 'Unknown case' ? 404 : 500;
     return Response.json({ error: error.message }, { status });
   }
 }

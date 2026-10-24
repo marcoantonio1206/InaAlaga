@@ -1,5 +1,7 @@
 "use client";
 
+import useCurrentTime from "@/lib/hooks/useCurrentTime";
+import { assertFutureVisit, earliestVisitTime } from "@/lib/visitTiming";
 import { displayStationName } from "@/lib/format";
 import { useState } from "react";
 import Card from "@/components/ui/Card";
@@ -10,7 +12,9 @@ import useSave, { primaryBtn } from "./useSave";
 import { VISIT_STATIONS } from "@/lib/visitLocation";
 
 export default function ScheduleForm({ c, worker, onSaved }) {
-  const [when, setWhen] = useState(c.visits.length ? "" : toManilaLocalInput(c.due_at));
+  const now = useCurrentTime();
+  const minimum = new Date(Math.max(Date.parse(earliestVisitTime(now)), Date.parse(c.discharge_at))).toISOString();
+  const [when, setWhen] = useState(() => !c.visits.length && Date.parse(c.due_at) >= Date.parse(minimum) ? toManilaLocalInput(c.due_at) : "");
   const [locationType, setLocationType] = useState("home");
   const [stationName, setStationName] = useState(c.station_name || VISIT_STATIONS[0].name);
   const [fieldError, setFieldError] = useState(null);
@@ -22,6 +26,7 @@ export default function ScheduleForm({ c, worker, onSaved }) {
     if (new Date(toManilaIso(when)) < new Date(c.discharge_at)) {
       return setFieldError("The follow-up cannot be before discharge.");
     }
+    try { assertFutureVisit(toManilaIso(when)); } catch (error) { return setFieldError(error.message); }
     setFieldError(null);
     run(c.id, { scheduled_for: toManilaIso(when), worker_name: worker.name,
       location_type: locationType, station_name: locationType === "station" ? stationName : null });
@@ -30,7 +35,7 @@ export default function ScheduleForm({ c, worker, onSaved }) {
   return (
     <Card>
       <p className="text-sm text-muted">
-        Enter date and time in Asia/Manila. The current worker is recorded as visitor. A saved schedule
+        Choose a future date and time in Philippine time. The current worker is recorded as visitor. A saved schedule
         appears for the mother and on your Schedule. Exact duplicate start times are blocked; travel time and visit duration are not checked.
       </p>
       {c.visits.some((v) => v.state === "scheduled") ? <p className="rounded-lg bg-brand-50 p-3 text-sm text-brand-900">This adds a separate visit. Existing appointments stay scheduled.</p> : null}
@@ -53,6 +58,7 @@ export default function ScheduleForm({ c, worker, onSaved }) {
           <input
             id="sched-when"
             type="datetime-local"
+            min={toManilaLocalInput(minimum)}
             value={when}
             onChange={(e) => {
               setWhen(e.target.value);

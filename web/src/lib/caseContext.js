@@ -1,14 +1,15 @@
 "use client";
 
+import useCurrentTime from "@/lib/hooks/useCurrentTime";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { getCaseByToken, createContactRequest, getDemoNow } from "@/lib/data";
+import { getCaseByToken, createContactRequest } from "@/lib/data";
 
 const CaseContext = createContext(null);
 
 export function CaseProvider({ token, children }) {
   const [state, setState] = useState({ phase: "loading", data: null });
   const [attempt, setAttempt] = useState(0);
-  const [elapsed, setElapsed] = useState(0);
+  const now = useCurrentTime();
 
   useEffect(() => {
     const refresh = () => setAttempt((n) => n + 1);
@@ -20,12 +21,6 @@ export function CaseProvider({ token, children }) {
       window.removeEventListener("storage", refresh);
       window.removeEventListener("focus", refresh);
     };
-  }, []);
-
-  useEffect(() => {
-    const started = Date.now();
-    const timer = setInterval(() => setElapsed(Date.now() - started), 1000);
-    return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
@@ -52,7 +47,7 @@ export function CaseProvider({ token, children }) {
     setState({ phase: "ready", data: updated });
   }, [token]);
 
-  const value = { ...state, now: new Date(Date.parse(getDemoNow()) + elapsed).toISOString(), reload, requestContact };
+  const value = { ...state, now, reload, requestContact };
   return <CaseContext.Provider value={value}>{children}</CaseContext.Provider>;
 }
 

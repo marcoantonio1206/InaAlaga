@@ -18,7 +18,8 @@ const worker = await import("../src/lib/data/mock.js?worker-tab");
 const mother = await import("../src/lib/data/mock.js?mother-tab");
 const schedule = { scheduled_for: "2026-10-20T09:00:00+08:00", worker_name: "Ana" };
 
-beforeEach(async () => {
+beforeEach(async (t) => {
+  t.mock.timers.enable({ apis: ["Date"], now: Date.parse("2026-10-19T04:00:00Z") });
   storage.clear();
   await worker.resetDemoData();
   await worker.acknowledgeCase("IA-0042", { worker_name: "Ana" });
