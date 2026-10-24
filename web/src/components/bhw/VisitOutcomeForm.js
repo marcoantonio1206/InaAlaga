@@ -1,12 +1,14 @@
 "use client";
 
+import { visitTypeLabel, visitDestination } from "@/lib/visitLocation";
+
 import { useState } from "react";
 import Card from "@/components/ui/Card";
 import Pill from "@/components/hospital/Pill";
 import Field, { controlClass } from "@/components/hospital/Field";
 import { recordVisitOutcome } from "@/lib/data";
 import { toManilaIso, toManilaLocalInput } from "@/lib/validation";
-import { formatDot } from "@/lib/format";
+import { formatDot, displayStationName } from "@/lib/format";
 import useSave, { primaryBtn } from "./useSave";
 
 function plusMinutes(iso, m) {
@@ -50,7 +52,7 @@ export default function VisitOutcomeForm({ c, visit, updateNeeded, onSaved }) {
         </Pill>
       </div>
       <p className="font-bold">
-        {formatDot(visit.scheduled_for)} · Your home · Visitor {visit.worker_name}
+        {formatDot(visit.scheduled_for)} · {visitTypeLabel(visit)} · {displayStationName(visitDestination(visit))} · {visit.worker_name}
       </p>
       {updateNeeded ? (
         <p className="text-sm text-warn-ink">
@@ -84,7 +86,7 @@ export default function VisitOutcomeForm({ c, visit, updateNeeded, onSaved }) {
         </div>
         <div className="grid gap-3 md:grid-cols-2">
           <Field label="Outcome" htmlFor="out-outcome">
-            <input id="out-outcome" value="Completed home visit" readOnly className={controlClass(false)} />
+            <input id="out-outcome" value={`Completed ${visitTypeLabel(visit).toLowerCase()}`} readOnly className={controlClass(false)} />
           </Field>
           <Field label="Recorded visitor" htmlFor="out-visitor">
             <input id="out-visitor" value={visit.worker_name} readOnly className={controlClass(false)} />
@@ -102,7 +104,7 @@ export default function VisitOutcomeForm({ c, visit, updateNeeded, onSaved }) {
       </form>
       <p className="text-sm text-muted">
         Only a saved visit outcome completes it. Acknowledgment, a phone conversation and elapsed time
-        cannot produce a completed home visit.
+        cannot produce a completed visit.
       </p>
     </Card>
   );

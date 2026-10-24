@@ -102,7 +102,19 @@ test("saves from two tabs both survive", async () => {
 test("reset removes issued links and restores the seed", async () => {
   const saved = await tabA.createDischarge(discharge("k5"));
   await tabA.createContactRequest(MARIA);
+  await tabA.acknowledgeCase("IA-0042", { worker_name: "Ana" });
+  // A second tab has already loaded the edited state before the reset.
+  assert.equal((await tabB.getCaseByToken(MARIA)).request_state, "recorded");
+  assert.ok(await tabB.getCaseByToken(saved.link.token));
   await tabA.resetDemoData();
   assert.equal(await tabA.getCaseByToken(saved.link.token), null);
   assert.equal((await tabA.getCaseByToken(MARIA)).request_state, "none");
+  const restored = await tabB.getCaseByToken(MARIA);
+  assert.equal(restored.request_state, "none");
+  assert.equal(restored.handoff_state, "pending");
+  assert.equal(restored.events.length, 0);
+  assert.equal(await tabB.getCaseByToken(saved.link.token), null);
+  // An action in the old tab must not bring deleted cases back.
+  await tabB.createContactRequest(MARIA);
+  assert.equal(await tabA.getCaseByToken(saved.link.token), null);
 });

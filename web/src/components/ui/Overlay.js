@@ -94,7 +94,7 @@ export function Modal({ open, onClose, title, subtitle, size = "md", footer, chi
   );
 }
 
-export function SlideOver({ open, onClose, title, subtitle, children }) {
+export function SlideOver({ open, onClose, title, subtitle, children, showDemo = true, stickyHeader = false }) {
   const panelRef = useOverlay(open, onClose);
   if (!open) return null;
   return (
@@ -109,9 +109,9 @@ export function SlideOver({ open, onClose, title, subtitle, children }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="panel-title"
-        className="absolute inset-y-0 right-0 w-full max-w-[1040px] overflow-y-auto bg-white px-6 py-4 shadow-2xl lg:px-8"
+        className={`absolute inset-y-0 right-0 w-full max-w-[1040px] bg-white shadow-2xl ${stickyHeader ? "flex flex-col overflow-hidden" : "overflow-y-auto px-6 py-4 lg:px-8"}`}
       >
-        <div className="mb-3 flex items-start justify-between gap-4">
+        <div className={`flex items-start justify-between gap-4 ${stickyHeader ? "shrink-0 border-b border-brand-200 bg-white px-6 py-4 lg:px-8" : "mb-3"}`}>
           <div>
             <h1 id="panel-title" className="text-2xl font-extrabold lg:text-3xl">
               {title}
@@ -119,13 +119,13 @@ export function SlideOver({ open, onClose, title, subtitle, children }) {
             {subtitle ? <p className="text-sm text-muted">{subtitle}</p> : null}
           </div>
           <div className="flex items-center gap-3">
-            <span className="rounded-full bg-brand-200 px-3 py-1 text-sm font-bold text-brand-900">
+            {showDemo ? <span className="rounded-full bg-brand-200 px-3 py-1 text-sm font-bold text-brand-900">
               Fictional demo
-            </span>
+            </span> : null}
             <CloseButton onClose={onClose} />
           </div>
         </div>
-        {children}
+        {stickyHeader ? <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4 lg:px-8">{children}</div> : children}
       </aside>
     </div>
   );

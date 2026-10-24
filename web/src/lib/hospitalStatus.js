@@ -1,3 +1,4 @@
+import { groupVisits } from "@/lib/visits";
 import { formatDot } from "@/lib/format";
 
 export function responsibility(c) {
@@ -7,8 +8,8 @@ export function responsibility(c) {
 }
 
 export function visitSummary(c) {
-  if (c.visits.some((v) => v.state === "completed")) return "Visit completed";
-  const next = c.visits.find((v) => v.state === "scheduled");
+  const next = groupVisits(c.visits).next;
   if (next) return `Scheduled · ${formatDot(next.scheduled_for)}`;
+  if (c.visits.some((v) => v.state === "completed")) return "Visit completed";
   return "No visit scheduled";
 }

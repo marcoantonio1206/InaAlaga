@@ -15,8 +15,8 @@ export function Mark() {
 }
 export function Bell() {
   return (
-    <span className="text-white/90" title="No notifications in this demo">
-      <span className="sr-only">Notifications: none in this demo</span>
+    <span className="text-white/90" title="No notifications">
+      <span className="sr-only">Notifications: none</span>
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
         <path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Z" />
         <path d="M10 20a2 2 0 0 0 4 0" />
@@ -49,7 +49,7 @@ export function RoleChip({ title, detail, control }) {
 
 // Shared purple header for the desktop roles (hospital, BHW). `nav` renders
 // under the brand on the left; `right` renders the chip area.
-export default function AppBar({ homeHref, nav, right, width = "max-w-[900px]" }) {
+export default function AppBar({ homeHref, nav, right, width = "max-w-[900px]", showBell = true }) {
   return (
     <header className="bg-brand-900 text-white shadow-md">
       <div className={`mx-auto flex ${width} items-center justify-between gap-4 px-6 py-3 lg:px-8`}>
@@ -64,7 +64,7 @@ export default function AppBar({ homeHref, nav, right, width = "max-w-[900px]" }
           {nav}
         </div>
         <div className="flex items-center gap-5">
-          <Bell />
+          {showBell ? <Bell /> : null}
           {right}
         </div>
       </div>

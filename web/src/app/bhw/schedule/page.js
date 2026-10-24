@@ -1,5 +1,7 @@
 "use client";
 
+import { visitTypeLabel, visitDestination } from "@/lib/visitLocation";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import PageHeader from "@/components/hospital/PageHeader";
@@ -8,7 +10,7 @@ import Icon from "@/components/ui/Icon";
 import { Loading, LoadFailed, Empty } from "@/components/bhw/LoadState";
 import { listWorkerSchedule, getDemoNow } from "@/lib/data";
 import { useWorker } from "@/lib/bhwWorkers";
-import { formatDot, formatDotYear } from "@/lib/format";
+import { formatDot, formatDotYear, displayStationName } from "@/lib/format";
 
 export default function BhwSchedulePage() {
   const { worker } = useWorker();
@@ -35,9 +37,9 @@ export default function BhwSchedulePage() {
 
   return (
     <>
-      <PageHeader title="Schedule" subtitle={`${worker.name} · Demo snapshot: ${formatDotYear(now)}`} />
+      <PageHeader showDemo={false} title="Schedule" subtitle={`${worker.name} · As of: ${formatDotYear(now)}`} />
       <p className="mb-4 text-sm text-muted">
-        Only saved home follow-ups naming you as the recorded visitor. Visitor-scoped: a case accepted by
+        Only saved visits naming you as the recorded visitor. Visitor-scoped: a case accepted by
         you appears here only after a schedule is saved.
       </p>
       {failed ? (
@@ -52,8 +54,8 @@ export default function BhwSchedulePage() {
         <Loading />
       ) : list.length === 0 ? (
         <Empty
-          title="No home follow-ups saved for you yet."
-          body="Accept a case, then save a schedule from its Case detail. Clean-seed cases start empty."
+          title="No visits saved for you yet."
+          body="Accept a case, then save a schedule from its Case detail."
         />
       ) : (
         <ul className="flex flex-col gap-3">
@@ -67,9 +69,9 @@ export default function BhwSchedulePage() {
                 >
                   <Icon name="calendar" size={22} className="shrink-0 text-brand-900" />
                   <div className="flex min-w-0 flex-1 flex-col gap-1">
-                    <p className="font-bold">{formatDot(visit.scheduled_for)} · Home follow-up</p>
+                    <p className="font-bold">{formatDot(visit.scheduled_for)} · {visitTypeLabel(visit)}</p>
                     <p className="text-sm text-muted">
-                      {c.alias} · {c.id} · {c.barangay}
+                      {c.alias} · {c.id} · {displayStationName(visitDestination(visit))}
                     </p>
                     <Pill tone={passed ? "warn" : "lilac"}>
                       {passed ? "Update needed · awaiting visit update" : "Scheduled · visit remains open"}

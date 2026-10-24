@@ -1,13 +1,14 @@
-import { formatDot } from "@/lib/format";
+import { groupVisits } from "@/lib/visits";
+import { visitTypeLabel, visitDestination } from "@/lib/visitLocation";
+import { formatDot, displayStationName } from "@/lib/format";
 
 // BHW-facing case state. Derived from saved fields only; time passing never
 // completes a visit, it only flags that an update is needed.
 export function bhwState(c, nowIso) {
   if (c.handoff_state === "unassigned") return "unassigned";
-  if (c.visits.some((v) => v.state === "completed")) return "completed";
   if (c.handoff_state !== "acknowledged") return "pending";
-  const next = c.visits.find((v) => v.state === "scheduled");
-  if (!next) return "accepted";
+  const next = groupVisits(c.visits).next;
+  if (!next) return c.visits.some((v) => v.state === "completed") ? "completed" : "accepted";
   return new Date(next.scheduled_for) < new Date(nowIso) ? "update_needed" : "scheduled";
 }
 
@@ -17,22 +18,22 @@ export const STATE_LABEL = {
   accepted: { label: "Accepted · no visit scheduled", tone: "ok", icon: "check" },
   scheduled: { label: "Scheduled · visit remains open", tone: "lilac", icon: "calendar" },
   update_needed: { label: "Update needed · awaiting visit update", tone: "warn", icon: "alert" },
-  completed: { label: "Home visit completed", tone: "ok", icon: "check" },
+  completed: { label: "Visit completed", tone: "ok", icon: "check" },
 };
 
 export function openVisit(c) {
-  return c.visits.find((v) => v.state === "scheduled") ?? null;
+  return groupVisits(c.visits).next ?? null;
 }
 
 export function completedVisit(c) {
-  return c.visits.find((v) => v.state === "completed") ?? null;
+  return c.visits.filter((v) => v.state === "completed").sort((a,b) => new Date(b.ended_at ?? b.scheduled_for) - new Date(a.ended_at ?? a.scheduled_for))[0] ?? null;
 }
 
 export function visitLine(c) {
+  const next = openVisit(c);
+  if (next) return `${visitTypeLabel(next)} · ${displayStationName(visitDestination(next))} · ${formatDot(next.scheduled_for)} · ${next.worker_name}`;
   const done = completedVisit(c);
   if (done) return `Completed · ${formatDot(done.ended_at ?? done.scheduled_for)}`;
-  const next = openVisit(c);
-  if (next) return `Home follow-up · ${formatDot(next.scheduled_for)} · ${next.worker_name}`;
   return "No visit scheduled";
 }
 

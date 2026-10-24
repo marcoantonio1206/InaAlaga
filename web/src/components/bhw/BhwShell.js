@@ -21,7 +21,7 @@ export default function BhwShell({ children }) {
 
   const switcher = (
     <select
-      aria-label="Demo worker"
+      aria-label="Select worker"
       value={worker.name}
       onChange={(e) => select(e.target.value)}
       className="-ml-1 h-7 rounded-md border border-brand-200 bg-white px-1 text-[12px] font-bold text-brand-900"
@@ -62,10 +62,15 @@ export default function BhwShell({ children }) {
     <div className="flex min-h-dvh flex-col bg-brand-50">
       <AppBar
         homeHref="/bhw"
+        showBell={false}
+        width="max-w-[1120px]"
         nav={nav}
-        right={<RoleChip title="Barangay health worker" control={switcher} />}
+        right={<div className="flex flex-wrap items-center justify-end gap-2">
+          <Link href="/demonstration/settings" aria-label="Open demonstration settings" className="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Demonstration</Link>
+          <RoleChip title="Barangay health worker" control={switcher} />
+        </div>}
       />
-      <main className="mx-auto w-full max-w-[900px] flex-1 px-4 py-5 lg:px-8">{children}</main>
+      <main className="mx-auto w-full max-w-[1120px] flex-1 px-4 py-5 lg:px-8">{children}</main>
       <nav aria-label="BHW" className="sticky bottom-0 border-t border-brand-200 bg-white px-2 py-2 lg:hidden">
         <ul className="grid grid-cols-2 gap-1">
           {TABS.map((tab) => {

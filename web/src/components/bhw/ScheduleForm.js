@@ -1,34 +1,54 @@
 "use client";
 
+import { displayStationName } from "@/lib/format";
 import { useState } from "react";
 import Card from "@/components/ui/Card";
 import Field, { controlClass } from "@/components/hospital/Field";
 import { scheduleVisit } from "@/lib/data";
 import { toManilaIso, toManilaLocalInput } from "@/lib/validation";
 import useSave, { primaryBtn } from "./useSave";
+import { VISIT_STATIONS } from "@/lib/visitLocation";
 
 export default function ScheduleForm({ c, worker, onSaved }) {
-  const [when, setWhen] = useState(toManilaLocalInput(c.due_at));
+  const [when, setWhen] = useState(c.visits.length ? "" : toManilaLocalInput(c.due_at));
+  const [locationType, setLocationType] = useState("home");
+  const [stationName, setStationName] = useState(c.station_name || VISIT_STATIONS[0].name);
   const [fieldError, setFieldError] = useState(null);
   const { saving, error, run } = useSave(scheduleVisit, onSaved);
 
   function submit(e) {
     e.preventDefault();
-    if (!when) return setFieldError("Enter the date and time of the home follow-up.");
+    if (!when) return setFieldError("Enter the date and time of the visit.");
     if (new Date(toManilaIso(when)) < new Date(c.discharge_at)) {
       return setFieldError("The follow-up cannot be before discharge.");
     }
     setFieldError(null);
-    run(c.id, { scheduled_for: toManilaIso(when), worker_name: worker.name });
+    run(c.id, { scheduled_for: toManilaIso(when), worker_name: worker.name,
+      location_type: locationType, station_name: locationType === "station" ? stationName : null });
   }
 
   return (
     <Card>
       <p className="text-sm text-muted">
         Enter date and time in Asia/Manila. The current worker is recorded as visitor. A saved schedule
-        appears for the mother and on your Schedule; it does not mean contact happened.
+        appears for the mother and on your Schedule. Exact duplicate start times are blocked; travel time and visit duration are not checked.
       </p>
+      {c.visits.some((v) => v.state === "scheduled") ? <p className="rounded-lg bg-brand-50 p-3 text-sm text-brand-900">This adds a separate visit. Existing appointments stay scheduled.</p> : null}
       <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
+        <Field label="Visit type" htmlFor="sched-type">
+          <select id="sched-type" value={locationType} onChange={(e) => setLocationType(e.target.value)} className={controlClass(false)}>
+            <option value="home">Home visit</option>
+            <option value="station">Station check-up</option>
+          </select>
+        </Field>
+        {locationType === "station" ? (
+          <Field label="Check-up station" htmlFor="sched-station">
+            <select id="sched-station" value={stationName} onChange={(e) => setStationName(e.target.value)} className={controlClass(false)}>
+              {VISIT_STATIONS.map((s) => <option key={s.name} value={s.name}>{displayStationName(s.name)}</option>)}
+            </select>
+            <p className="mt-1 text-xs text-muted">Visit destination only. The assigned station for this case stays unchanged.</p>
+          </Field>
+        ) : null}
         <Field label="Date and time" htmlFor="sched-when" error={fieldError}>
           <input
             id="sched-when"

@@ -41,7 +41,7 @@ export default function ContactRequestCard({ c, worker, onSaved }) {
     <Card>
       <Pill tone="warn">Mother recorded “Please contact me”</Pill>
       <p className="text-sm">
-        Recorded {c.request_recorded_at ? formatDot(c.request_recorded_at) : "in this demo"}. The request
+        {c.request_recorded_at ? `Recorded ${formatDot(c.request_recorded_at)}.` : "Request recorded."} The request
         awaits acknowledgment. Opening the case has not acknowledged it.
       </p>
       {error ? (

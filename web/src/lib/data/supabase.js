@@ -1,3 +1,5 @@
+import { actionTimestamp } from "@/lib/actionTime";
+import { normalizeVisitLocation, visitTypeLabel } from "@/lib/visitLocation";
 // Server-only: uses the service-role key, which Next.js never ships to the
 // browser. Route handlers under app/api import this module; client code goes
 // through ./api.js (selected by lib/data/index.js).
@@ -37,11 +39,11 @@ export function getDemoMotherToken() {
 }
 
 // Helper to append audit events
-async function appendEvent(caseId, type, actor, detail = null) {
+async function appendEvent(caseId, type, actor, detail = null, at = DEMO_NOW) {
   const supabase = getSupabase();
   await supabase.from('events').insert({
     case_id: caseId,
-    at: DEMO_NOW,
+    at,
     type,
     actor,
     detail
@@ -84,7 +86,7 @@ function mapEvent(e) {
 
 // Helper to convert DB case to mock-compatible shape
 function mapCase(dbCase) {
-  const request = [...(dbCase.contact_requests || [])].sort(byTime('recorded_at')).at(-1);
+  const request = [...(dbCase.contact_requests || [])].sort(byTime('created_at')).at(-1);
   return {
     id: dbCase.id,
     alias: dbCase.alias,
@@ -178,29 +180,39 @@ export async function getMotherLink(caseId) {
 
 export async function createContactRequest(token) {
   const supabase = getSupabase();
+  const actionAt = actionTimestamp();
   const existingCase = await caseRowForToken(token, 'id, request_state, recorded_at');
   if (!existingCase || !isLive(existingCase)) throw new Error('Unknown link');
-  if (existingCase.request_state !== 'none') {
+  if (existingCase.request_state === 'recorded') {
     return getCaseByToken(token);
   }
 
-  const { error: updateError } = await supabase
+  const { data: claimed, error: updateError } = await supabase
     .from('cases')
     .update({
       request_state: 'recorded',
-      updated_at: DEMO_NOW
+      updated_at: actionAt
     })
-    .eq('id', existingCase.id);
+    .eq('id', existingCase.id)
+    .eq('request_state', existingCase.request_state)
+    .select('id')
+    .maybeSingle();
 
   if (updateError) throw updateError;
+  if (!claimed) return getCaseByToken(token);
 
-  await supabase.from('contact_requests').insert({
+  const { error: insertError } = await supabase.from('contact_requests').insert({
     case_id: existingCase.id,
     state: 'recorded',
-    recorded_at: DEMO_NOW
+    recorded_at: actionAt
   });
+  if (insertError) {
+    await supabase.from('cases').update({ request_state: existingCase.request_state })
+      .eq('id', existingCase.id).eq('request_state', 'recorded');
+    throw insertError;
+  }
 
-  await appendEvent(existingCase.id, 'request_recorded', 'Mother', 'Please contact me');
+  await appendEvent(existingCase.id, 'request_recorded', 'Mother', 'Please contact me', actionAt);
 
   return getCaseByToken(token);
 }
@@ -405,6 +417,7 @@ export async function listWorkerSchedule(workerName) {
       state: v.state,
       scheduled_for: v.scheduled_for,
       location_type: v.location_type,
+      station_name: v.station_name,
       worker_name: v.worker_name,
       scheduled_at: v.scheduled_at
     }
@@ -413,6 +426,7 @@ export async function listWorkerSchedule(workerName) {
 
 export async function acknowledgeCase(caseId, { worker_name }) {
   const supabase = getSupabase();
+  const actionAt = actionTimestamp();
   const workerId = await findWorkerId(worker_name);
   if (!workerId) throw new Error('Unknown worker');
 
@@ -434,20 +448,23 @@ export async function acknowledgeCase(caseId, { worker_name }) {
     .update({
       handoff_state: 'acknowledged',
       owner_worker_id: workerId,
-      acknowledged_at: DEMO_NOW,
-      updated_at: DEMO_NOW
+      acknowledged_at: actionAt,
+      updated_at: actionAt
     })
     .eq('id', caseId);
 
   if (updateError) throw updateError;
 
-  await appendEvent(caseId, 'case_accepted', worker_name, 'Accepted responsibility');
+  await appendEvent(caseId, 'case_accepted', worker_name, 'Accepted responsibility', actionAt);
 
   return getCaseById(caseId);
 }
 
-export async function scheduleVisit(caseId, { scheduled_for, worker_name }) {
+export async function scheduleVisit(caseId, { scheduled_for, worker_name, location_type = "home", station_name }) {
+  const location = normalizeVisitLocation({ location_type, station_name });
+  if (!Number.isFinite(Date.parse(scheduled_for))) throw new Error("Enter a valid visit date and time.");
   const supabase = getSupabase();
+  const actionAt = actionTimestamp();
   const { data: existingCase, error: fetchError } = await supabase
     .from('cases')
     .select('*')
@@ -458,23 +475,17 @@ export async function scheduleVisit(caseId, { scheduled_for, worker_name }) {
   if (existingCase.handoff_state !== 'acknowledged') throw new Error('Case not accepted');
   if (new Date(scheduled_for) < new Date(existingCase.discharge_at)) throw new Error('Before discharge');
 
-  const { data: existingVisit } = await supabase
-    .from('visits')
-    .select('id')
-    .eq('case_id', caseId)
-    .eq('state', 'scheduled')
-    .limit(1)
-    .maybeSingle();
-
-  if (existingVisit) throw new Error('Visit already scheduled');
-
-  const { data: countData } = await supabase
-    .from('visits')
-    .select('id', { count: 'exact' })
-    .eq('case_id', caseId);
-
-  // visits.id is the table's primary key, so it must be unique across cases.
-  const visitId = `${caseId}-v${(countData?.length || 0) + 1}`;
+  // Exact-start collision checks only: duration/travel availability is not modeled here.
+  const time = new Date(scheduled_for).toISOString();
+  const [motherSlot, workerSlot] = await Promise.all([
+    supabase.from('visits').select('id').eq('case_id', caseId).neq('state', 'cancelled').eq('scheduled_for', time).limit(1),
+    supabase.from('visits').select('id').eq('worker_name', worker_name).eq('state', 'scheduled').eq('scheduled_for', time).limit(1),
+  ]);
+  if (motherSlot.error) throw motherSlot.error;
+  if (workerSlot.error) throw workerSlot.error;
+  if (motherSlot.data.length) throw new Error('A visit is already scheduled for this mother at that time. Choose another time.');
+  if (workerSlot.data.length) throw new Error('This worker already has a visit at that time. Choose another time.');
+  const visitId = `${caseId}-${crypto.randomUUID()}`;
 
   const { error: insertError } = await supabase
     .from('visits')
@@ -483,20 +494,21 @@ export async function scheduleVisit(caseId, { scheduled_for, worker_name }) {
       case_id: caseId,
       state: 'scheduled',
       scheduled_for,
-      location_type: 'home',
+      ...location,
       worker_name,
-      scheduled_at: DEMO_NOW
+      scheduled_at: actionAt
     });
 
   if (insertError) throw insertError;
 
-  await appendEvent(caseId, 'visit_scheduled', worker_name, `Home follow-up · ${formatDot(scheduled_for)}`);
+  await appendEvent(caseId, 'visit_scheduled', worker_name, `${visitTypeLabel(location)} · ${location.station_name || "Your home"} · ${formatDot(scheduled_for)}`, actionAt);
 
   return getCaseById(caseId);
 }
 
 export async function recordVisitOutcome(caseId, visitId, { started_at, ended_at, outcome }) {
   const supabase = getSupabase();
+  const actionAt = actionTimestamp();
   if (outcome !== 'completed') throw new Error('Unsupported outcome');
 
   const { data: visit, error: fetchError } = await supabase
@@ -518,20 +530,21 @@ export async function recordVisitOutcome(caseId, visitId, { started_at, ended_at
       started_at,
       ended_at,
       outcome,
-      completed_recorded_at: DEMO_NOW,
-      updated_at: DEMO_NOW
+      completed_recorded_at: actionAt,
+      updated_at: actionAt
     })
     .eq('id', visitId);
 
   if (updateError) throw updateError;
 
-  await appendEvent(caseId, 'visit_completed', visit.worker_name, 'Completed home visit outcome saved');
+  await appendEvent(caseId, 'visit_completed', visit.worker_name, `${visitTypeLabel(visit)} outcome saved`, actionAt);
 
   return getCaseById(caseId);
 }
 
 export async function acknowledgeRequest(caseId, { worker_name }) {
   const supabase = getSupabase();
+  const actionAt = actionTimestamp();
   const { data: existingCase, error: fetchError } = await supabase
     .from('cases')
     .select('request_state, handoff_state')
@@ -546,7 +559,7 @@ export async function acknowledgeRequest(caseId, { worker_name }) {
     .from('cases')
     .update({
       request_state: 'acknowledged',
-      updated_at: DEMO_NOW
+      updated_at: actionAt
     })
     .eq('id', caseId);
 
@@ -557,18 +570,20 @@ export async function acknowledgeRequest(caseId, { worker_name }) {
     .update({
       state: 'acknowledged',
       acknowledged_by: worker_name,
-      acknowledged_at: DEMO_NOW,
-      updated_at: DEMO_NOW
+      acknowledged_at: actionAt,
+      updated_at: actionAt
     })
-    .eq('case_id', caseId);
+    .eq('case_id', caseId)
+    .eq('state', 'recorded');
 
-  await appendEvent(caseId, 'request_acknowledged', worker_name, 'Contact request acknowledged');
+  await appendEvent(caseId, 'request_acknowledged', worker_name, 'Contact request acknowledged', actionAt);
 
   return getCaseById(caseId);
 }
 
 export async function recordContactAttempt(caseId, { method, started_at, ended_at, outcome, worker_name }) {
   const supabase = getSupabase();
+  const actionAt = actionTimestamp();
   if (!['not_reached', 'reached'].includes(outcome)) throw new Error('Unsupported outcome');
   if (new Date(ended_at) < new Date(started_at)) throw new Error('Ended before started');
 
@@ -590,7 +605,7 @@ export async function recordContactAttempt(caseId, { method, started_at, ended_a
     ended_at,
     outcome,
     worker_name,
-    recorded_at: DEMO_NOW
+    recorded_at: actionAt
   });
 
   if (insertError) throw insertError;
@@ -599,8 +614,7 @@ export async function recordContactAttempt(caseId, { method, started_at, ended_a
     caseId,
     'contact_attempt',
     worker_name,
-    outcome === 'reached' ? `Reached by ${method}` : `Not reached (${method})`
-  );
+    outcome === 'reached' ? `Reached by ${method}` : `Not reached (${method})`, actionAt);
 
   return getCaseById(caseId);
 }

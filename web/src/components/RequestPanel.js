@@ -44,6 +44,10 @@ export default function RequestPanel({ requestState, onRequest }) {
           {t("requestLabel")}
         </div>
         <p className="font-bold">{t("requestAcked")}</p>
+        <Button variant="outline" onClick={handleClick} disabled={saving}>
+          {saving ? t("requestSaving") : t("requestAgain")}
+        </Button>
+        {failed ? <p role="alert" className="text-sm text-danger-ink">{t("requestFailed")}</p> : null}
       </Card>
     );
   }

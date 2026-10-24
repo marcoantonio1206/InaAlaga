@@ -2,7 +2,6 @@
 
 import MotherHeader from "@/components/MotherHeader";
 import Card from "@/components/ui/Card";
-import DemoNotice from "@/components/DemoNotice";
 import { useCase } from "@/lib/caseContext";
 import { useLang } from "@/lib/i18n";
 
@@ -17,7 +16,6 @@ export default function PlaceholderPage() {
           <p className="text-muted">{t("tabSoon")}</p>
         </Card>
       </div>
-      <DemoNotice />
     </main>
   );
 }

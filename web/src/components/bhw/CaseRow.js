@@ -18,7 +18,7 @@ export default function CaseRow({ c, now, href }) {
       >
         <span
           aria-hidden="true"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-900 text-sm font-bold text-white"
+          className="flex h-10 w-10 shrink-0 aspect-square items-center justify-center rounded-full bg-brand-900 text-sm font-bold text-white"
         >
           {initials(c.alias)}
         </span>
@@ -38,7 +38,7 @@ export default function CaseRow({ c, now, href }) {
           </div>
           <p className="text-sm">{visitLine(c)}</p>
           <p className={`text-sm ${late ? "text-warn-ink" : "text-muted"}`}>
-            Demo target {formatDot(c.due_at)}
+            Follow-up target {formatDot(c.due_at)}
             {late ? ` · ${late}` : ""}
           </p>
         </div>

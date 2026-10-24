@@ -51,6 +51,10 @@ Python 3.10+, standard library only. Seeds, config hashes and output checksums a
 
 The NDHS microdata (DHS Program, PHGR82FL) is restricted and not included; register at dhsprogram.com to obtain it. Published aggregates used for context are documented in `data/context/psa_ndhs_verification/`.
 
+## Latest UI handoff
+
+See [Mother and BHW progress — October 24, 2026](docs/UI_PROGRESS_2026-10-24.md) for the implemented workflows, validation, database migrations and remaining deployment checks.
+
 ## Repository map
 
 Older handoff notes, including what is intentionally excluded from the repo and how to re-extract the OSM geography: `docs/HANDOFF_NOTES.md`.

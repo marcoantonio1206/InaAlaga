@@ -1,5 +1,7 @@
 "use client";
 
+import { groupVisits } from "@/lib/visits";
+
 import { useEffect, useState } from "react";
 import Pill from "@/components/hospital/Pill";
 import Card from "@/components/ui/Card";
@@ -65,8 +67,8 @@ export default function PatientProfile({ caseId }) {
   const r = responsibility(c);
   const recorded = c.recorded_at ?? c.discharge_at;
   const assigned = c.assigned_at ?? (c.station_name ? plusMinute(recorded) : null);
-  const next = c.visits.find((v) => v.state === "scheduled");
-  const done = c.visits.find((v) => v.state === "completed");
+  const { next, previous } = groupVisits(c.visits);
+  const done = next ? null : previous.find((v) => v.state === "completed");
   const worker =
     c.handoff_state === "acknowledged"
       ? c.owner_worker ?? c.visits[0]?.worker_name ?? "Accepted"

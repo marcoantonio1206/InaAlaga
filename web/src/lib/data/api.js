@@ -81,8 +81,8 @@ export function acknowledgeCase(caseId, { worker_name }) {
   return request(`/cases/${enc(caseId)}/acknowledge`, { method: "PATCH", body: { worker_name } });
 }
 
-export function scheduleVisit(caseId, { scheduled_for, worker_name }) {
-  return request(`/cases/${enc(caseId)}/visits`, { method: "POST", body: { scheduled_for, worker_name } });
+export function scheduleVisit(caseId, { scheduled_for, worker_name, location_type = "home", station_name }) {
+  return request(`/cases/${enc(caseId)}/visits`, { method: "POST", body: { scheduled_for, worker_name, location_type, station_name } });
 }
 
 export function recordVisitOutcome(caseId, visitId, { started_at, ended_at, outcome }) {
@@ -105,5 +105,5 @@ export function recordContactAttempt(caseId, { method, started_at, ended_at, out
 
 // Supabase sessions are reset through /api/sessions; the BHW reset button is a no-op here.
 export async function resetDemoData() {
-  return { success: true };
+  throw new Error("Browser reset is only available in local demonstration mode.");
 }

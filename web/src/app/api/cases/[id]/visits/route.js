@@ -1,3 +1,4 @@
+import { normalizeVisitLocation } from "@/lib/visitLocation";
 import { scheduleVisit } from '@/lib/data/supabase';
 
 export async function POST(request, { params }) {
@@ -10,7 +11,14 @@ export async function POST(request, { params }) {
       return Response.json({ error: 'scheduled_for and worker_name are required' }, { status: 400 });
     }
 
-    const caseData = await scheduleVisit(caseId, { scheduled_for, worker_name });
+    let location;
+    try {
+      location = normalizeVisitLocation(body);
+      if (!Number.isFinite(Date.parse(scheduled_for))) throw new Error("Enter a valid visit date and time.");
+    } catch (error) {
+      return Response.json({ error: error.message }, { status: 400 });
+    }
+    const caseData = await scheduleVisit(caseId, { scheduled_for, worker_name, ...location });
     return Response.json(caseData);
   } catch (error) {
     console.error('scheduleVisit error:', error);

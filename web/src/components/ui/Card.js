@@ -2,6 +2,8 @@ const tones = {
   default: "bg-white border-brand-200",
   tint: "bg-brand-200 border-brand-200",
   dashed: "bg-white border-dashed border-brand-600",
+  future: "bg-future-bg border-future-border",
+  next: "bg-brand-50 border-brand-600",
 };
 
 export default function Card({ children, tone = "default", className = "" }) {

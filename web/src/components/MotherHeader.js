@@ -17,7 +17,7 @@ export default function MotherHeader({ alias }) {
       <h1 className="mt-4 text-2xl font-extrabold">
         {t("hello")}, {alias}
       </h1>
-      <p className="text-base text-white/90">{t("demoCase")}</p>
+      <p className="mt-2 w-fit rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">{t("demonstration")}</p>
     </header>
   );
 }

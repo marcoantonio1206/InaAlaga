@@ -15,6 +15,9 @@
   --color-warn-ink: #8a5a00;
   --color-danger-bg: #fbe9e7;
   --color-danger-ink: #a32d2d;
+  --color-future-bg: #fff4e8;
+  --color-future-border: #f5cda3;
+  --color-future-ink: #874b1c;
   --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
 }
 

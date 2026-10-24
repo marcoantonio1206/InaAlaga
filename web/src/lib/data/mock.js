@@ -1,3 +1,6 @@
+import { actionTimestamp } from "@/lib/actionTime";
+import { assertNoDuplicateVisit } from "@/lib/visits";
+import { normalizeVisitLocation, visitTypeLabel } from "@/lib/visitLocation";
 const DEMO_NOW = "2026-10-19T12:00:00+08:00";
 import { lookupStation, TANZA, LINAO } from "@/lib/demoGeography";
 import { formatDot } from "@/lib/format";
@@ -190,11 +193,9 @@ export async function resetDemoData() {
   replace(store, structuredClone(SEED));
   replace(links, structuredClone(SEED_LINKS));
   submitted.clear();
-  try {
-    window.localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // ignore
-  }
+  // Store the restored seed so other open tabs hydrate the reset too.
+  // Removing the key leaves those tabs with stale in-memory records.
+  persist();
 }
 
 export function getDemoNow() {
@@ -267,19 +268,22 @@ export async function getMotherLink(caseId) {
   return liveLinkForCase(key);
 }
 
-function pushEvent(c, type, actor, detail) {
-  c.events.push({ at: DEMO_NOW, type, actor, detail: detail ?? null });
+function pushEvent(c, type, actor, detail, at) {
+  c.events.push({ at, type, actor, detail: detail ?? null });
 }
 
 export async function createContactRequest(token) {
   await wait(400);
   hydrate();
+  const actionAt = actionTimestamp();
   const found = caseForToken(token);
   if (!found) throw new Error("Unknown link");
-  if (found.request_state === "none") {
+  if (found.request_state !== "recorded") {
+    found.request_acknowledged_by = null;
+    found.request_acknowledged_at = null;
     found.request_state = "recorded";
-    found.request_recorded_at = DEMO_NOW;
-    pushEvent(found, "request_recorded", "Mother", "Please contact me");
+    found.request_recorded_at = actionAt;
+    pushEvent(found, "request_recorded", "Mother", "Please contact me", actionAt);
     persist();
   }
   return structuredClone(found);
@@ -326,6 +330,7 @@ export async function listWorkerSchedule(workerName) {
 export async function acknowledgeCase(caseId, { worker_name }) {
   await wait(400);
   hydrate();
+  const actionAt = actionTimestamp();
   const c = findCase(caseId);
   if (c.handoff_state === "unassigned") throw new Error("No station assigned");
   if (c.handoff_state === "acknowledged") {
@@ -334,29 +339,32 @@ export async function acknowledgeCase(caseId, { worker_name }) {
   }
   c.handoff_state = "acknowledged";
   c.owner_worker = worker_name;
-  c.acknowledged_at = DEMO_NOW;
-  pushEvent(c, "accepted", worker_name, "Accepted responsibility");
+  c.acknowledged_at = actionAt;
+  pushEvent(c, "accepted", worker_name, "Accepted responsibility", actionAt);
   persist();
   return structuredClone(c);
 }
 
-export async function scheduleVisit(caseId, { scheduled_for, worker_name }) {
+export async function scheduleVisit(caseId, { scheduled_for, worker_name, location_type = "home", station_name }) {
+  const location = normalizeVisitLocation({ location_type, station_name });
+  if (!Number.isFinite(Date.parse(scheduled_for))) throw new Error("Enter a valid visit date and time.");
   await wait(400);
   hydrate();
+  const actionAt = actionTimestamp();
   const c = findCase(caseId);
   if (c.handoff_state !== "acknowledged") throw new Error("Case not accepted");
   if (new Date(scheduled_for) < new Date(c.discharge_at)) throw new Error("Before discharge");
-  if (c.visits.some((v) => v.state === "scheduled")) throw new Error("Visit already scheduled");
+  assertNoDuplicateVisit(Object.values(store), caseId, worker_name, scheduled_for);
   const visit = {
     id: `v${c.visits.length + 1}`,
     state: "scheduled",
     scheduled_for,
-    location_type: "home",
+    ...location,
     worker_name,
-    scheduled_at: DEMO_NOW,
+    scheduled_at: actionAt,
   };
   c.visits.push(visit);
-  pushEvent(c, "visit_scheduled", worker_name, `Home follow-up · ${formatDot(scheduled_for)}`);
+  pushEvent(c, "visit_scheduled", worker_name, `${visitTypeLabel(visit)} · ${location.station_name || "Your home"} · ${formatDot(scheduled_for)}`, actionAt);
   persist();
   return structuredClone(c);
 }
@@ -364,6 +372,7 @@ export async function scheduleVisit(caseId, { scheduled_for, worker_name }) {
 export async function recordVisitOutcome(caseId, visitId, { started_at, ended_at, outcome }) {
   await wait(500);
   hydrate();
+  const actionAt = actionTimestamp();
   const c = findCase(caseId);
   const v = c.visits.find((x) => x.id === visitId);
   if (!v || v.state !== "scheduled") throw new Error("No open visit");
@@ -374,8 +383,8 @@ export async function recordVisitOutcome(caseId, visitId, { started_at, ended_at
   v.started_at = started_at;
   v.ended_at = ended_at;
   v.outcome = outcome;
-  v.completed_recorded_at = DEMO_NOW;
-  pushEvent(c, "visit_completed", v.worker_name, "Completed home visit outcome saved");
+  v.completed_recorded_at = actionAt;
+  pushEvent(c, "visit_completed", v.worker_name, `${visitTypeLabel(v)} outcome saved`, actionAt);
   persist();
   return structuredClone(c);
 }
@@ -383,13 +392,14 @@ export async function recordVisitOutcome(caseId, visitId, { started_at, ended_at
 export async function acknowledgeRequest(caseId, { worker_name }) {
   await wait(400);
   hydrate();
+  const actionAt = actionTimestamp();
   const c = findCase(caseId);
   if (c.handoff_state === "unassigned") throw new Error("No station assigned");
   if (c.request_state !== "recorded") throw new Error("No open request");
   c.request_state = "acknowledged";
   c.request_acknowledged_by = worker_name;
-  c.request_acknowledged_at = DEMO_NOW;
-  pushEvent(c, "request_acknowledged", worker_name, "Contact request acknowledged");
+  c.request_acknowledged_at = actionAt;
+  pushEvent(c, "request_acknowledged", worker_name, "Contact request acknowledged", actionAt);
   persist();
   return structuredClone(c);
 }
@@ -397,6 +407,7 @@ export async function acknowledgeRequest(caseId, { worker_name }) {
 export async function recordContactAttempt(caseId, { method, started_at, ended_at, outcome, worker_name }) {
   await wait(400);
   hydrate();
+  const actionAt = actionTimestamp();
   const c = findCase(caseId);
   if (c.handoff_state === "unassigned") throw new Error("No station assigned");
   if (!["not_reached", "reached"].includes(outcome)) throw new Error("Unsupported outcome");
@@ -408,15 +419,14 @@ export async function recordContactAttempt(caseId, { method, started_at, ended_a
     ended_at,
     outcome,
     worker_name,
-    recorded_at: DEMO_NOW,
+    recorded_at: actionAt,
   };
   c.contact_attempts.push(attempt);
   pushEvent(
     c,
     "contact_attempt",
     worker_name,
-    outcome === "reached" ? `Reached by ${method}` : `Not reached (${method})`
-  );
+    outcome === "reached" ? `Reached by ${method}` : `Not reached (${method})`, actionAt);
   persist();
   return structuredClone(c);
 }

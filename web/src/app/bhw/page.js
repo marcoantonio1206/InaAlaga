@@ -9,10 +9,23 @@ import { SlideOver } from "@/components/ui/Overlay";
 import CaseRow from "@/components/bhw/CaseRow";
 import CaseDetail from "@/components/bhw/CaseDetail";
 import { Loading, LoadFailed, Empty } from "@/components/bhw/LoadState";
-import { listStationCases, resetDemoData, getDemoNow } from "@/lib/data";
+import { listStationCases, getDemoNow } from "@/lib/data";
 import { useWorker } from "@/lib/bhwWorkers";
-import { STATE_LABEL, bhwState, visitLine, requestLine } from "@/lib/bhwStatus";
-import { formatDot, formatDotYear, initials, overdueLabel } from "@/lib/format";
+import { STATE_LABEL, bhwState, visitLine, requestLine, openVisit } from "@/lib/bhwStatus";
+import { visitTypeLabel, visitDestination } from "@/lib/visitLocation";
+import { formatDot, formatDotYear, initials, overdueLabel, displayStationName } from "@/lib/format";
+
+function FollowUpDetails({ caseData }) {
+  const visit = openVisit(caseData);
+  if (!visit) return <span className="whitespace-nowrap">{visitLine(caseData)}</span>;
+  return (
+    <div className="flex flex-col gap-1">
+      <p className="whitespace-nowrap font-semibold">{visitTypeLabel(visit)}</p>
+      <p className="whitespace-nowrap">{displayStationName(visitDestination(visit))}</p>
+      <p className="whitespace-nowrap text-sm text-muted">{formatDot(visit.scheduled_for)} · {visit.worker_name}</p>
+    </div>
+  );
+}
 
 const FILTERS = [
   { key: "all", label: "All" },
@@ -76,7 +89,7 @@ function CasesScreen() {
 
   return (
     <>
-      <PageHeader title="Cases" subtitle={`${worker.station} · Demo snapshot: ${formatDotYear(now)}`} />
+      <PageHeader showDemo={false} title="Cases" subtitle={`${displayStationName(worker.station)} · As of: ${formatDotYear(now)}`} />
       <div className="mb-2 flex flex-col gap-1.5">
         <label htmlFor="search" className="text-sm font-bold">
           Search
@@ -123,14 +136,14 @@ function CasesScreen() {
       ) : (
         <>
           {/* Desktop: table, same pattern as the hospital list */}
-          <div className="hidden overflow-hidden rounded-2xl border border-brand-200 bg-white md:block">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-brand-600 text-xs text-white">
+          <div className="hidden overflow-x-auto rounded-2xl border border-brand-200 bg-white md:block">
+            <table className="w-full min-w-[900px] text-left text-[15px]">
+              <thead className="bg-brand-600 text-sm text-white">
                 <tr>
                   <th className="px-4 py-3 font-bold">Mother / case</th>
                   <th className="px-4 py-3 font-bold">Status</th>
-                  <th className="px-4 py-3 font-bold">Home follow-up</th>
-                  <th className="px-4 py-3 font-bold">Demo target</th>
+                  <th className="px-4 py-3 font-bold">Follow-up visit</th>
+                  <th className="whitespace-nowrap px-4 py-3 font-bold">Follow-up target</th>
                   <th className="w-10 px-4 py-3">
                     <span className="sr-only">Open</span>
                   </th>
@@ -150,32 +163,32 @@ function CasesScreen() {
                       aria-selected={selected}
                       className={`cursor-pointer border-t border-brand-200 ${selected ? "bg-brand-50" : "hover:bg-brand-50"}`}
                     >
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-4">
                         <div className="flex items-center gap-3">
                           <span
                             aria-hidden="true"
-                            className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-900 text-xs font-bold text-white"
+                            className="flex h-10 w-10 shrink-0 aspect-square items-center justify-center rounded-full bg-brand-900 text-sm font-bold text-white"
                           >
                             {initials(c.alias)}
                           </span>
-                          <div>
+                          <div className="min-w-[150px] text-left">
                             <button
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 openCase(c.id);
                               }}
-                              className="font-bold"
+                              className="block text-left font-bold"
                             >
                               {c.alias}
                             </button>
-                            <p className="text-xs text-muted">
+                            <p className="mt-1 text-sm text-muted">
                               {c.id} · {c.barangay}
                             </p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-4">
                         <div className="flex flex-wrap gap-1.5">
                           <Pill tone={sl.tone}>
                             <Icon name={sl.icon} size={14} className="mr-1" />
@@ -184,12 +197,12 @@ function CasesScreen() {
                           {req ? <Pill tone={req.tone}>{req.label}</Pill> : null}
                         </div>
                       </td>
-                      <td className="px-4 py-2.5">{visitLine(c)}</td>
-                      <td className="px-4 py-2.5">
-                        <p className={late ? "text-warn-ink" : ""}>{formatDot(c.due_at)}</p>
-                        {late ? <p className="text-warn-ink">{late}</p> : null}
+                      <td className="px-4 py-4"><FollowUpDetails caseData={c} /></td>
+                      <td className="px-4 py-4">
+                        <p className={`whitespace-nowrap ${late ? "text-warn-ink" : ""}`}>{formatDot(c.due_at)}</p>
+                        {late ? <p className="whitespace-nowrap text-warn-ink">{late}</p> : null}
                       </td>
-                      <td className="px-4 py-2.5 text-brand-900" aria-hidden="true">
+                      <td className="px-4 py-4 text-brand-900" aria-hidden="true">
                         ›
                       </td>
                     </tr>
@@ -198,7 +211,7 @@ function CasesScreen() {
               </tbody>
             </table>
             <p className="border-t border-brand-200 px-4 py-3 text-xs text-muted">
-              Showing {rows.length} of {list.length} fictional records · Earliest follow-up target first
+              Showing {rows.length} of {list.length} records · Earliest follow-up target first
             </p>
           </div>
           {/* Phone: cards */}
@@ -211,24 +224,15 @@ function CasesScreen() {
       )}
       <p className="mt-2 text-xs text-muted">
         Assignment to a station is not acceptance by a worker. Targets are administrative, not clinical
-        urgency.{" "}
-        <button
-          type="button"
-          onClick={async () => {
-            await resetDemoData();
-            refresh();
-          }}
-          className="font-bold text-brand-900 underline"
-        >
-          Reset demo data in this browser
-        </button>
+        urgency.
       </p>
 
       <SlideOver
+        showDemo={false}
+        stickyHeader
         open={Boolean(selectedId)}
         onClose={closePanel}
         title="Case detail"
-        subtitle="Shared record · each action has its own saved state"
       >
         {selectedId ? <CaseDetail key={selectedId} caseId={selectedId} onChanged={refresh} /> : null}
       </SlideOver>

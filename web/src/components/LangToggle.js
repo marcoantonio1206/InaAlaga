@@ -10,10 +10,10 @@ const tones = {
 };
 
 export default function LangToggle({ tone = "dark" }) {
-  const { lang, setLang } = useLang();
+  const { lang, setLang, t } = useLang();
   const s = tones[tone];
   return (
-    <div role="group" aria-label="Language" className={`inline-flex rounded-full p-1 ${s.group}`}>
+    <div role="group" aria-label={t("languageLabel")} className={`inline-flex rounded-full p-1 ${s.group}`}>
       {["fil", "en"].map((code) => (
         <button
           key={code}

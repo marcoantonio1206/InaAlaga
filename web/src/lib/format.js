@@ -51,3 +51,7 @@ export function overdueLabel(dueIso, nowIso) {
   if (hrs < 48) return `Overdue by ${hrs} ${hrs === 1 ? "hr" : "hrs"}`;
   return `Overdue by ${Math.floor(hrs / 24)} days`;
 }
+// Keep stored station identifiers intact; simplify names only when rendering.
+export function displayStationName(name) {
+  return name?.replace(/\s*\(demo station\)\s*$/i, "") ?? "";
+}

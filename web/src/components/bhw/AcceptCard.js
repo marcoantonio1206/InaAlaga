@@ -1,5 +1,6 @@
 "use client";
 
+import { displayStationName } from "@/lib/format";
 import Card from "@/components/ui/Card";
 import Pill from "@/components/hospital/Pill";
 import { acknowledgeCase } from "@/lib/data";
@@ -57,7 +58,7 @@ export default function AcceptCard({ c, worker, onSaved, onRefresh }) {
       <Pill tone="lilac">Awaiting worker acceptance</Pill>
       <p className="text-sm">
         Case <span className="font-bold">{c.id}</span> ({c.alias}, {c.barangay}) assigned to{" "}
-        <span className="font-bold">{c.station_name}</span>. You are acting as{" "}
+        <span className="font-bold">{displayStationName(c.station_name)}</span>. You are acting as{" "}
         <span className="font-bold">{worker.name}</span>.
       </p>
       <p className="text-sm text-muted">

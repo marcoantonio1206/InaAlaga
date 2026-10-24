@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { actionTimestamp } from "@/lib/actionTime";
 import Card from "@/components/ui/Card";
 import Pill from "@/components/hospital/Pill";
 import Field, { controlClass } from "@/components/hospital/Field";
-import { recordContactAttempt, getDemoNow } from "@/lib/data";
+import { recordContactAttempt } from "@/lib/data";
 import { toManilaIso, toManilaLocalInput } from "@/lib/validation";
 import { formatDot } from "@/lib/format";
 import useSave, { primaryBtn, outlineBtn } from "./useSave";
@@ -30,7 +31,7 @@ export function AttemptList({ attempts }) {
 }
 
 export default function ContactAttemptForm({ c, worker, onSaved, alwaysOpen = false, onCancel }) {
-  const now = getDemoNow();
+  const [now] = useState(actionTimestamp);
   const [open, setOpen] = useState(alwaysOpen || (c.contact_attempts.length === 0 && c.request_state === "acknowledged"));
   const [method, setMethod] = useState(METHODS[0]);
   const [started, setStarted] = useState(toManilaLocalInput(now));
@@ -113,7 +114,7 @@ export default function ContactAttemptForm({ c, worker, onSaved, alwaysOpen = fa
           checked={outcome === "reached"}
           onChange={() => setOutcome("reached")}
         />
-        Reached by phone · contact is logged, the home visit remains open
+        Reached by phone · contact is logged, the scheduled visit remains open
       </label>
     </fieldset>
     {error ? (
@@ -126,7 +127,7 @@ export default function ContactAttemptForm({ c, worker, onSaved, alwaysOpen = fa
       <button type="submit" disabled={saving} className={primaryBtn}>
         {saving ? "Saving…" : error ? "Retry save" : "Save contact attempt"}
       </button>
-      <button type="button" onClick={() => setOpen(false)} className={outlineBtn}>
+      <button type="button" onClick={() => { setOpen(false); onCancel?.(); }} className={outlineBtn}>
         Cancel
       </button>
     </div>
@@ -153,7 +154,7 @@ export default function ContactAttemptForm({ c, worker, onSaved, alwaysOpen = fa
         {form}
       )}
       <p className="text-sm font-bold text-brand-900">
-        Request acknowledged ≠ contact made · Contact made ≠ home visit completed
+        Request acknowledged ≠ contact made · Contact made ≠ visit completed
       </p>
     </Card>
   );

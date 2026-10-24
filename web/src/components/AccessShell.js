@@ -12,13 +12,13 @@ export default function AccessShell({ meta, title, footnote, children }) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-[28px] font-extrabold leading-tight text-brand-900">InaAlaga</p>
-          <p className="text-sm text-muted">{meta ?? t("fictionalDemo")}</p>
+          <p className="text-sm text-muted">{meta ?? t("demonstration")}</p>
         </div>
         <LangToggle tone="light" />
       </div>
       <h1 className="text-2xl font-extrabold leading-tight">{title}</h1>
       {children}
-      <p className="text-sm text-muted">{footnote ?? t("notEmergency")}</p>
+      {footnote ? <p className="text-sm text-muted">{footnote}</p> : null}
     </main>
   );
 }

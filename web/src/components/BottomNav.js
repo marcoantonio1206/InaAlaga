@@ -16,7 +16,7 @@ export default function BottomNav({ token }) {
   const pathname = usePathname();
   const base = `/m/${token}`;
   return (
-    <nav aria-label="Main" className="sticky bottom-0 border-t border-brand-200 bg-white px-2 py-2">
+    <nav aria-label={t("mainNavigation")} className="sticky bottom-0 border-t border-brand-200 bg-white px-2 py-2">
       <ul className="grid grid-cols-3 gap-1">
         {TABS.map((tab) => {
           const href = base + tab.path;

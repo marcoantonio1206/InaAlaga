@@ -8,6 +8,25 @@ const CaseContext = createContext(null);
 export function CaseProvider({ token, children }) {
   const [state, setState] = useState({ phase: "loading", data: null });
   const [attempt, setAttempt] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
+
+  useEffect(() => {
+    const refresh = () => setAttempt((n) => n + 1);
+    const timer = setInterval(refresh, 5000);
+    window.addEventListener("storage", refresh);
+    window.addEventListener("focus", refresh);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("storage", refresh);
+      window.removeEventListener("focus", refresh);
+    };
+  }, []);
+
+  useEffect(() => {
+    const started = Date.now();
+    const timer = setInterval(() => setElapsed(Date.now() - started), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -33,7 +52,7 @@ export function CaseProvider({ token, children }) {
     setState({ phase: "ready", data: updated });
   }, [token]);
 
-  const value = { ...state, now: getDemoNow(), reload, requestContact };
+  const value = { ...state, now: new Date(Date.parse(getDemoNow()) + elapsed).toISOString(), reload, requestContact };
   return <CaseContext.Provider value={value}>{children}</CaseContext.Provider>;
 }
 

@@ -1,12 +1,8 @@
 "use client";
 
 import MotherHeader from "@/components/MotherHeader";
-import StatusCard from "@/components/StatusCard";
-import VisitCard from "@/components/VisitCard";
-import WhyFollowUp from "@/components/WhyFollowUp";
-import StationCard from "@/components/StationCard";
+import MotherFollowUp from "@/components/MotherFollowUp";
 import RequestPanel from "@/components/RequestPanel";
-import DemoNotice from "@/components/DemoNotice";
 import { useCase } from "@/lib/caseContext";
 import { getStatus, getCardVisit } from "@/lib/status";
 
@@ -19,13 +15,9 @@ export default function HomePage() {
     <main>
       <MotherHeader alias={data.alias} />
       <div className="flex flex-col gap-3 p-4">
-        <StatusCard status={status} />
-        {visit ? <VisitCard visit={visit} /> : null}
-        <WhyFollowUp />
-        <StationCard stationName={data.station_name} />
+        <MotherFollowUp caseData={data} visit={visit} status={status} />
         <RequestPanel requestState={data.request_state} onRequest={requestContact} />
       </div>
-      <DemoNotice />
     </main>
   );
 }
