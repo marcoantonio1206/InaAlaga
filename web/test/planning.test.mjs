@@ -4,7 +4,7 @@ import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { parseCsv } from "../src/lib/csv.js";
-import { DEFAULTS, FILTERS, deadlineAddsLittle, matchScenario, optionFor, pct, signed } from "../src/lib/planning.js";
+import { DEFAULTS, FILTERS, isDefault, matchScenario, optionFor, pct, runShare, signed, summarize, verdict } from "../src/lib/planning.js";
 
 const csvText = readFileSync(new URL("../public/scenario_summary.csv", import.meta.url), "utf8");
 let rows;
@@ -55,11 +55,43 @@ test("select strings map back to option types", () => {
   assert.equal(optionFor(delay, "24-72"), "24-72");
 });
 
-test("the 'adds little' sentence appears at or below 0.5 pp", () => {
-  assert.equal(deadlineAddsLittle({ C_minus_B_mean_pp: 0.5 }), true);
-  assert.equal(deadlineAddsLittle({ C_minus_B_mean_pp: -1.2 }), true);
-  assert.equal(deadlineAddsLittle({ C_minus_B_mean_pp: 0.51 }), false);
-  assert.equal(deadlineAddsLittle({ C_minus_B_mean_pp: null }), false);
+test("verdicts distinguish higher, little difference, lower and tied", () => {
+  const v = (mean, tied = 0) => verdict({ C_minus_B_mean_pp: mean, C_minus_B_fraction_tied: tied }, "C_minus_B");
+  assert.equal(v(7.29), "higher");
+  assert.equal(v(0.5), "little");
+  assert.equal(v(0.04), "little");
+  assert.equal(v(-0.37), "lower");
+  assert.equal(v(-1.55), "lower");
+  assert.equal(v(0, 1), "tied");
+  assert.equal(v(null), null);
+});
+
+test("default summary states both gains and that C was worse in some runs", () => {
+  const [handoff, order] = summarize(matchScenario(rows, DEFAULTS));
+  assert.equal(handoff, "Faster handoff increased on-time contact by 36.1 percentage points on average.");
+  assert.equal(order, "Deadline ordering added another 7.3 percentage points on average. It was lower than faster handoff alone in 8% of runs.");
+});
+
+test("a negative scheduling mean is reported as lower, never as adding little", () => {
+  const row = matchScenario(rows, { ...DEFAULTS, service_minutes: 60, travel_multiplier: 2 });
+  assert.equal(verdict(row, "C_minus_B"), "lower");
+  assert.match(summarize(row)[1], /^Deadline ordering lowered on-time contact by 1\.6 percentage points on average/);
+  assert.match(summarize(row)[1], /in 74% of runs/);
+});
+
+test("every scenario gets a summary and no wording claims a universal best", () => {
+  for (const row of rows) {
+    const text = summarize(row).join(" ");
+    assert.equal(summarize(row).length, 2, row.scenario_id);
+    assert.doesNotMatch(text, /best|always/i);
+  }
+});
+
+test("reset helpers and run shares", () => {
+  assert.equal(isDefault(DEFAULTS), true);
+  assert.equal(isDefault({ ...DEFAULTS, workers_per_station: 2 }), false);
+  assert.equal(runShare(0.08), "8%");
+  assert.equal(runShare(null), null);
 });
 
 test("formatting: percentages and signed points, missing values never shown as zero", () => {

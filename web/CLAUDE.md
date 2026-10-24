@@ -17,10 +17,11 @@ src/app/(mobile)/           mother views, 360 px first. /consent, /inbox/[token]
                             [token] is an opaque, expiring link token, never a case ID (PRD M01). Unknown and expired tokens show InvalidLink with no case details
 src/app/hospital/           facilitator desktop views (top bar, 1180 px content). /patients is the only screen; ?case=ID opens the profile slide-over, ?new=1 opens the discharge dialog; /patients/[caseId] and /discharge redirect there
 src/app/bhw/                BHW workspace. /bhw is the Cases list (table on desktop, cards on phones); ?case=ID opens the case-detail slide-over; /bhw/schedule; /bhw/cases/[caseId] redirects to ?case=
-src/app/coordinator/        coordinator planning view (desktop, 900 px content). Five selects pick one factorial setting; no match shows "No matching scenario"
+src/app/coordinator/        coordinator (desktop, 1120 px content). / is Planning: five selects pick one factorial setting (no match shows "No matching scenario"), plain-language summary, higher/little/lower verdicts, assumptions, expandable evidence. /overview lists saved records (unassigned, awaiting acceptance, visits awaiting update, open requests) with a read-only ?case= slide-over; it polls, Planning does not
 public/scenario_summary.csv copy of simulation/results/factorial_v1/scenario_summary.csv; re-copy after rerunning the factorial study, never edit by hand
 src/lib/csv.js              minimal CSV parser (no library)
-src/lib/planning.js         selector options, policy labels, matching and formatting; null values display as "Unavailable", never 0
+src/lib/planning.js         selector options, policy labels, matching, verdict()/summarize() wording and formatting; null values display as "Unavailable", never 0
+src/lib/coordinatorOverview.js  overview groups derived from saved case fields only (never simulation results)
 src/components/             mother components (StatusCard, VisitCard, RequestPanel, BottomNav, MotherHeader, DemoNotice, AccessShell + SkeletonBlocks for pre-case screens, InvalidLink ...)
 src/components/ui/          primitives: Card, Badge, Button, Icon, AppBar (shared purple header + RoleChip), Overlay (Modal + SlideOver)
 src/components/hospital/    TopBar (wraps AppBar), PageHeader, Pill, Field, PatientProfile, DischargeDialog

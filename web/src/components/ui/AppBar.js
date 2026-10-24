@@ -52,8 +52,8 @@ export function RoleChip({ title, detail, control }) {
 export default function AppBar({ homeHref, nav, right, width = "max-w-[900px]", showBell = true }) {
   return (
     <header className="bg-brand-900 text-white shadow-md">
-      <div className={`mx-auto flex ${width} items-center justify-between gap-4 px-6 py-3 lg:px-8`}>
-        <div className="flex items-center gap-6">
+      <div className={`mx-auto flex ${width} flex-wrap items-center justify-between gap-x-4 gap-y-2 px-6 py-3 lg:px-8`}>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           <Link href={homeHref} className="flex items-center gap-3">
             <Mark />
             <span className="text-[26px] tracking-tight">
