@@ -21,8 +21,8 @@ function CaseView({ caseId }) {
   const load = useCallback(() => getCaseById(caseId), [caseId]);
   const { data: c, error, refreshing, refresh } = useLiveResource(load);
 
-  if (c === undefined) return <Card><p className="text-muted">{error ? "Couldn’t load this record." : "Loading…"}</p>{error ? <button type="button" onClick={refresh} className="w-fit rounded-xl bg-brand-900 px-5 py-3 font-bold text-white">Retry</button> : null}</Card>;
-  if (c === null) return <Card><p className="font-bold">This record was not found.</p></Card>;
+  if (c === undefined) return <Card className="sm:px-6"><p className="text-muted">{error ? "Couldn’t load this record." : "Loading…"}</p>{error ? <button type="button" onClick={refresh} className="w-fit rounded-xl bg-brand-900 px-5 py-3 font-bold text-white">Retry</button> : null}</Card>;
+  if (c === null) return <Card className="sm:px-6"><p className="font-bold">This record was not found.</p></Card>;
   return <div className="flex flex-col gap-1">
     <RefreshStatus refreshing={refreshing} refresh={refresh} error={error} subject="this record" />
     <MotherDetails c={c} now={now} idPrefix="coordinator"
@@ -34,7 +34,7 @@ function CaseView({ caseId }) {
 
 function Group({ group, onOpen }) {
   return (
-    <Card>
+    <Card className="sm:px-6">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="flex items-center gap-2 text-lg font-extrabold">
@@ -83,7 +83,7 @@ function OverviewScreen() {
   return (
     <>
       <PageHeader showDemo={false} title="Overview" subtitle={`Saved activity as of ${formatDotYear(now)} Philippine time`} />
-      <p className="mb-3 flex items-start gap-2 rounded-xl border border-brand-200 bg-white p-3 text-sm">
+      <p className="mb-3 flex items-start gap-2 rounded-xl border border-brand-200 bg-white p-3 text-sm sm:px-6">
         <Icon name="list" size={18} className="mt-0.5 shrink-0 text-brand-900" />
         <span>
           <span className="font-bold">Saved records from this app.</span> These counts come from cases entered by facility

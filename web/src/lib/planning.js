@@ -4,7 +4,7 @@
 export const FILTERS = [
   {
     key: "demand_per_day",
-    label: "New cases per day (whole pilot)",
+    label: "Demand (whole pilot)",
     options: [4, 8, 12],
     format: (v) => `${v} per day`,
     describe: (v) => `${v} new cases per day across all five pilot barangays combined`,
@@ -32,7 +32,7 @@ export const FILTERS = [
   },
   {
     key: "reference_delay_hours",
-    label: "Reference handoff delay (A, D)",
+    label: "Reference delay (A, D)",
     options: ["6-24", "12-48", "24-72"],
     format: (v) => `${v.replace("-", "–")} h`,
     describe: (v) => `Reference workflow (A, D): ${v.replace("-", "–")} hours from discharge until the station receives the case`,

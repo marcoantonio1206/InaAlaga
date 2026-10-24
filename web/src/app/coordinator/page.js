@@ -28,7 +28,7 @@ import {
 
 function ScenarioSelector({ selected, onChange }) {
   return (
-    <Card>
+    <Card className="sm:px-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-lg font-extrabold">Scenario</h2>
         <button
@@ -40,14 +40,14 @@ function ScenarioSelector({ selected, onChange }) {
           Reset scenario
         </button>
       </div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid items-end gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {FILTERS.map((f) => (
           <Field key={f.key} label={f.label} htmlFor={`f-${f.key}`}>
             <select
               id={`f-${f.key}`}
               value={String(selected[f.key])}
               onChange={(e) => onChange({ ...selected, [f.key]: optionFor(f, e.target.value) })}
-              className={controlClass(false)}
+              className={`${controlClass(false)} select-chevron`}
             >
               {f.options.map((o) => (
                 <option key={o} value={String(o)}>
@@ -65,7 +65,7 @@ function ScenarioSelector({ selected, onChange }) {
 function ContactShare({ row }) {
   const sentences = summarize(row);
   return (
-    <Card>
+    <Card className="sm:px-6">
       <h2 className="text-lg font-extrabold">Share of mothers contacted by their follow-up target</h2>
       <ul className="flex flex-col gap-3">
         {POLICIES.map((p) => {
@@ -83,7 +83,7 @@ function ContactShare({ row }) {
           );
         })}
       </ul>
-      <div className="mt-2 rounded-xl bg-brand-50 p-3">
+      <div className="mt-2 rounded-xl bg-brand-50 p-3 sm:px-4">
         <h3 className="font-extrabold">What this shows</h3>
         {sentences.length ? sentences.map((s) => <p key={s}>{s}</p>) : <p>Comparison unavailable for this scenario.</p>}
         <p className="mt-1 text-sm text-muted">
@@ -110,7 +110,7 @@ function VerdictPill({ row, compKey }) {
 
 function Changes({ row }) {
   return (
-    <Card>
+    <Card className="sm:px-6">
       <h2 className="text-lg font-extrabold">Changes between approaches</h2>
       <p className="text-sm text-muted">
         Each run uses the same fictional cases and workers for every approach, so differences come from the approach
@@ -144,7 +144,7 @@ function Changes({ row }) {
 
 function Evidence({ row, selected }) {
   return (
-    <Card>
+    <Card className="sm:px-6">
       <details>
         <summary className="cursor-pointer text-lg font-extrabold">More evidence for this scenario</summary>
         <div className="mt-3 flex flex-col gap-4">
@@ -224,7 +224,7 @@ function Evidence({ row, selected }) {
 
 function Assumptions({ selected }) {
   return (
-    <Card>
+    <Card className="sm:px-6">
       <h2 className="text-lg font-extrabold">Assumptions in this scenario</h2>
       <ul className="flex list-disc flex-col gap-1 pl-5">
         {FILTERS.map((f) => (
@@ -293,7 +293,7 @@ export default function CoordinatorPlanningPage() {
         title="Planning"
         subtitle="Which approach gets more mothers contacted on time with the same workers?"
       />
-      <p className="mb-3 flex items-start gap-2 rounded-xl border border-brand-200 bg-white p-3 text-sm">
+      <p className="mb-3 flex items-start gap-2 rounded-xl border border-brand-200 bg-white p-3 text-sm sm:px-6">
         <Icon name="alert" size={18} className="mt-0.5 shrink-0 text-brand-900" />
         <span>
           <span className="font-bold">Precomputed synthetic simulation results.</span> They are independent of the
@@ -326,7 +326,7 @@ export default function CoordinatorPlanningPage() {
               <Changes row={row} />
             </>
           ) : (
-            <Card tone="dashed">
+            <Card tone="dashed" className="sm:px-6">
               <p className="font-bold">No matching scenario.</p>
               <p className="text-sm text-muted">
                 No precomputed result has these five settings. Results are never interpolated.
